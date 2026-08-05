@@ -40,3 +40,26 @@ def smape(y_true, y_pred):
     denominator = np.abs(true) + np.abs(pred)
     nonzero = denominator != 0
     return np.mean(2 * np.abs(pred[nonzero] - true[nonzero]) / denominator[nonzero]) * 100
+
+
+def mase(y_true, y_pred, y_train, seasonal_period=1):
+    """Calculate mean absolute scaled error from a training-only scale.
+
+    The scale is the mean absolute seasonal difference in ``y_train``.
+    Evaluation targets are never used to estimate the denominator.
+    """
+    true, pred = _as_arrays(y_true, y_pred)
+    train = np.asarray(y_train, dtype=float).reshape(-1)
+
+    if not isinstance(seasonal_period, (int, np.integer)) or seasonal_period < 1:
+        raise ValueError("seasonal_period must be a positive integer.")
+    if train.size <= seasonal_period:
+        raise ValueError("y_train must contain more values than seasonal_period.")
+    if not np.all(np.isfinite(train)):
+        raise ValueError("y_train must contain only finite values.")
+
+    scale = np.mean(np.abs(train[seasonal_period:] - train[:-seasonal_period]))
+    if not np.isfinite(scale) or scale == 0:
+        raise ValueError("MASE scaling denominator must be finite and non-zero.")
+
+    return np.mean(np.abs(true - pred)) / scale
