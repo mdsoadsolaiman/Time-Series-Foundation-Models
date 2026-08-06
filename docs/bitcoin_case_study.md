@@ -14,7 +14,7 @@ This document records the completed Bitcoin experiment before expanding to addit
 - Raw rows observed in the repository audit: 7,633,557.
 - Forecast target: daily Bitcoin `Close`.
 
-Planned folders for exchange-rate, weather, traffic, and energy-style experiments exist or are referenced, but no additional domain dataset has been completed yet.
+The Energy case study is now complete using South Australian electricity demand. Weather and Transport remain planned domains; their results are not represented in this Bitcoin artifact.
 
 ## Preprocessing
 

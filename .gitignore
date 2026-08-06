@@ -1,2 +1,12 @@
 data/bitcoin/btcusd_1-min_data.csv
 data/**/*.csv
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+.venv-*/
+venv/
+env/
+*.ckpt
+*.pth
+*.pt

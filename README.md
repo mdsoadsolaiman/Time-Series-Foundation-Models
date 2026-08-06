@@ -1,139 +1,166 @@
-# TimeSeriesFoundationModels
+# Trustworthy Foundation Models for Time-Series Forecasting
 
-This project investigates trustworthy foundation models for time-series forecasting.
+This research project evaluates time-series foundation models as forecasting systems rather than point-metric contestants. Two completed case studies examine accuracy, robustness, temporal generalisation, uncertainty, explainability, and statistical significance under frozen, leakage-controlled protocols.
 
-Research direction:
+## Research Objective
 
-**Trustworthy Foundation Models for Time-Series Forecasting: Evaluating Generalisation, Uncertainty, and Explainability.**
+The central question is whether zero-shot foundation models are consistently trustworthy across domains and forecast horizons. Chronos-Bolt-Tiny and TimesFM are compared with strong simple baselines, statistical models, and deterministic LSTMs. Exact forecast vectors are frozen before downstream analysis.
 
-The first completed domain case study is Bitcoin daily price forecasting. The project compares deterministic baselines, classical statistical models, supervised neural models, and zero-shot foundation models under a clearly documented validation protocol.
+## Completed Domains
 
-## Domain 1 - Financial Time Series
+### Domain 1 — Finance: Bitcoin
 
-**Bitcoin - Completed**
+**Completed.** Daily Bitcoin Close is evaluated over 1,061 test days with rolling one-step forecasts. The authoritative comparison is `results/validated_forecasts.csv`.
 
-The Bitcoin experiment uses the physically present minute-level BTC/USD dataset at:
+### Domain 2 — Energy: South Australian Electricity Demand
 
-```text
-data/bitcoin/btcusd_1-min_data.csv
-```
+**Completed.** Half-hourly South Australian demand is evaluated over 46,176 observations under rolling one-step Protocol A and 962 non-overlapping 48-step day-ahead origins under Protocol B.
 
-The raw OHLCV data are resampled to daily frequency, with daily `Close` used as the forecasting target. The completed authoritative rolling one-step comparison is frozen in:
+### Domain 3 — Weather
 
-```text
-results/validated_forecasts.csv
-```
+**Planned.** This is the recommended next domain.
 
-Authoritative forecast columns:
+### Domain 4 — Transport
 
-- `Actual`
-- `Naive`
-- `Persistence_Enhanced_LSTM`
-- `Chronos_Bolt_Tiny`
-- `TimesFM`
+**Planned.** Protocol and dataset selection have not begun.
 
-The Bitcoin case-study summary is documented in:
+## Models Evaluated
 
-```text
-docs/bitcoin_case_study.md
-```
+- **Baselines:** Naive persistence, daily and weekly seasonal naive, moving average.
+- **Statistical:** historical Bitcoin classical models; electricity DHR-ARIMA.
+- **Deep learning:** Bitcoin Persistence-Enhanced LSTM and protocol-specific electricity LSTMs.
+- **Foundation models:** zero-shot Chronos-Bolt-Tiny and TimesFM.
+- **Unavailable/optional:** Moirai/Uni2TS, PatchTST, and iTransformer have no authoritative results.
 
-## Cross-Domain Evaluation Plan
+## Evaluation Framework
 
-- Domain 1 - Finance: Bitcoin - Completed
-- Domain 2 - Energy - Planned
-- Domain 3 - Weather - Planned
-- Domain 4 - Transport - Planned
+- **Accuracy:** MAE, RMSE, MAPE, sMAPE, and electricity MASE-48.
+- **Robustness:** pre-registered demand/volatility or market regimes.
+- **Generalisation:** chronological test segments.
+- **Uncertainty:** supported native intervals, empirical coverage, and width.
+- **Explainability:** declared evidence by model class.
+- **Statistical significance:** protocol-appropriate Diebold–Mariano tests.
 
-No results are reported yet for the planned future domains.
+Trustworthiness reporting includes both a missing-evidence-penalised score and an evidence-available score. Component scores are relative within a protocol and are not claims of perfect prediction.
 
-## Current Project Structure
+## Key Bitcoin Results
+
+| Rank | Model | MAE | RMSE | MAPE | sMAPE |
+|---:|---|---:|---:|---:|---:|
+| 1 | Naive | 1290.353242 | 1853.624774 | 1.742747 | 1.744142 |
+| 2 | Persistence-Enhanced LSTM | 1323.040782 | 1886.566387 | 1.787392 | 1.794338 |
+| 3 | TimesFM | 1349.946786 | 1924.199337 | 1.823179 | 1.823895 |
+| 4 | Chronos-Bolt-Tiny | 1424.025828 | 1994.007926 | 1.934509 | 1.928782 |
+
+Naive significantly outperforms the three advanced models. TimesFM significantly outperforms Chronos; PE-LSTM versus TimesFM is not significant at α = 0.05. Chronos is much better calibrated: approximately 84.5% versus TimesFM's 33.1% empirical coverage for nominal 80% intervals.
+
+## Key Electricity Results
+
+| Rank | Protocol A: rolling one-step | MASE-48 | Protocol B: 48-step day-ahead | MASE-48 |
+|---:|---|---:|---|---:|
+| 1 | TimesFM | 0.1400 | TimesFM | 0.6892 |
+| 2 | DHR-ARIMA | 0.2276 | Chronos-Bolt-Tiny | 1.0774 |
+| 3 | Chronos-Bolt-Tiny | 0.2762 | Daily Seasonal Naive | 1.1056 |
+| 4 | Naive | 0.3611 | LSTM | 1.3064 |
+| 5 | LSTM | 0.4017 | Weekly Seasonal Naive | 1.3088 |
+| 6 | Daily Seasonal Naive | 1.1056 | Moving Average | 1.7359 |
+| 7 | Weekly Seasonal Naive | 1.3088 | Naive | 2.0831 |
+| 8 | Moving Average | 1.5302 | DHR-ARIMA | 2.4557 |
+
+TimesFM leads both protocols and beats their strongest baselines by about 38%. Chronos 80% coverage is approximately 91.1% and 67.6%; TimesFM coverage is approximately 33.6% and 24.6%.
+
+## Cross-Domain Findings
+
+- TimesFM ranks third and trails Naive by about 4.6% in Bitcoin, but ranks first in both electricity protocols.
+- Chronos provides better uncertainty calibration than TimesFM in every completed protocol.
+- Strong baselines remain essential: persistence dominates Bitcoin, DHR-ARIMA is strong one-step, and Daily Seasonal Naive is strong day-ahead.
+- Horizon materially changes rankings.
+- Model complexity and point accuracy do not imply calibrated uncertainty or universal trustworthiness.
+
+Raw Bitcoin and electricity MAE/RMSE values are never compared directly because their units and scales differ.
+
+## Repository Structure
 
 ```text
 TimeSeriesFoundationModels/
-|-- data/
-|   |-- bitcoin/
-|   |   `-- btcusd_1-min_data.csv
-|   |-- exchange_rate/
-|   |-- traffic/
-|   `-- weather/
-|-- docs/
-|   |-- bitcoin_case_study.md
-|   `-- patchtst_itransformer_environment.md
-|-- figures/
-|-- notebooks/
-|   |-- 01_EDA.ipynb
-|   |-- 02_Classical_Models.ipynb
-|   |-- 03_Deep_Learning_LSTM.ipynb
-|   |-- 03b_LSTM_Improved.ipynb
-|   |-- 04_Transformers.ipynb
-|   |-- 05_Advanced_Forecasting_Models.ipynb
-|   |-- 05_Foundation_Models.ipynb
-|   |-- 06_Trustworthiness.ipynb
-|   |-- 07_Model_Validation_Audit.ipynb
-|   |-- 08_Naive_Forecast_Audit.ipynb
-|   `-- 09_Statistical_Significance_Test.ipynb
-|-- papers/
-|-- proposal/
-|-- results/
-|   |-- baseline_forecasts.csv
-|   |-- chronos_bolt_tiny_forecast.csv
-|   |-- persistence_enhanced_lstm_forecast.csv
-|   |-- timesfm_forecast.csv
-|   `-- validated_forecasts.csv
-|-- src/
-|   |-- data_loader.py
-|   |-- metrics.py
-|   |-- plots.py
-|   `-- preprocessing.py
-|-- README.md
-`-- requirements.txt
+├── data/                         # Local datasets and dataset notes
+├── docs/                         # Protocols, case studies, findings, environment, status
+├── figures/
+│   ├── bitcoin/                  # Bitcoin diagnostic figures
+│   ├── electricity/              # Reserved for verified electricity figures
+│   └── cross_domain/             # Reserved for verified synthesis figures
+├── notebooks/
+│   └── electricity/              # Electricity phases 1–9
+├── papers/                       # Research reading notes
+├── proposal/                     # Scholarship proposal
+├── results/
+│   └── electricity/              # Frozen forecasts and evidence by protocol
+├── src/                          # Reusable loading, preprocessing, metrics, plots
+├── requirements-research.txt     # Authoritative direct dependencies
+└── requirements.txt              # Historical minimal environment file
 ```
 
-## Reusable Bitcoin Pipeline Modules
+## Notebook Guide
 
-- `src/data_loader.py`: loads the raw Bitcoin CSV and converts the Unix-seconds `Timestamp` column to UTC datetimes.
-- `src/preprocessing.py`: prepares daily OHLCV Bitcoin data from the minute-level dataset.
-- `src/plots.py`: provides a reusable daily time-series plotting helper.
-- `src/metrics.py`: implements MAE, RMSE, MAPE, and sMAPE.
+| Notebook | Status | Purpose |
+|---|---|---|
+| `01_EDA.ipynb` | AUTHORITATIVE | Bitcoin data audit and daily preparation |
+| `02_Classical_Models.ipynb` | PROTOCOL-LIMITED / HISTORICAL | Classical Bitcoin forecasts without equivalent frozen rolling vectors |
+| `03_Deep_Learning_LSTM.ipynb` | EXPLORATORY | Raw-price LSTM |
+| `03b_LSTM_Improved.ipynb` | EXPLORATORY | Improved experimental LSTM |
+| `04_Transformers.ipynb` | EXPLORATORY | Failed/collapsed Transformer case study |
+| `05_Advanced_Forecasting_Models.ipynb` | COMPATIBILITY-ONLY | Unavailable-model scaffold |
+| `05_Foundation_Models.ipynb` | AUTHORITATIVE GENERATION | Bitcoin foundation-model evidence |
+| `06_Trustworthiness.ipynb` | AUTHORITATIVE ANALYSIS | Bitcoin multidimensional trust evaluation |
+| `07_Model_Validation_Audit.ipynb` | AUTHORITATIVE AUDIT | Bitcoin saved-vector validation |
+| `08_Naive_Forecast_Audit.ipynb` | AUTHORITATIVE AUDIT | Persistence verification |
+| `09_Statistical_Significance_Test.ipynb` | AUTHORITATIVE ANALYSIS | Bitcoin DM tests |
+| `electricity/10_Electricity_EDA.ipynb` | AUTHORITATIVE | Dataset selection and audit |
+| `electricity/11_Electricity_Baselines.ipynb` | AUTHORITATIVE GENERATION | Protocol-specific deterministic baselines |
+| `electricity/11b_Electricity_Statistical_Model.ipynb` | AUTHORITATIVE GENERATION | DHR-ARIMA |
+| `electricity/12_Electricity_LSTM.ipynb` | AUTHORITATIVE GENERATION | Deterministic LSTM forecasts |
+| `electricity/13_Electricity_Foundation_Models.ipynb` | AUTHORITATIVE GENERATION | Zero-shot Chronos and TimesFM |
+| `electricity/14_Electricity_Model_Validation_Audit.ipynb` | AUTHORITATIVE AUDIT | Protocol and vector audit |
+| `electricity/15_Electricity_Trustworthiness_Evidence.ipynb` | AUTHORITATIVE ANALYSIS | Robustness, generalisation, uncertainty evidence |
+| `electricity/16_Electricity_Trustworthiness.ipynb` | AUTHORITATIVE ANALYSIS | Trust Scores and sensitivity |
+| `electricity/17_Electricity_Statistical_Significance.ipynb` | AUTHORITATIVE ANALYSIS | Protocol-specific DM tests |
+| `18_Cross_Domain_Comparison.ipynb` | AUTHORITATIVE SYNTHESIS | Artifact-only two-domain comparison |
 
-Example:
+Inserted names `03b` and `11b` preserve historical phase order; notebooks are intentionally not renamed.
 
-```python
-from src.data_loader import load_bitcoin_data
-from src.preprocessing import prepare_daily_bitcoin_data
+## Authoritative Artifacts
 
-df = load_bitcoin_data("data/bitcoin/btcusd_1-min_data.csv")
-df_daily = prepare_daily_bitcoin_data(df)
+- Bitcoin: `results/validated_forecasts.csv`
+- Electricity A: `results/electricity/protocol_a_validated_forecasts.csv`
+- Electricity B: `results/electricity/protocol_b_validated_forecasts.csv`
+- Trust evidence: `protocol_a_trust_scores.csv`, `protocol_b_trust_scores.csv`, and `trust_score_sensitivity.csv`
+- Statistical evidence: protocol-specific DM and effect-size CSVs
+- Cross-domain: the four `results/cross_domain_*.csv` files
+
+The complete protected set and SHA-256 values are in [`docs/authoritative_artifact_hashes.md`](docs/authoritative_artifact_hashes.md). See [`results/README.md`](results/README.md) for artifact classification.
+
+## Reproducibility
+
+Do not overwrite frozen artifacts during routine notebook execution. Downstream audit, trustworthiness, significance, and synthesis work should load saved forecast vectors. Protocols use chronological splits, past-only information, validation-only selection, deterministic LSTM controls, and exact timestamp alignment.
+
+Start with:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements-research.txt
 ```
 
-## Bitcoin Model Status
+## Environment
 
-Authoritative rolling one-step models:
+The audited completed environment is CPU-only Windows 11 with Python 3.13.2. [`requirements-research.txt`](requirements-research.txt) is authoritative for direct research dependencies. Notebook tooling must be installed explicitly because the audited workstation resolves some Jupyter components outside `.venv`. Details and blockers are in [`docs/environment.md`](docs/environment.md).
 
-- Naive persistence baseline
-- Persistence-Enhanced LSTM
-- Chronos-Bolt-Tiny
-- TimesFM
+## Limitations
 
-Deterministic benchmark recreated from historical actuals:
+Only two domains and one electricity region are complete. Frequencies, horizons, and LSTM formulations differ. Trust weights and explainability scores are researcher-defined. Supported uncertainty quantiles are limited. Moirai, PatchTST, and iTransformer are unavailable, and no foundation model is fine-tuned.
 
-- 7-Day Moving Average
+## Future Work
 
-Exploratory or failed models, not part of the authoritative saved-vector ranking:
+Weather is the recommended next case study, followed by Transport. Other priorities are additional electricity regions, conformal calibration, foundation-model scaling, and compatible evaluation of additional model families.
 
-- Original raw-price LSTM
-- Improved experimental LSTM
-- Collapsed Transformer
-- Corrected but over-smoothed Transformer
-
-Protocol-limited statistical models:
-
-- ARIMA and SARIMA are not included in the main rolling one-step Trust Score unless exact rolling one-step saved vectors are available.
-
-## Reproducibility Notes
-
-- Do not overwrite `results/validated_forecasts.csv` unless intentionally regenerating the frozen Bitcoin artifact.
-- Notebook 06 is intended to be artifact-only: it should load saved forecasts and must not train, refit, or load model checkpoints.
-- Notebook 09 performs statistical-significance testing from saved forecast vectors.
-- PatchTST, iTransformer, and Moirai/Uni2TS remain outside the completed Bitcoin scope because of environment compatibility blockers.
+Detailed reports: [`Bitcoin case study`](docs/bitcoin_case_study.md), [`Electricity case study`](docs/electricity_case_study.md), [`final research findings`](docs/final_research_findings.md), and [`project status`](docs/project_status.md).
