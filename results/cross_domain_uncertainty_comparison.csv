@@ -1,0 +1,7 @@
+Domain,Protocol,Model,Nominal_Coverage,Empirical_Coverage,Coverage_Error,Average_Width,Width_Units
+Bitcoin,Rolling one-step daily,Chronos-Bolt-Tiny,0.8,0.845429,0.04542899999999994,5151.959961,Bitcoin price units
+Bitcoin,Rolling one-step daily,TimesFM,0.8,0.33082,0.46918000000000004,1436.627452,Bitcoin price units
+Electricity,Protocol A: rolling one-step 30-minute,Chronos-Bolt-Tiny,0.8,0.911231,0.11123099999999997,137.419281,Electricity demand units
+Electricity,Protocol A: rolling one-step 30-minute,TimesFM,0.8,0.336495,0.46350500000000006,17.108297,Electricity demand units
+Electricity,Protocol B: 48-step day-ahead,Chronos-Bolt-Tiny,0.8,0.676239,0.12376100000000001,283.997589,Electricity demand units
+Electricity,Protocol B: 48-step day-ahead,TimesFM,0.8,0.245604,0.5543960000000001,75.642609,Electricity demand units
