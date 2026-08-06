@@ -1,0 +1,17 @@
+Protocol,Model,Interval,Nominal_Coverage,Empirical_Coverage,Average_Width,Evidence_Type,Available,Notes
+A,Naive,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+A,Daily_Seasonal_Naive,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+A,Weekly_Seasonal_Naive,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+A,Moving_Average,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+A,DHR_ARIMA,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+A,LSTM,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+A,Chronos_Bolt_Tiny,80%,0.8,0.911231,137.419281,Native probabilistic,True,Exact aggregate Phase 5 result; horizon-specific vectors not saved. 95% unavailable.
+A,TimesFM,80%,0.8,0.336495,17.108297,Native probabilistic,True,Exact aggregate Phase 5 result; horizon-specific vectors not saved. 95% unavailable.
+B,Naive,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+B,Daily_Seasonal_Naive,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+B,Weekly_Seasonal_Naive,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+B,Moving_Average,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+B,DHR_ARIMA,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+B,LSTM,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+B,Chronos_Bolt_Tiny,80%,0.8,0.676239,283.997589,Native probabilistic,True,Exact aggregate Phase 5 result; horizon-specific vectors not saved. 95% unavailable.
+B,TimesFM,80%,0.8,0.245604,75.642609,Native probabilistic,True,Exact aggregate Phase 5 result; horizon-specific vectors not saved. 95% unavailable.
