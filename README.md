@@ -116,6 +116,8 @@ TimeSeriesFoundationModels/
 
 | Notebook | Status | Purpose |
 |---|---|---|
+| `Bitcoin_Master.ipynb` | MASTER / RECOMMENDED ENTRY POINT | Safe Bitcoin orchestration, validation, and artifact-based analysis |
+| `Electricity_Master.ipynb` | MASTER / RECOMMENDED ENTRY POINT | Safe Electricity orchestration, validation, and artifact-based analysis |
 | `01_EDA.ipynb` | AUTHORITATIVE | Bitcoin data audit and daily preparation |
 | `02_Classical_Models.ipynb` | PROTOCOL-LIMITED / HISTORICAL | Classical Bitcoin forecasts without equivalent frozen rolling vectors |
 | `03_Deep_Learning_LSTM.ipynb` | EXPLORATORY | Raw-price LSTM |
@@ -139,6 +141,8 @@ TimeSeriesFoundationModels/
 | `18_Cross_Domain_Comparison.ipynb` | AUTHORITATIVE SYNTHESIS | Artifact-only two-domain comparison |
 
 Inserted names `03b` and `11b` preserve historical phase order; notebooks are intentionally not renamed.
+
+Use the master notebooks for routine inspection and artifact-based analysis. Use the phase-specific notebooks for model generation, audits, and historical implementation detail. Both master notebooks default to safe mode and do not load or train forecasting models.
 
 ## Authoritative Artifacts
 
