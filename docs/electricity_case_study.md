@@ -32,9 +32,13 @@ Selection and early stopping use development/validation evidence. The final test
 
 Protocol A is rolling one-step prediction at a 30-minute horizon. Every model predicts timestamp `t` using only observations strictly earlier than `t`; the actual at `t` becomes available only after the prediction is recorded. The artifact contains 46,176 aligned forecasts per model.
 
+The pre-registered lag rules are `actual[t-1]` for Naive, `actual[t-48]` for Daily Seasonal Naive, and `actual[t-336]` for Weekly Seasonal Naive. All models receive the same information availability; a model may truncate older context but cannot add newer information.
+
 ## 7. Forecasting Protocol B
 
 Protocol B is true 48-step, 24-hour day-ahead forecasting. There are 962 non-overlapping midnight origins. Each model produces all 48 values without seeing any actual inside that forecast day. Forecast keys are Origin, Horizon, and Timestamp. Protocol B is not constructed by stitching rolling one-step forecasts.
+
+The first origin is 2012-07-13 00:00 and the last is 2015-03-01 00:00; the final endpoint is 2015-03-01 23:30. There are no partial days or horizons beyond the test interval. A documented optional 336-step weekly stress test was not executed and is not part of the evidence.
 
 ## 8. Baseline Models
 
@@ -90,6 +94,10 @@ Notebook 14 validates shape, keys, alignment, timestamps, finiteness, protocol s
 
 The rankings must not be merged: the information sets and forecast horizons differ.
 
+### Horizon behaviour
+
+Protocol B reports overall metrics and a protected horizon table for horizons 1 through 48. Horizon-specific MAE, RMSE, MAPE, sMAPE, and MASE-48 are computed from the 962 forecasts at each half-hour lead. The saved horizon metrics and horizon-level significance analysis show that conclusions must remain indexed by lead time; no rolling one-step result is relabelled as day-ahead evidence.
+
 ## 15. Regime-Conditional Robustness Results
 
 Evidence is saved separately for predefined demand, volatility, and peak-event regimes. Relative scores are comparison-set scores, not absolute guarantees. This is conditional subgroup performance, not comprehensive adversarial robustness; sensor corruption, missing-data attacks, synthetic shifts, and controlled covariate shifts were not tested. TimesFM scores 100.0 in both protocols; Chronos scores 33.53 and 73.00.
@@ -132,6 +140,14 @@ Protocol A tests timestamp-level squared-error loss differentials with HAC varia
 
 TimesFM significantly beats DHR-ARIMA and Chronos in Protocol A. It also significantly beats Daily Seasonal Naive and Chronos in Protocol B. Chronos has significantly lower daily squared loss than Daily Seasonal Naive in Protocol B, while the accompanying absolute-loss sensitivity does not support an unconditional claim across all loss definitions.
 
+## Practical Effect Sizes
+
+Protected effect-size tables accompany p-values for both protocols. Protocol A uses timestamp-level loss differences with serial-dependence correction; Protocol B aggregates loss by daily origin before inference. Magnitude, direction, multiplicity-adjusted significance, and horizon sensitivity are interpreted together, so statistical detection is not treated as sufficient operational importance.
+
+## Authoritative Artifacts
+
+The primary vectors are `results/electricity/protocol_a_validated_forecasts.csv` and `results/electricity/protocol_b_validated_forecasts.csv`. Protected supporting evidence includes `protocol_b_validated_horizon_metrics.csv`, protocol-specific robustness and temporal-stability (`generalisation`) tables, uncertainty summaries, exploratory composite scores, trust-weight sensitivity, DM tests, effect sizes, and horizon significance. The complete byte-preservation ledger is [`../results/authoritative_artifact_hashes.md`](../results/authoritative_artifact_hashes.md).
+
 ## 21. Key Findings
 
 - TimesFM is the strongest point forecaster under both electricity protocols.
@@ -147,4 +163,6 @@ The evidence covers one region and one historical demand series. Composite weigh
 
 ## 23. Reproducibility
 
-The authoritative vectors are `results/electricity/protocol_a_validated_forecasts.csv` and `protocol_b_validated_forecasts.csv`. Evidence tables, exploratory composite summaries, and DM outputs reside beside them. Hashes are frozen in [`authoritative_artifact_hashes.md`](authoritative_artifact_hashes.md). Notebook 14 is a validation scaffold saved without outputs; notebooks 15–17 are artifact-only analyses saved without outputs. Their authoritative evidence is the frozen CSV set. See [`environment.md`](environment.md) for dependencies and [`electricity_forecasting_protocol.md`](electricity_forecasting_protocol.md) for the frozen protocol.
+The completed workflow was audited on CPU-only Windows 11 build 26100 with Python 3.13.2. Direct dependencies are frozen in [`../requirements-research.txt`](../requirements-research.txt), and notebook tooling must be installed explicitly in a clean environment. Foundation-model inference completed on CPU. Moirai / Uni2TS, PatchTST, and iTransformer have no authoritative electricity forecasts and remain outside the ranking. Reproducing model generation is distinct from artifact-only verification and must not overwrite the frozen vectors without a new experiment version.
+
+The authoritative vectors are `results/electricity/protocol_a_validated_forecasts.csv` and `results/electricity/protocol_b_validated_forecasts.csv`. Evidence tables, exploratory composite summaries, and DM outputs reside beside them. Hashes are frozen in [`../results/authoritative_artifact_hashes.md`](../results/authoritative_artifact_hashes.md). Notebook 14 is a validation scaffold saved without outputs; notebooks 15–17 are artifact-only analyses saved without outputs. Their authoritative evidence is the frozen CSV set. The frozen protocol, validation rules, dependencies, and environment constraints are consolidated in this case study, [`../requirements-research.txt`](../requirements-research.txt), and [`../results/README.md`](../results/README.md).

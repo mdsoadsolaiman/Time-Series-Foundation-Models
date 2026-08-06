@@ -7,7 +7,7 @@
 - `electricity/protocol_b_validated_forecasts.csv`: aligned true 48-step day-ahead electricity vectors.
 - `electricity/protocol_b_validated_horizon_metrics.csv`: audited horizon-specific Protocol B metrics.
 
-These files must not be overwritten by exploratory runs. Their hashes are recorded in [`../docs/authoritative_artifact_hashes.md`](../docs/authoritative_artifact_hashes.md).
+These files must not be overwritten by exploratory runs. Their hashes are recorded in [`authoritative_artifact_hashes.md`](authoritative_artifact_hashes.md).
 
 ## Supporting evidence
 
@@ -18,6 +18,8 @@ Bitcoin model-specific CSVs preserve source vectors used to assemble the validat
 Electricity Protocol A is rolling one-step at 30-minute resolution. Protocol B is a true non-overlapping 48-step day-ahead task. Their forecasts, metrics, exploratory composite summaries, and significance tests remain separate and must not be merged into a single electricity ranking.
 
 ## Reproducibility levels
+
+Downstream trustworthiness, significance, and cross-domain analyses operate on saved forecast vectors and do not require model checkpoints. Regenerating forecasts is a separate, substantially more expensive operation and must use a new experiment version rather than overwrite frozen artifacts.
 
 **Artifact-level reproducibility** is available directly from saved vectors: existence, SHA-256 hashes, schemas, keys, row counts, and key metrics can be checked with `python src/verify_research_artifacts.py`. This path uses pandas/NumPy only and does not load a forecasting model.
 

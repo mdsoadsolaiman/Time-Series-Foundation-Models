@@ -149,7 +149,7 @@ Inserted names `03b` and `11b` preserve historical phase order; notebooks are in
 - Statistical evidence: protocol-specific DM and effect-size CSVs
 - Cross-domain: the four `results/cross_domain_*.csv` files
 
-The complete protected set and SHA-256 values are in [`docs/authoritative_artifact_hashes.md`](docs/authoritative_artifact_hashes.md). See [`results/README.md`](results/README.md) for artifact classification.
+The complete protected set and SHA-256 values are in [`results/authoritative_artifact_hashes.md`](results/authoritative_artifact_hashes.md). See [`results/README.md`](results/README.md) for artifact classification.
 
 ## Reproducibility
 
@@ -165,7 +165,7 @@ pip install -r requirements-research.txt
 
 ## Environment
 
-The audited completed environment is CPU-only Windows 11 with Python 3.13.2. [`requirements-research.txt`](requirements-research.txt) is authoritative for direct research dependencies. Notebook tooling must be installed explicitly because the audited workstation resolves some Jupyter components outside `.venv`. Details and blockers are in [`docs/environment.md`](docs/environment.md).
+The audited completed environment is CPU-only Windows 11 build 26100 with Python 3.13.2. [`requirements-research.txt`](requirements-research.txt) is authoritative for direct research dependencies. Notebook tooling must be installed explicitly because the audited workstation resolves some Jupyter components outside `.venv`. Chronos-Bolt-Tiny and TimesFM inference completed on CPU. Moirai / Uni2TS was unavailable in the completed Python 3.13 workflow; PatchTST and iTransformer require a separate supported Python 3.11 or 3.12 NeuralForecast environment and have no authoritative forecasts. Artifact-only verification does not require model checkpoints.
 
 ## Limitations
 
@@ -175,4 +175,4 @@ Only two domains, one Bitcoin asset, and one electricity region are complete. Fr
 
 Weather is the recommended next case study, followed by Transport. Other priorities are additional electricity regions, conformal calibration, foundation-model scaling, and compatible evaluation of additional model families.
 
-Detailed reports: [`Bitcoin case study`](docs/bitcoin_case_study.md), [`Electricity case study`](docs/electricity_case_study.md), [`final research findings`](docs/final_research_findings.md), and [`project status`](docs/project_status.md).
+Detailed reports: [`Bitcoin case study`](docs/bitcoin_case_study.md) and [`Electricity case study`](docs/electricity_case_study.md). The primary cross-domain narrative is the [`research manuscript`](paper/research_manuscript.md).

@@ -4,6 +4,10 @@ Status: **Frozen as Domain 1 - Financial Time Series**
 
 This document records the completed Bitcoin experiment before expanding to additional domains. It summarises the dataset, preprocessing, forecasting protocol, validated model results, trustworthiness analysis, known failure cases, and remaining limitations.
 
+## Research Objective
+
+The experiment tests whether zero-shot time-series foundation models improve on strong statistical, neural, and persistence benchmarks for non-stationary daily Bitcoin prices, and whether point accuracy agrees with regime robustness, temporal stability, uncertainty calibration, auditability, statistical significance, and practical effect size.
+
 ## Dataset
 
 - Dataset: BTC/USD minute-level OHLCV data.
@@ -156,6 +160,10 @@ Foundation-model regime results recorded from the validated workflow:
 
 TimesFM is stronger than Chronos on the reported point-forecast regime metrics. These are predefined conditional-performance slices, not comprehensive adversarial robustness; perturbations, data corruption, missing-data attacks, and controlled distribution shifts were not tested.
 
+## Temporal Stability
+
+The frozen test period is divided into Earlier, Middle, and Later contiguous segments and evaluated from the same saved forecast vectors. This is a temporal-stability diagnostic (historically labelled `Generalisation` in artifacts), not evidence of geographic, cross-dataset, out-of-distribution, or structural-break generalisation. Missing evidence is retained as missing rather than inferred.
+
 ## Uncertainty Results
 
 Chronos-Bolt-Tiny:
@@ -195,6 +203,14 @@ Executed results:
 
 Practical effect sizes were recorded as small relative to the average Bitcoin price.
 
+## Practical Effect Sizes
+
+Statistical significance is interpreted alongside magnitude. The saved effect-size analysis expresses model differences relative to the average Bitcoin price and finds the practical effects small, preventing low p-values over 1,061 observations from being presented as automatically operationally large.
+
+## Transparency and Auditability
+
+The researcher-defined rubric covers model transparency, interpretation, complexity, reproducibility, and failure detectability. It is broader than feature-attribution XAI and does not establish attribution faithfulness, counterfactual quality, representation-level explanation, saliency validity, or user-centred usefulness. Exact saved vectors, deterministic baselines, explicit exclusion rules, failure cases, and the artifact hash ledger provide the audit trail.
+
 ## Trustworthiness Findings
 
 Notebook 06 is designed as an artifact-only trustworthiness analysis. It should load saved forecasts from `results/validated_forecasts.csv` and must not train, refit, or load forecasting checkpoints.
@@ -212,6 +228,14 @@ Primary trustworthiness evidence:
 Important interpretation note:
 
 A score of 100 is relative to the best model in the comparison set and does not represent perfect forecast accuracy. A missing uncertainty artifact is not evidence of poor calibration. The two composite scores are exploratory sensitivity summaries: their weights are researcher-defined, components overlap, and normalisation depends on the comparison set. Component evidence remains primary.
+
+## Validation and Audit Procedure
+
+Notebooks 07 and 08 audit forecast shape, timestamps, alignment, finiteness, metric reproduction, and Naive construction. Notebook 09 performs artifact-only significance testing. Frozen downstream analyses load saved vectors and do not train, refit, or load forecasting checkpoints. The repository verifier `src/verify_research_artifacts.py` independently checks protected hashes, schemas, row counts, keys, and reproduced metrics.
+
+## Authoritative Artifacts
+
+The principal vector is `results/validated_forecasts.csv`. Supporting vectors are `results/baseline_forecasts.csv`, `results/persistence_enhanced_lstm_forecast.csv`, `results/chronos_bolt_tiny_forecast.csv`, and `results/timesfm_forecast.csv`. Derived robustness, temporal-stability, uncertainty, exploratory composite, effect-size, and significance evidence is protected by [`../results/authoritative_artifact_hashes.md`](../results/authoritative_artifact_hashes.md). Hash equality establishes byte preservation; methodological validity is established by the protocol and audits.
 
 ## Failure Case Studies
 
@@ -286,6 +310,10 @@ Prophet:
 - TimesFM and Chronos are evaluated zero-shot; no fine-tuning comparison is included.
 - Some exploratory notebooks are intentionally excluded because they lack validated saved forecast vectors or use non-comparable protocols.
 - Notebook output state may differ from artifact state for exploratory notebooks; the frozen comparison should rely on `results/validated_forecasts.csv`.
+
+## Reproducibility and Environment
+
+The completed workflow was audited on CPU-only Windows 11 build 26100 with Python 3.13.2. Direct dependencies are frozen in [`../requirements-research.txt`](../requirements-research.txt); notebook tooling must be installed explicitly in a clean environment. Chronos-Bolt-Tiny and TimesFM inference completed on CPU. Moirai / Uni2TS was unavailable in the completed Python 3.13 workflow, and PatchTST/iTransformer required a separate supported Python 3.11 or 3.12 NeuralForecast environment. Those unavailable models have no authoritative Bitcoin vectors and are excluded from rankings. Reproducing model generation is substantially more expensive than artifact-only verification and must not overwrite frozen results without a new experiment version.
 
 ## Final Bitcoin Conclusions
 

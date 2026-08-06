@@ -256,4 +256,4 @@ Xue, S., et al. (2026). QuitoBench: A high-quality open time series forecasting 
 
 Zeng, A., Chen, M., Zhang, L., & Xu, Q. (2023). Are transformers effective for time series forecasting? *AAAI, 37*(9), 11121–11128. https://doi.org/10.1609/aaai.v37i9.26317
 
-The complete verified bibliography is maintained in [`../docs/references.md`](../docs/references.md).
+The complete verified bibliography is maintained in [`references.md`](references.md).

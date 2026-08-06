@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
-LEDGER = ROOT / "docs" / "authoritative_artifact_hashes.md"
+LEDGER = ROOT / "results" / "authoritative_artifact_hashes.md"
 MODEL_NAMES = {
     "Persistence_Enhanced_LSTM": "Persistence-Enhanced LSTM",
     "Chronos_Bolt_Tiny": "Chronos-Bolt-Tiny",

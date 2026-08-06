@@ -11,4 +11,4 @@ The repository contains two completed research domains and two planned extension
 
 Exchange Rate is not part of the verified roadmap. Dataset-specific provenance, preparation, and reproduction notes are maintained in each domain directory.
 
-Raw data are never treated as forecast evidence. Authoritative forecast vectors and derived evaluation tables are under `results/` and are protected by the hash ledger in `docs/authoritative_artifact_hashes.md`.
+Raw data are never treated as forecast evidence. Authoritative forecast vectors and derived evaluation tables are under `results/` and are protected by the hash ledger in `results/authoritative_artifact_hashes.md`.
