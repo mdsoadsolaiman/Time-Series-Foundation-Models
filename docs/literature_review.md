@@ -70,11 +70,11 @@ RevIN addresses shifting input/output statistics, while current benchmarking wor
 
 Electricity Protocol A permits sequential one-step updates; Protocol B fixes a day-ahead information set. Their ranking and coverage changes are evidence that horizon and information availability must be declared. They are not interchangeable estimates of the same operational task.
 
-## Explainability and Trustworthiness
+## Direct XAI, Transparency, and Trustworthiness
 
 Recent TSFM explainability work probes internal representations, steering, synthetic concept annotations, and retrieval traces. These methods go beyond attention inspection but remain early and do not establish causal explanations. The project’s dimensions—Transparency, Ease of Interpretation, Computational Complexity, Reproducibility, and Failure Detectability—are broader than feature-attribution XAI.
 
-Accordingly, the **Explainability Score is researcher-defined**, and the overall Trust Score is **a researcher-defined composite evaluation framework**, not a validated universal metric. NIST supports multidimensional, contextual assessment; recent energy benchmarking supports adding efficiency; neither validates this project’s weights. Component scores, weighting rationale, and sensitivity analysis must accompany any composite.
+Accordingly, the project's **Transparency/Auditability Score** (historical artifact label: Explainability) is researcher-defined, and the composite is an **Exploratory Composite Trustworthiness Summary**, not a validated universal metric. NIST supports multidimensional contextual assessment; recent energy benchmarking supports adding efficiency; neither validates these weights. Components are not statistically independent and normalisation depends on the comparison set. Dimension-level evidence and sensitivity analysis must accompany any composite.
 
 ## Statistical Significance
 
@@ -89,11 +89,11 @@ Diebold–Mariano is methodologically old but remains the foundational paired-lo
 | Simple baselines can remain competitive (Zeng; Toner) | Bitcoin Naive wins significantly; Electricity Seasonal Naive is strong day-ahead | Agreement | Require strong protocol-appropriate baselines |
 | Context and horizon alter outcomes (GIFT-Eval; QuitoBench) | Electricity A/B change DHR-ARIMA behaviour, ranks, and coverage | Agreement | Treat information set and horizon as first-class design variables |
 | Efficiency depends on architecture and dataset (Guibert et al.) | Project complexity rubric distinguishes inference burden but lacks measured energy | Evidence gap | Measure runtime/memory/energy where feasible; avoid proxy-only claims |
-| Interpretability research increasingly probes representations (Wiliński; Boileau) | Current Explainability Score is rubric-based | Tension | Add validated, model-specific explanation evidence in future work |
+| Interpretability research increasingly probes representations (Wiliński; Boileau) | Current Transparency/Auditability score is rubric-based, not direct XAI | Tension | Add validated, model-specific explanation evidence in future work |
 
 ## Research Gap
 
-Recent TSFM research has established broad zero-shot evaluation and increasingly studies calibration, adaptation, internal representations, inference efficiency, and benchmark integrity. Yet the reviewed primary studies usually emphasise one or a subset of these dimensions. There remains defensible scope for an integrated, protocol-aware and artifact-auditable analysis combining strong-baseline-relative accuracy, robustness, temporal generalisation, native uncertainty calibration, explainability and reproducibility evidence, forecast-horizon sensitivity, efficiency, and dependence-aware statistical comparison across heterogeneous domains. This is a synthesis and evaluation gap, not a claim that cross-domain TSFM benchmarking is absent.
+Recent TSFM research has established broad zero-shot evaluation and increasingly studies calibration, adaptation, internal representations, inference efficiency, and benchmark integrity. Yet primary studies usually emphasise one or a subset of these dimensions. There remains scope for a protocol-aware, artifact-auditable synthesis of baseline-relative accuracy, regime-conditional robustness, temporal stability, native uncertainty calibration, transparency/auditability, forecast-horizon sensitivity, efficiency, and dependence-aware statistical comparison. This is a synthesis gap, not a claim that cross-domain TSFM benchmarking is absent.
 
 ## Refined Research Questions
 
@@ -101,7 +101,7 @@ Recent TSFM research has established broad zero-shot evaluation and increasingly
 2. **Temporal-structure effects:** How do persistence, seasonality, trend, volatility, and regime structure affect relative performance among foundation, statistical, deep-learning, and simple models?
 3. **Baseline-relative superiority:** In which domain–horizon settings do zero-shot TSFMs significantly and materially outperform strong protocol-appropriate baselines?
 4. **Calibration quality:** How do empirical coverage, sharpness, interval width, and proper interval scores of available TSFM forecasts vary across domains, regimes, and horizons?
-5. **Complexity versus trustworthiness:** When do accuracy gains justify computational complexity after robustness, calibration, reproducibility, explainability, failure detectability, and efficiency are reported separately?
+5. **Complexity versus trustworthiness:** When do accuracy gains justify computational complexity after robustness, calibration, reproducibility, transparency, failure detectability, and efficiency are reported separately?
 6. **Forecast-horizon dependence:** How do forecast horizon and allowable information updates change model ranking, robustness, and uncertainty calibration?
 
 ## Papers Requiring University Access

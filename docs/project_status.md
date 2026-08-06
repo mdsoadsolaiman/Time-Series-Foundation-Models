@@ -54,7 +54,7 @@ The principal frozen forecast artifacts are:
 - `results/electricity/protocol_a_validated_forecasts.csv`
 - `results/electricity/protocol_b_validated_forecasts.csv`
 - `results/electricity/protocol_b_validated_horizon_metrics.csv`
-- electricity robustness, generalisation, uncertainty, Trust Score, effect-size, and DM CSVs
+- electricity regime-conditional robustness, temporal-stability (historical `generalisation` label), uncertainty, exploratory composite, effect-size, and DM CSVs
 - four `results/cross_domain_*.csv` synthesis files
 
 See [`authoritative_artifact_hashes.md`](authoritative_artifact_hashes.md) for the complete protected set.
@@ -65,7 +65,7 @@ The audited system is CPU-only Windows 11 with Python 3.13.2. Foundation-model i
 
 ## Current conclusions
 
-TimesFM is strongest for both electricity horizons but not for Bitcoin. Chronos is better calibrated than TimesFM in every completed protocol. Strong baselines remain indispensable, horizon changes rankings, and point accuracy is not a proxy for uncertainty quality or overall trustworthiness.
+TimesFM is strongest for both electricity protocols but not for Bitcoin. Chronos has lower absolute error from nominal 80% marginal coverage than TimesFM in all three tasks, while width and sharpness remain relevant. Strong baselines remain indispensable. In the completed tasks, rankings vary across dataset, domain, frequency, and forecasting protocol; one dataset per domain prevents isolation of a pure domain effect.
 
 ## Next research options
 

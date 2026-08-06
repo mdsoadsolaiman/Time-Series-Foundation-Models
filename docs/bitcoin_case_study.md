@@ -132,7 +132,7 @@ Metrics reproduced directly from `results/validated_forecasts.csv`:
 
 The Naive baseline has the strongest point accuracy among the frozen saved-vector models.
 
-## Regime Results
+## Regime-Conditional Robustness Results
 
 The trustworthiness workflow evaluates performance by market regime using rolling return behavior:
 
@@ -154,7 +154,7 @@ Foundation-model regime results recorded from the validated workflow:
 | TimesFM | Major upward movement | 2467.687670 | 2877.414558 |
 | TimesFM | Major downward movement | 2454.908958 | 2875.542493 |
 
-TimesFM is stronger than Chronos on the reported point-forecast regime metrics. Neither result should be interpreted as native causal robustness.
+TimesFM is stronger than Chronos on the reported point-forecast regime metrics. These are predefined conditional-performance slices, not comprehensive adversarial robustness; perturbations, data corruption, missing-data attacks, and controlled distribution shifts were not tested.
 
 ## Uncertainty Results
 
@@ -173,8 +173,9 @@ TimesFM:
 
 Interpretation:
 
-- Chronos provides better 80% uncertainty calibration.
+- Chronos has lower absolute error from nominal 80% marginal coverage in this task.
 - TimesFM intervals are too narrow and severely under-cover.
+- Coverage alone is insufficient: interval width and sharpness matter, wider intervals may improve coverage, and no universal calibration superiority is claimed from one nominal level.
 - Accuracy alone is insufficient for trustworthiness.
 
 ## Diebold-Mariano Tests
@@ -198,19 +199,19 @@ Practical effect sizes were recorded as small relative to the average Bitcoin pr
 
 Notebook 06 is designed as an artifact-only trustworthiness analysis. It should load saved forecasts from `results/validated_forecasts.csv` and must not train, refit, or load forecasting checkpoints.
 
-Trustworthiness dimensions:
+Primary trustworthiness evidence:
 
 - Relative Accuracy Score.
-- Relative Robustness Score.
-- Relative Generalisation Score.
+- Relative Regime-Conditional Robustness Score.
+- Relative Temporal Stability Score (historical artifact label: `Generalisation`).
 - Uncertainty Score.
-- Explainability Score.
+- Transparency/Auditability Score (historical artifact label: `Explainability`).
 - Overall Trust Score - Missing Evidence Penalised.
 - Evidence-Available Trust Score.
 
 Important interpretation note:
 
-A score of 100 is relative to the best model in the comparison set and does not represent perfect forecast accuracy. A missing uncertainty artifact is not evidence of poor calibration. The penalised ranking measures deployment readiness, while the evidence-available ranking measures performance on evaluated dimensions.
+A score of 100 is relative to the best model in the comparison set and does not represent perfect forecast accuracy. A missing uncertainty artifact is not evidence of poor calibration. The two composite scores are exploratory sensitivity summaries: their weights are researcher-defined, components overlap, and normalisation depends on the comparison set. Component evidence remains primary.
 
 ## Failure Case Studies
 
@@ -237,7 +238,7 @@ Corrected but over-smoothed Transformer:
 
 - A corrected Transformer projected the 1D input into a higher model dimension before attention and normalization.
 - It avoided the exact original collapse but still showed severe range compression and poor accuracy.
-- Excluded from the main Trust Score ranking.
+- Excluded from the authoritative comparison and exploratory composite summary.
 
 ARIMA/SARIMA:
 
@@ -291,7 +292,7 @@ Prophet:
 - The Naive persistence baseline remains the strongest point forecaster among the frozen authoritative Bitcoin models.
 - Persistence-Enhanced LSTM is the strongest supervised neural model with an exact saved forecast vector.
 - TimesFM is the strongest zero-shot foundation model for point forecasting.
-- Chronos-Bolt-Tiny is weaker than TimesFM on point accuracy but stronger for 80% uncertainty calibration.
+- Chronos-Bolt-Tiny is weaker than TimesFM on point accuracy but has lower absolute error from nominal 80% marginal coverage.
 - TimesFM uncertainty intervals are too narrow and severely under-cover.
 - Advanced model complexity does not guarantee trustworthiness.
 - Trustworthiness depends on protocol comparability, diagnostics, uncertainty calibration, and failure detectability, not just headline error metrics.

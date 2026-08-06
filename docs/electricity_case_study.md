@@ -2,7 +2,7 @@
 
 ## 1. Research Objective
 
-This case study evaluates whether zero-shot time-series foundation models provide accurate and trustworthy electricity-demand forecasts under both short-horizon and operational day-ahead protocols. Accuracy is considered alongside robustness, temporal generalisation, uncertainty, explainability, and statistical significance.
+This case study evaluates zero-shot time-series foundation models under short-horizon and operational day-ahead protocols. Primary evidence comprises point accuracy, regime-conditional robustness, temporal stability, uncertainty calibration, transparency/auditability, and statistical significance.
 
 ## 2. Dataset
 
@@ -50,7 +50,7 @@ The deterministic LSTM uses chronological training, validation-only selection an
 
 ## 11. Chronos-Bolt-Tiny
 
-`amazon/chronos-bolt-tiny` is evaluated zero-shot with a frozen context of 336 observations. It ranks third in Protocol A and second in Protocol B. Its native 80% intervals are substantially better calibrated than TimesFM's intervals, although they are not perfect in either protocol.
+`amazon/chronos-bolt-tiny` is evaluated zero-shot with a frozen context of 336 observations. It ranks third in Protocol A and second in Protocol B. Its native intervals have lower absolute error from nominal 80% marginal coverage than TimesFM's in both protocols; width and sharpness still matter.
 
 ## 12. TimesFM
 
@@ -90,13 +90,13 @@ Notebook 14 validates shape, keys, alignment, timestamps, finiteness, protocol s
 
 The rankings must not be merged: the information sets and forecast horizons differ.
 
-## 15. Robustness Results
+## 15. Regime-Conditional Robustness Results
 
-Robustness evidence is saved separately for each protocol and includes pre-registered demand and volatility regimes. Relative scores are comparison-set scores, not absolute guarantees. TimesFM has the highest relative robustness score in Protocol A (100.0) and Protocol B (100.0). Chronos scores 33.53 and 73.00 respectively, illustrating pronounced horizon dependence.
+Evidence is saved separately for predefined demand, volatility, and peak-event regimes. Relative scores are comparison-set scores, not absolute guarantees. This is conditional subgroup performance, not comprehensive adversarial robustness; sensor corruption, missing-data attacks, synthetic shifts, and controlled covariate shifts were not tested. TimesFM scores 100.0 in both protocols; Chronos scores 33.53 and 73.00.
 
-## 16. Generalisation Results
+## 16. Temporal Stability Results
 
-The test is divided chronologically into Earlier, Middle, and Later contiguous segments; Protocol B keeps complete daily origins intact. TimesFM has the highest relative generalisation score under Protocol A and B (100.0 in both). Chronos scores 52.02 in Protocol A and 63.11 in Protocol B. Exact segment metrics remain in the saved generalisation CSVs.
+The held-out test is divided into Earlier, Middle, and Later contiguous segments; Protocol B keeps complete daily origins intact. This measures performance stability over time, not geographic, cross-dataset, out-of-distribution, or structural-break generalisation. TimesFM scores 100.0 in both protocols; Chronos scores 52.02 and 63.11. Historical CSV column names remain unchanged.
 
 ## 17. Uncertainty Results
 
@@ -111,13 +111,13 @@ Only native intervals supported by the installed foundation-model APIs are repor
 
 TimesFM's narrower intervals severely undercover. Narrowness alone is therefore not evidence of uncertainty quality.
 
-## 18. Explainability
+## 18. Transparency and Auditability
 
-Explainability is assessed through declared model-class properties and evidence availability. The saved framework assigns higher scores to transparent deterministic rules than to complex neural and foundation models. These researcher-defined scores are components of a comparative framework, not a user study or causal explanation.
+The researcher-defined rubric covers model transparency, interpretation, complexity, reproducibility, and failure detectability. It is not direct XAI and does not establish attribution faithfulness, counterfactual quality, representation-level explanation, saliency validity, or user-centred usefulness.
 
-## 19. Trustworthiness Rankings
+## 19. Exploratory Composite Trustworthiness Summary
 
-Weights are Accuracy 35%, Robustness 20%, Generalisation 20%, Uncertainty 15%, and Explainability 10%. Two scores are reported: a penalised score treats missing evidence as zero for evidence completeness; an evidence-available score renormalises over observed components.
+Dimension-level evidence remains primary. The secondary composite retains Accuracy 35%, Robustness 20%, Temporal Stability 20%, Uncertainty 15%, and Transparency/Auditability 10%. Weights are researcher-defined, components overlap, and normalisation depends on the comparison set. The two saved scores are exploratory summaries, not validated measurement instruments.
 
 | Protocol | Leading model | Penalised Trust Score | Evidence-Available Trust Score |
 |---|---|---:|---:|
@@ -137,14 +137,14 @@ TimesFM significantly beats DHR-ARIMA and Chronos in Protocol A. It also signifi
 - TimesFM is the strongest point forecaster under both electricity protocols.
 - DHR-ARIMA is a strong short-horizon benchmark but weak day-ahead.
 - Daily Seasonal Naive becomes a strong day-ahead benchmark.
-- Chronos is second day-ahead and is much better calibrated than TimesFM.
+- Chronos is second day-ahead and has lower absolute error from nominal 80% marginal coverage than TimesFM; coverage alone does not establish universal calibration superiority.
 - Forecast horizon materially changes model rankings.
 - Trustworthiness requires component-level interpretation, not only an aggregate score.
 
 ## 22. Limitations
 
-The evidence covers one region and one historical demand series. Trust weights and explainability scores are researcher-defined. Only supported 80% foundation-model intervals are available. Moirai, PatchTST, and iTransformer are unavailable; no foundation model is fine-tuned. Results should not be assumed to transfer to other grids, climates, or operational settings.
+The evidence covers one region and one historical demand series. Composite weights and transparency/auditability scores are researcher-defined. Only supported 80% foundation-model intervals are available. Moirai is absent; PatchTST and iTransformer are outside the authoritative comparison and are not assumed to be zero-shot foundation models. No foundation model is fine-tuned, and results should not be assumed to transfer to other grids, climates, or operational settings.
 
 ## 23. Reproducibility
 
-The authoritative vectors are `results/electricity/protocol_a_validated_forecasts.csv` and `protocol_b_validated_forecasts.csv`. Evidence tables, Trust Scores, and DM outputs reside beside them. Hashes are frozen in [`authoritative_artifact_hashes.md`](authoritative_artifact_hashes.md). Notebook 14 audits forecasts; notebooks 15–17 perform artifact-only downstream analysis. See [`environment.md`](environment.md) for dependencies and [`electricity_forecasting_protocol.md`](electricity_forecasting_protocol.md) for the pre-registered protocol.
+The authoritative vectors are `results/electricity/protocol_a_validated_forecasts.csv` and `protocol_b_validated_forecasts.csv`. Evidence tables, exploratory composite summaries, and DM outputs reside beside them. Hashes are frozen in [`authoritative_artifact_hashes.md`](authoritative_artifact_hashes.md). Notebook 14 is a validation scaffold saved without outputs; notebooks 15–17 are artifact-only analyses saved without outputs. Their authoritative evidence is the frozen CSV set. See [`environment.md`](environment.md) for dependencies and [`electricity_forecasting_protocol.md`](electricity_forecasting_protocol.md) for the frozen protocol.

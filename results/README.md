@@ -11,11 +11,17 @@ These files must not be overwritten by exploratory runs. Their hashes are record
 
 ## Supporting evidence
 
-Bitcoin model-specific CSVs preserve source vectors used to assemble the validated artifact. Electricity forecast files preserve baseline, DHR-ARIMA, LSTM, Chronos, and TimesFM evidence for each protocol. Robustness, generalisation, uncertainty, Trust Score, effect-size, and DM tables are authoritative downstream evidence.
+Bitcoin model-specific CSVs preserve source vectors used to assemble the validated artifact. Electricity forecast files preserve baseline, DHR-ARIMA, LSTM, Chronos, and TimesFM evidence for each protocol. Regime-conditional robustness, temporal-stability (historical CSV label: `generalisation`), uncertainty, exploratory composite, effect-size, and DM tables are authoritative downstream evidence.
 
 ## Protocol separation
 
-Electricity Protocol A is rolling one-step at 30-minute resolution. Protocol B is a true non-overlapping 48-step day-ahead task. Their forecasts, metrics, Trust Scores, and significance tests remain separate and must not be merged into a single electricity ranking.
+Electricity Protocol A is rolling one-step at 30-minute resolution. Protocol B is a true non-overlapping 48-step day-ahead task. Their forecasts, metrics, exploratory composite summaries, and significance tests remain separate and must not be merged into a single electricity ranking.
+
+## Reproducibility levels
+
+**Artifact-level reproducibility** is available directly from saved vectors: existence, SHA-256 hashes, schemas, keys, row counts, and key metrics can be checked with `python src/verify_research_artifacts.py`. This path uses pandas/NumPy only and does not load a forecasting model.
+
+**End-to-end regeneration** is a different and more demanding claim. It requires external raw datasets, exact model checkpoints, compatible package versions, and substantial CPU time. Frozen artifacts permit verification of reported results even when those dependencies are unavailable.
 
 ## Cross-domain outputs
 

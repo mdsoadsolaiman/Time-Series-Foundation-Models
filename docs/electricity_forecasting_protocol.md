@@ -168,7 +168,7 @@ Regimes will be fixed before final-model error inspection and evaluated consiste
 
 The actual target may be used to assign a test observation to a demand regime for retrospective stratified evaluation, but thresholds cannot be tuned against test errors. High-volatility features used as forecast inputs must use only past observations; retrospective regime labels must be identified as such. No days or events may be hand-picked. Each regime reports MAE, RMSE, MAPE, sMAPE, MASE-48, and N. If validation evidence justifies a different quantile or rolling window, that change must be documented and frozen before final-test evaluation.
 
-## Temporal generalisation
+## Temporal Stability
 
 The final test is divided chronologically into Earlier, Middle, and Later contiguous sections of approximately equal size. There is no randomisation. For Protocol A, boundaries are day-aligned. For Protocol B, the 962 complete forecast days are allocated contiguously as 321, 320, and 321 daily blocks, keeping every 48-step origin intact. Exact segment dates will be derived and saved with the evaluation artifact before metrics are inspected.
 
@@ -193,9 +193,9 @@ The cross-domain framework is pre-registered unchanged:
 | Robustness | 20% |
 | Generalisation | 20% |
 | Uncertainty | 15% |
-| Explainability | 10% |
+| Transparency/Auditability (historical artifact label: Explainability) | 10% |
 
-Later analysis will report both **Overall Trust Score – Missing Evidence Penalised** and **Evidence-Available Trust Score**. A component score of 100 is relative to the best model in the comparison set, not perfect prediction. Missing uncertainty evidence is not evidence of poor calibration. The penalised score measures evidence completeness/deployment readiness; the evidence-available score renormalises available weights and evaluates only dimensions with evidence. No Trust Score is calculated in Phase 2.
+Later analysis reports both **Overall Trust Score – Missing Evidence Penalised** and **Evidence-Available Trust Score** as exploratory composite summaries. A component score of 100 is relative to the comparison set, not perfect prediction. Weights are researcher-defined, components overlap, and normalisation depends on the comparison set. Dimension-level evidence remains primary. Missing uncertainty evidence is not evidence of poor calibration. No composite is calculated in Phase 2.
 
 ## Statistical-significance plan
 

@@ -2,7 +2,7 @@
 
 ## 1. Research Motivation
 
-Point accuracy is necessary but insufficient for deployment. A forecast may be accurate on average yet fail during extremes, deteriorate over time, provide misleading intervals, or be difficult to interrogate. This project evaluates accuracy together with robustness, temporal generalisation, uncertainty, explainability, and statistical evidence.
+Point accuracy is necessary but insufficient for deployment. A forecast may be accurate on average yet fail during extremes, deteriorate over time, provide misleading intervals, or be difficult to audit. Primary evidence comprises point accuracy, regime-conditional robustness, temporal stability, uncertainty calibration, transparency/auditability, and statistical evidence.
 
 ## 2. Research Questions
 
@@ -41,7 +41,7 @@ Both domains use chronological splits and prohibit lookahead. Bitcoin and Electr
 
 Persistence is difficult to beat in this strongly persistent, nonstationary price series. Naive significantly outperforms PE-LSTM, TimesFM, and Chronos; TimesFM significantly outperforms Chronos; PE-LSTM and TimesFM are not significantly different at α = 0.05. Advanced models do not automatically improve on the appropriate simple baseline.
 
-Chronos 80% coverage is approximately 84.5%, compared with approximately 33.1% for TimesFM. Thus the weaker point forecaster is the better-calibrated probabilistic model.
+For native nominal 80% intervals, Chronos coverage is approximately 84.5%, compared with 33.1% for TimesFM. Chronos therefore has lower absolute marginal-coverage error in this task; coverage alone is insufficient because interval width and sharpness also matter.
 
 ## 7. Electricity Findings
 
@@ -59,11 +59,11 @@ TimesFM trails Bitcoin Naive by about 4.6% in MAE and ranks third, but ranks fir
 
 Chronos is consistently closer to nominal 80% coverage: approximately 84.5% for Bitcoin, 91.1% for Electricity A, and 67.6% for Electricity B. TimesFM covers approximately 33.1%, 33.6%, and 24.6% respectively. TimesFM intervals are narrower, but the severe undercoverage shows that narrow intervals do not imply reliable uncertainty.
 
-## 10. Trustworthiness Findings
+## 10. Trustworthiness Evidence and Exploratory Composite Synthesis
 
-The framework weights Accuracy (35%), Robustness (20%), Generalisation (20%), Uncertainty (15%), and Explainability (10%). Component scores are relative to the within-protocol comparison set, not claims of perfect performance.
+Dimension-level evidence is primary. The secondary exploratory composite retains Accuracy (35%), Robustness (20%), Temporal Stability (20%), Uncertainty (15%), and Transparency/Auditability (10%). Weights are researcher-defined, components are not statistically independent, and normalisation depends on the within-protocol comparison set.
 
-The **Penalised Trust Score** assigns zero contribution to unavailable evidence and therefore reflects evidence completeness/deployment readiness. The **Evidence-Available Trust Score** renormalises over observed components and avoids interpreting missing uncertainty evidence as measured poor calibration. Both must be read with their components. Model complexity does not ensure better trustworthiness: Bitcoin Naive leads, transparent baselines score highly for explainability, and TimesFM's electricity point strength coexists with poor calibration.
+The **Overall Trust Score — Missing Evidence Penalised** assigns zero contribution to unavailable evidence; the **Evidence-Available Trust Score** renormalises over observed components. Both are exploratory summaries and must be read after their dimensions. Missing uncertainty is not measured poor calibration. Model complexity does not ensure better evidence: Bitcoin Naive leads, transparent baselines score highly for auditability, and TimesFM's electricity point strength coexists with severe 80% undercoverage.
 
 ## 11. Statistical Significance
 
@@ -79,7 +79,7 @@ The central Bitcoin result is the statistically supported advantage of Naive ove
 
 ## 13. Limitations
 
-Only two domains are complete. Electricity covers one region; frequencies and horizons differ; the LSTM formulations differ; uncertainty quantiles are limited; Trust Score weights and explainability scores are researcher-defined; Moirai, PatchTST, and iTransformer are unavailable; and foundation models are not fine-tuned.
+Only two datasets and one electricity region are complete; domain effects cannot be separated cleanly from dataset, frequency, horizon, target, or evaluation-period effects. LSTM formulations differ and single runs do not quantify seed uncertainty. Native quantiles are limited; composite weights and transparency/auditability scores are researcher-defined. Moirai is absent, PatchTST and iTransformer are outside the authoritative final comparison, and foundation models are not fine-tuned.
 
 ## 14. Future Work
 
