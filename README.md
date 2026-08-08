@@ -39,7 +39,7 @@ The central question is whether zero-shot foundation models are consistently tru
 ## Models Evaluated
 
 - **Baselines:** Naive persistence, daily and weekly seasonal naive, moving average.
-- **Statistical:** Bitcoin rolling ARIMA and periodic-refit Prophet; electricity DHR-ARIMA.
+- **Statistical:** Bitcoin rolling ARIMA, Simple Exponential Smoothing, additive-trend non-seasonal Holt-Winters, and periodic-refit Prophet; electricity DHR-ARIMA.
 - **Deep learning:** Bitcoin Persistence-Enhanced LSTM and protocol-specific electricity LSTMs.
 - **Foundation models:** zero-shot Chronos-Bolt-Tiny and TimesFM.
 - **Unavailable/optional:** Moirai/Uni2TS, PatchTST, and iTransformer have no authoritative results.
@@ -60,15 +60,17 @@ Dimension-level evidence is primary. The secondary **Exploratory Composite Trust
 | Rank | Model | MAE | RMSE | MAPE | sMAPE |
 |---:|---|---:|---:|---:|---:|
 | 1 | Naive | 1290.353242 | 1853.624774 | 1.742747 | 1.744142 |
-| 2 | ARIMA Rolling One-Step | 1299.874638 | 1866.302859 | 1.754004 | 1.754209 |
-| 3 | Persistence-Enhanced LSTM | 1321.365311 | 1881.091190 | 1.783956 | 1.791645 |
-| 4 | TimesFM | 1349.946786 | 1924.199337 | 1.823179 | 1.823895 |
-| 5 | Chronos-Bolt-Tiny | 1424.025828 | 1994.007926 | 1.934509 | 1.928782 |
-| 6 | Prophet 30-Day Periodic Refit | 8195.262862 | 10781.162873 | 11.199767 | 11.287185 |
+| 2 | Simple Exponential Smoothing Rolling One-Step | 1290.358684 | 1855.731424 | 1.742685 | 1.743871 |
+| 3 | ARIMA Rolling One-Step | 1299.874638 | 1866.302859 | 1.754004 | 1.754209 |
+| 4 | Holt-Winters Rolling One-Step | 1308.541314 | 1871.702185 | 1.763640 | 1.763424 |
+| 5 | Persistence-Enhanced LSTM | 1321.365311 | 1881.091190 | 1.783956 | 1.791645 |
+| 6 | TimesFM | 1349.946786 | 1924.199337 | 1.823179 | 1.823895 |
+| 7 | Chronos-Bolt-Tiny | 1424.025828 | 1994.007926 | 1.934509 | 1.928782 |
+| 8 | Prophet 30-Day Periodic Refit | 8195.262862 | 10781.162873 | 11.199767 | 11.287185 |
 
-Naive remains the lowest-RMSE model, but its difference from rolling ARIMA is not significant (`p = 0.308442`). Naive significantly outperforms PE-LSTM, TimesFM, Chronos, and Prophet. TimesFM significantly outperforms Chronos; PE-LSTM versus TimesFM is not significant (`p = 0.056421`). Training-only conformal calibration changed Chronos 80% test coverage from 84.54% to 81.53% and TimesFM from 33.08% to 55.61%; TimesFM remains materially under-covered.
+Naive remains the lowest-RMSE model. Its differences from Simple Exponential Smoothing (`p = 0.666843`), Holt-Winters (`p = 0.067710`), and rolling ARIMA (`p = 0.308442`) are not significant. Both smoothing models significantly outperform TimesFM, Chronos, and Prophet. Training-only conformal calibration changed Chronos 80% test coverage from 84.54% to 81.53% and TimesFM from 33.08% to 55.61%; TimesFM remains materially under-covered.
 
-After applying the same training-residual empirical uncertainty method to ARIMA, Naive leads both Trust Score variants at `97.810622`; ARIMA ranks second at `96.552205` with 80% empirical coverage `0.662582`.
+After applying the same validation-residual empirical uncertainty method to ARIMA and both smoothing models, Naive leads both Trust Score variants at `97.803780`; Simple Exponential Smoothing ranks second at `97.466671`, followed by Holt-Winters at `96.579302` and ARIMA at `96.545355`.
 
 ## Key Electricity Results
 
@@ -127,7 +129,7 @@ TimeSeriesFoundationModels/
 | `03_Deep_Learning_LSTM.ipynb` | EXPLORATORY | Raw-price LSTM |
 | `03b_LSTM_Improved.ipynb` | EXPLORATORY | Improved experimental LSTM |
 | `04_Transformers.ipynb` | EXPLORATORY | Failed/collapsed Transformer case study |
-| `05_Advanced_Forecasting_Models.ipynb` | AUTHORITATIVE GENERATION — PARTIAL MODEL SET | Rolling ARIMA and periodic-refit Prophet; SARIMA omitted and neural models deferred |
+| `05_Advanced_Forecasting_Models.ipynb` | AUTHORITATIVE GENERATION — COMPLETE ADVANCED MODEL SET | Rolling ARIMA, Simple Exponential Smoothing, and Holt-Winters plus periodic-refit Prophet; SARIMA omitted and neural models deferred |
 | `05_Foundation_Models.ipynb` | AUTHORITATIVE GENERATION | Bitcoin foundation-model evidence |
 | `06_Trustworthiness.ipynb` | AUTHORITATIVE ANALYSIS | Bitcoin multidimensional trust evaluation |
 | `07_Model_Validation_Audit.ipynb` | AUTHORITATIVE AUDIT | Bitcoin saved-vector validation |

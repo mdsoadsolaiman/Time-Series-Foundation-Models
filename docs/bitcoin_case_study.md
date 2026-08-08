@@ -58,11 +58,13 @@ This protocol is used for the authoritative saved vectors:
 - Chronos-Bolt-Tiny
 - TimesFM
 - ARIMA Rolling One-Step
+- Simple Exponential Smoothing Rolling One-Step
+- Holt-Winters Rolling One-Step
 - Prophet 30-Day Periodic Refit
 
 The 7-Day Moving Average is a deterministic rolling one-step benchmark recreated from the historical actual series.
 
-ARIMA now has an exact rolling one-step saved vector using per-observation state updates. Prophet uses a clearly labelled 30-day periodic-refit protocol with a strict 128-day past-only context. SARIMA is omitted: lag-7 return ACF was -0.0234 inside the ±0.0269 bound and weekly STL strength was 0.070, so a seven-day seasonal term was not supported; a zero-seasonal SARIMA would duplicate ARIMA.
+ARIMA uses per-observation state updates. Simple Exponential Smoothing and additive-trend, non-seasonal Holt-Winters are refitted on the latest 128 strictly prior prices for every forecast date, making both true rolling one-step evaluations. Prophet uses a clearly labelled 30-day periodic-refit protocol with a strict 128-day past-only context. SARIMA is omitted because weekly seasonality was unsupported.
 
 ## Authoritative Forecast Artifact
 
@@ -82,10 +84,12 @@ Expected columns:
 - `TimesFM`
 - `ARIMA_Rolling`
 - `Prophet_Periodic_Refit`
+- `Simple_Exp_Smoothing`
+- `Holt_Winters`
 
 Repository audit verification:
 
-- Shape: 1,061 rows x 8 columns.
+- Shape: 1,061 rows x 10 columns.
 - Date range: 2023-08-12 to 2026-07-07.
 - Timestamps are unique and sorted.
 - No missing values were found.
@@ -102,6 +106,8 @@ Authoritative rolling one-step models:
 - Chronos-Bolt-Tiny.
 - TimesFM.
 - ARIMA Rolling One-Step.
+- Simple Exponential Smoothing Rolling One-Step.
+- Holt-Winters Rolling One-Step.
 - Prophet 30-Day Periodic Refit.
 
 Additional deterministic benchmark:
@@ -130,13 +136,15 @@ Metrics reproduced directly from `results/validated_forecasts.csv`:
 | Model | MAE | RMSE | MAPE | sMAPE |
 |---|---:|---:|---:|---:|
 | Naive | 1290.353242 | 1853.624774 | 1.742747 | 1.744142 |
+| Simple Exponential Smoothing Rolling One-Step | 1290.358684 | 1855.731424 | 1.742685 | 1.743871 |
 | ARIMA Rolling One-Step | 1299.874638 | 1866.302859 | 1.754004 | 1.754209 |
+| Holt-Winters Rolling One-Step | 1308.541314 | 1871.702185 | 1.763640 | 1.763424 |
 | Persistence-Enhanced LSTM | 1321.365311 | 1881.091190 | 1.783956 | 1.791645 |
 | TimesFM | 1349.946786 | 1924.199337 | 1.823179 | 1.823895 |
 | Chronos-Bolt-Tiny | 1424.025828 | 1994.007926 | 1.934509 | 1.928782 |
 | Prophet 30-Day Periodic Refit | 8195.262862 | 10781.162873 | 11.199767 | 11.287185 |
 
-The Naive baseline has the strongest point accuracy among the frozen saved-vector models.
+The Naive baseline retains the strongest point accuracy, but both smoothing models are close to Naive and ARIMA under the fair protocol. Their former static-protocol RMSE values were 52,421.33 for Simple Exponential Smoothing and 48,571.10 for Holt-Winters, compared with fair rolling values of 1,855.73 and 1,871.70 respectively.
 
 ## Regime-Conditional Robustness Results
 
@@ -205,7 +213,7 @@ Executed results:
 | Persistence-Enhanced LSTM vs TimesFM | -1.909856 | 0.056421 | Persistence-Enhanced LSTM by RMSE | False |
 | Chronos-Bolt-Tiny vs TimesFM | 2.760989 | 0.005862 | TimesFM | True |
 
-The complete 15-pair table is frozen in `results/bitcoin_dm_pairwise_results.csv`.
+The complete 28-pair table for the eight saved forecast vectors is frozen in `results/bitcoin_dm_pairwise_results.csv`. Naive is not significantly different from Simple Exponential Smoothing (`p = 0.666843`) or Holt-Winters (`p = 0.067710`); both smoothing models significantly outperform TimesFM, Chronos, and Prophet.
 
 Practical effect sizes were recorded as small relative to the average Bitcoin price.
 
@@ -235,9 +243,9 @@ Important interpretation note:
 
 A score of 100 is relative to the best model in the comparison set and does not represent perfect forecast accuracy. A missing uncertainty artifact is not evidence of poor calibration. The two composite scores are exploratory sensitivity summaries: their weights are researcher-defined, components overlap, and normalisation depends on the comparison set. Component evidence remains primary.
 
-ARIMA now uses the same training-residual empirical interval method as the deterministic baselines, based on the final 1,061 training dates. Its test coverage is 0.662582 for the empirical 80% interval and 0.899152 for the 95% interval, producing an Uncertainty Score of 86.615087.
+ARIMA and both smoothing models use the same validation-residual empirical interval method as the deterministic baselines, based on the final 1,061 training dates. No test residuals are used for calibration.
 
-Final ranking for both scoring variants: Naive 97.810622, ARIMA Rolling One-Step 96.552205, Chronos-Bolt-Tiny 91.318843, TimesFM 90.528647, Persistence-Enhanced LSTM 79.607361 penalised / 93.655719 evidence-available, 7-Day Moving Average 70.729402, and Prophet 30-Day Periodic Refit 22.626693 penalised / 26.619639 evidence-available. Naive leads both rankings after ARIMA is evaluated on the uncertainty dimension rather than having that dimension excluded.
+Final penalised ranking: Naive 97.803780, Simple Exponential Smoothing 97.466671, Holt-Winters 96.579302, ARIMA 96.545355, Chronos 91.312313, TimesFM 90.521931, Persistence-Enhanced LSTM 79.600601, 7-Day Moving Average 70.724359, and Prophet 22.624980. The evidence-available ranking has the same order except Persistence-Enhanced LSTM rises to fifth at 93.647766; Prophet scores 26.617624. Naive leads both variants.
 
 ## Validation and Audit Procedure
 
@@ -245,7 +253,7 @@ Notebooks 07 and 08 audit forecast shape, timestamps, alignment, finiteness, met
 
 ## Authoritative Artifacts
 
-The principal vector is `results/validated_forecasts.csv`. Supporting point vectors include `results/baseline_forecasts.csv`, `results/persistence_enhanced_lstm_forecast.csv`, `results/chronos_bolt_tiny_forecast.csv`, `results/timesfm_forecast.csv`, `results/arima_rolling_forecast.csv`, and `results/prophet_rolling_forecast.csv`. Calibration, Trust Score, and full pairwise significance CSVs are also protected by [`../results/authoritative_artifact_hashes.md`](../results/authoritative_artifact_hashes.md). Hash equality establishes byte preservation; methodological validity is established by the protocol and audits.
+The principal vector is `results/validated_forecasts.csv`. Supporting point vectors include the baseline, neural, foundation-model, ARIMA, Prophet, Simple Exponential Smoothing, and Holt-Winters CSVs in `results/`. Calibration, Trust Score, and full pairwise significance CSVs are protected by [`../results/authoritative_artifact_hashes.md`](../results/authoritative_artifact_hashes.md).
 
 ## Failure Case Studies
 
@@ -328,7 +336,7 @@ The completed workflow was audited on CPU-only Windows 11 build 26100 with Pytho
 ## Final Bitcoin Conclusions
 
 - The Naive persistence baseline remains the strongest point forecaster among the frozen authoritative Bitcoin models.
-- Rolling ARIMA is second by RMSE and is not significantly different from Naive at alpha 0.05.
+- Simple Exponential Smoothing is second by RMSE; Holt-Winters and ARIMA are close behind, and none differs significantly from Naive at alpha 0.05.
 - Persistence-Enhanced LSTM is the strongest supervised neural model with an exact saved forecast vector.
 - TimesFM is the strongest zero-shot foundation model for point forecasting.
 - Chronos-Bolt-Tiny is weaker than TimesFM on point accuracy but has lower absolute error from nominal 80% marginal coverage.
