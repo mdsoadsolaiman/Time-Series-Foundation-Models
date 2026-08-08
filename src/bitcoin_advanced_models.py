@@ -108,3 +108,26 @@ def merge_advanced_forecasts(
         raise ValueError("Advanced model forecast vectors are duplicated")
     validated.to_csv(validated_path, index=False)
     return validated
+
+
+def generate_arima_validation_artifact(project_root: Path) -> pd.DataFrame:
+    """Save ARIMA forecasts for the final 1,061 training days without using test data."""
+    from src.data_loader import load_bitcoin_data
+    from src.preprocessing import prepare_daily_bitcoin_data
+
+    raw = load_bitcoin_data(project_root / "data" / "bitcoin" / "btcusd_1-min_data.csv")
+    target = prepare_daily_bitcoin_data(raw)["Close"].dropna().astype(float)
+    split = int(len(target) * 0.8)
+    train = target.iloc[:split]
+    validation_index = train.tail(1061).index
+    forecast = rolling_arima_log_return_forecast(target, validation_index).rename(
+        "ARIMA_Rolling_Validation"
+    )
+    output = validate_and_save_forecast(
+        forecast,
+        validation_index,
+        project_root / "results" / "arima_validation_forecast.csv",
+    )
+    if output["Timestamp"].max() >= target.iloc[split:].index.min():
+        raise ValueError("ARIMA validation artifact overlaps the test period")
+    return output

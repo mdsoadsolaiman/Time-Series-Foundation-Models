@@ -1,6 +1,6 @@
 Model,Evidence-Available Trust Score,Available Dimensions,Unavailable Dimensions,Renormalised Weight Sum
-ARIMA Rolling One-Step,98.30581435032079,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Explainability Score",Uncertainty Score,1.0
 Naive,97.81062200987576,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
+ARIMA Rolling One-Step,96.5522052656554,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
 Persistence-Enhanced LSTM,93.65571894107791,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Explainability Score",Uncertainty Score,1.0
 Chronos-Bolt-Tiny,91.31884256137668,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
 TimesFM,90.52864655372109,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0

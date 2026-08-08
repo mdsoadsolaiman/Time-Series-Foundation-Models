@@ -68,6 +68,8 @@ Dimension-level evidence is primary. The secondary **Exploratory Composite Trust
 
 Naive remains the lowest-RMSE model, but its difference from rolling ARIMA is not significant (`p = 0.308442`). Naive significantly outperforms PE-LSTM, TimesFM, Chronos, and Prophet. TimesFM significantly outperforms Chronos; PE-LSTM versus TimesFM is not significant (`p = 0.056421`). Training-only conformal calibration changed Chronos 80% test coverage from 84.54% to 81.53% and TimesFM from 33.08% to 55.61%; TimesFM remains materially under-covered.
 
+After applying the same training-residual empirical uncertainty method to ARIMA, Naive leads both Trust Score variants at `97.810622`; ARIMA ranks second at `96.552205` with 80% empirical coverage `0.662582`.
+
 ## Key Electricity Results
 
 | Rank | Protocol A: rolling one-step | MASE-48 | Protocol B: 48-step day-ahead | MASE-48 |

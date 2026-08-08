@@ -235,7 +235,9 @@ Important interpretation note:
 
 A score of 100 is relative to the best model in the comparison set and does not represent perfect forecast accuracy. A missing uncertainty artifact is not evidence of poor calibration. The two composite scores are exploratory sensitivity summaries: their weights are researcher-defined, components overlap, and normalisation depends on the comparison set. Component evidence remains primary.
 
-Final missing-evidence-penalised ranking: Naive 97.810622, Chronos-Bolt-Tiny 91.318843, TimesFM 90.528647, ARIMA Rolling One-Step 83.559942, Persistence-Enhanced LSTM 79.607361, 7-Day Moving Average 70.729402, and Prophet 30-Day Periodic Refit 22.626693. In the evidence-available ranking, ARIMA leads at 98.305814 because its missing uncertainty dimension is excluded and the remaining weights are renormalised; Naive remains the top fully evidenced model at 97.810622.
+ARIMA now uses the same training-residual empirical interval method as the deterministic baselines, based on the final 1,061 training dates. Its test coverage is 0.662582 for the empirical 80% interval and 0.899152 for the 95% interval, producing an Uncertainty Score of 86.615087.
+
+Final ranking for both scoring variants: Naive 97.810622, ARIMA Rolling One-Step 96.552205, Chronos-Bolt-Tiny 91.318843, TimesFM 90.528647, Persistence-Enhanced LSTM 79.607361 penalised / 93.655719 evidence-available, 7-Day Moving Average 70.729402, and Prophet 30-Day Periodic Refit 22.626693 penalised / 26.619639 evidence-available. Naive leads both rankings after ARIMA is evaluated on the uncertainty dimension rather than having that dimension excluded.
 
 ## Validation and Audit Procedure
 
