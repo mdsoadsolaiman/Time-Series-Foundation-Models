@@ -72,6 +72,32 @@ Naive remains the lowest-RMSE model. Its differences from Simple Exponential Smo
 
 After applying the same validation-residual empirical uncertainty method to ARIMA and both smoothing models, Naive leads both Trust Score variants at `97.803780`; Simple Exponential Smoothing ranks second at `97.466671`, followed by Holt-Winters at `96.579302` and ARIMA at `96.545355`.
 
+The variants are ranked independently because missing uncertainty evidence changes the PE-LSTM result.
+
+| Penalised Rank | Model | Missing-Evidence-Penalised Score |
+|---:|---|---:|
+| 1 | Naive | 97.803780 |
+| 2 | Simple Exponential Smoothing Rolling One-Step | 97.466671 |
+| 3 | Holt-Winters Rolling One-Step | 96.579302 |
+| 4 | ARIMA Rolling One-Step | 96.545355 |
+| 5 | Chronos-Bolt-Tiny | 91.312313 |
+| 6 | TimesFM | 90.521931 |
+| 7 | Persistence-Enhanced LSTM | 79.600601 |
+| 8 | 7-Day Moving Average | 70.724359 |
+| 9 | Prophet 30-Day Periodic Refit | 22.624980 |
+
+| Evidence-Available Rank | Model | Evidence-Available Score |
+|---:|---|---:|
+| 1 | Naive | 97.803780 |
+| 2 | Simple Exponential Smoothing Rolling One-Step | 97.466671 |
+| 3 | Holt-Winters Rolling One-Step | 96.579302 |
+| 4 | ARIMA Rolling One-Step | 96.545355 |
+| 5 | Persistence-Enhanced LSTM | 93.647766 |
+| 6 | Chronos-Bolt-Tiny | 91.312313 |
+| 7 | TimesFM | 90.521931 |
+| 8 | 7-Day Moving Average | 70.724359 |
+| 9 | Prophet 30-Day Periodic Refit | 26.617624 |
+
 ## Key Electricity Results
 
 | Rank | Protocol A: rolling one-step | MASE-48 | Protocol B: 48-step day-ahead | MASE-48 |

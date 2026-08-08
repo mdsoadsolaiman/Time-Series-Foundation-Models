@@ -245,7 +245,33 @@ A score of 100 is relative to the best model in the comparison set and does not 
 
 ARIMA and both smoothing models use the same validation-residual empirical interval method as the deterministic baselines, based on the final 1,061 training dates. No test residuals are used for calibration.
 
-Final penalised ranking: Naive 97.803780, Simple Exponential Smoothing 97.466671, Holt-Winters 96.579302, ARIMA 96.545355, Chronos 91.312313, TimesFM 90.521931, Persistence-Enhanced LSTM 79.600601, 7-Day Moving Average 70.724359, and Prophet 22.624980. The evidence-available ranking has the same order except Persistence-Enhanced LSTM rises to fifth at 93.647766; Prophet scores 26.617624. Naive leads both variants.
+The two variants are ranked independently; no shared rank is implied.
+
+| Penalised Rank | Model | Missing-Evidence-Penalised Score |
+|---:|---|---:|
+| 1 | Naive | 97.803780 |
+| 2 | Simple Exponential Smoothing Rolling One-Step | 97.466671 |
+| 3 | Holt-Winters Rolling One-Step | 96.579302 |
+| 4 | ARIMA Rolling One-Step | 96.545355 |
+| 5 | Chronos-Bolt-Tiny | 91.312313 |
+| 6 | TimesFM | 90.521931 |
+| 7 | Persistence-Enhanced LSTM | 79.600601 |
+| 8 | 7-Day Moving Average | 70.724359 |
+| 9 | Prophet 30-Day Periodic Refit | 22.624980 |
+
+| Evidence-Available Rank | Model | Evidence-Available Score |
+|---:|---|---:|
+| 1 | Naive | 97.803780 |
+| 2 | Simple Exponential Smoothing Rolling One-Step | 97.466671 |
+| 3 | Holt-Winters Rolling One-Step | 96.579302 |
+| 4 | ARIMA Rolling One-Step | 96.545355 |
+| 5 | Persistence-Enhanced LSTM | 93.647766 |
+| 6 | Chronos-Bolt-Tiny | 91.312313 |
+| 7 | TimesFM | 90.521931 |
+| 8 | 7-Day Moving Average | 70.724359 |
+| 9 | Prophet 30-Day Periodic Refit | 26.617624 |
+
+Naive leads both variants. PE-LSTM is seventh when missing uncertainty evidence is penalised and fifth when only available evidence is scored.
 
 ## Validation and Audit Procedure
 
