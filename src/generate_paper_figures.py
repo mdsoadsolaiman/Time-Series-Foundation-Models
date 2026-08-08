@@ -17,6 +17,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from matplotlib.colors import LinearSegmentedColormap
+from statsmodels.graphics.tsaplots import plot_acf
+from statsmodels.tsa.seasonal import STL
+
+from src.data_loader import load_bitcoin_data
+from src.preprocessing import prepare_daily_bitcoin_data
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results"
@@ -26,6 +31,34 @@ COLORS = {"Actual": "#222222", "Naive": "#0072B2", "Persistence-Enhanced LSTM": 
           "DHR-ARIMA": "#56B4E9", "Daily Seasonal Naive": "#E69F00"}
 NAME = {"Persistence_Enhanced_LSTM": "Persistence-Enhanced LSTM", "Chronos_Bolt_Tiny": "Chronos-Bolt-Tiny",
         "DHR_ARIMA": "DHR-ARIMA", "Daily_Seasonal_Naive": "Daily Seasonal Naive"}
+
+def bitcoin_seasonality_diagnostic():
+    """Plot ACF and weekly STL diagnostics for daily Bitcoin log returns."""
+    raw = load_bitcoin_data(ROOT / "data" / "bitcoin" / "btcusd_1-min_data.csv")
+    daily = prepare_daily_bitcoin_data(raw)
+    log_returns = np.log(daily["Close"] / daily["Close"].shift(1)).dropna()
+    stl = STL(log_returns, period=7, robust=True).fit()
+    seasonal_strength = max(0.0, 1.0 - np.var(stl.resid) / np.var(stl.resid + stl.seasonal))
+    lag7_acf = float(log_returns.autocorr(lag=7))
+    confidence_bound = float(1.96 / np.sqrt(len(log_returns)))
+
+    fig, axes = plt.subplots(3, 1, figsize=(11, 10))
+    log_returns.tail(730).plot(ax=axes[0], color="#0072B2", lw=0.9)
+    axes[0].set(title="Bitcoin daily log returns (final 730 observations)", ylabel="Log return", xlabel="Date")
+    axes[0].grid(alpha=0.2)
+    plot_acf(log_returns, lags=30, zero=False, alpha=0.05, ax=axes[1], color="#D55E00")
+    axes[1].axvline(7, color="#009E73", ls="--", lw=1.5, label=f"Lag 7 ACF = {lag7_acf:.4f}")
+    axes[1].set(title="ACF of Bitcoin daily log returns", xlabel="Lag (days)")
+    axes[1].legend(frameon=False)
+    stl.seasonal.tail(730).plot(ax=axes[2], color="#CC79A7", lw=0.9)
+    axes[2].set(title=f"STL weekly seasonal component (strength = {seasonal_strength:.4f})", ylabel="Seasonal component", xlabel="Date")
+    axes[2].grid(alpha=0.2)
+    fig.tight_layout()
+    save(fig, FIGURES / "bitcoin" / "bitcoin_log_return_seasonality_diagnostic.png")
+    print(f"observations={len(log_returns)}")
+    print(f"lag7_acf={lag7_acf:.12f}")
+    print(f"approx_95pct_bound={confidence_bound:.12f}")
+    print(f"weekly_stl_seasonal_strength={seasonal_strength:.12f}")
 
 def save(fig, path):
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -167,7 +200,9 @@ def main():
 
 if __name__ == "__main__":
     import sys
-    if "--cross-domain-revision-only" in sys.argv:
+    if "--bitcoin-seasonality-only" in sys.argv:
+        bitcoin_seasonality_diagnostic()
+    elif "--cross-domain-revision-only" in sys.argv:
         cross_domain_revision_figures()
     else:
         main()
