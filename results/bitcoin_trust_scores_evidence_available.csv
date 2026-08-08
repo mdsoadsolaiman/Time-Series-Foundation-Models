@@ -1,8 +1,10 @@
 Model,Evidence-Available Trust Score,Available Dimensions,Unavailable Dimensions,Renormalised Weight Sum
-Naive,97.81062200987576,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
-ARIMA Rolling One-Step,96.5522052656554,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
-Persistence-Enhanced LSTM,93.65571894107791,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Explainability Score",Uncertainty Score,1.0
-Chronos-Bolt-Tiny,91.31884256137668,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
-TimesFM,90.52864655372109,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
-7-Day Moving Average,70.72940219618643,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
-Prophet 30-Day Periodic Refit,26.619639160994314,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Explainability Score",Uncertainty Score,1.0
+Naive,97.80377958571472,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
+Simple Exponential Smoothing Rolling One-Step,97.46667093897341,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
+Holt-Winters Rolling One-Step,96.57930249563839,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
+ARIMA Rolling One-Step,96.54535478054653,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
+Persistence-Enhanced LSTM,93.64776557768936,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Explainability Score",Uncertainty Score,1.0
+Chronos-Bolt-Tiny,91.31231250482429,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
+TimesFM,90.52193073196767,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
+7-Day Moving Average,70.72435941415849,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
+Prophet 30-Day Periodic Refit,26.617623569955636,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Explainability Score",Uncertainty Score,1.0
