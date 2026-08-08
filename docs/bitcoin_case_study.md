@@ -26,7 +26,7 @@ The reusable pipeline is implemented in `src/`:
 
 - `src.data_loader.load_bitcoin_data(path)` loads the raw CSV, converts `Timestamp` to UTC datetime, sorts the data, and resets the index.
 - `src.preprocessing.prepare_daily_bitcoin_data(df)` resamples minute-level OHLCV data to daily OHLCV.
-- `src.metrics` implements MAE, RMSE, MAPE, and sMAPE.
+- `src.metrics` implements MAE, RMSE, MAPE, sMAPE, and training-scaled MASE.
 - `src.plots.plot_time_series` provides a simple daily time-series plot.
 
 The daily forecasting series is the resampled daily `Close` column.
@@ -57,10 +57,12 @@ This protocol is used for the authoritative saved vectors:
 - Persistence-Enhanced LSTM
 - Chronos-Bolt-Tiny
 - TimesFM
+- ARIMA Rolling One-Step
+- Prophet 30-Day Periodic Refit
 
 The 7-Day Moving Average is a deterministic rolling one-step benchmark recreated from the historical actual series.
 
-ARIMA and SARIMA are retained as protocol-limited statistical references unless exact rolling one-step saved vectors exist. Static multi-step forecasts are not directly equivalent to rolling one-step forecasts.
+ARIMA now has an exact rolling one-step saved vector using per-observation state updates. Prophet uses a clearly labelled 30-day periodic-refit protocol with a strict 128-day past-only context. SARIMA is omitted: lag-7 return ACF was -0.0234 inside the ±0.0269 bound and weekly STL strength was 0.070, so a seven-day seasonal term was not supported; a zero-seasonal SARIMA would duplicate ARIMA.
 
 ## Authoritative Forecast Artifact
 
@@ -78,10 +80,12 @@ Expected columns:
 - `Persistence_Enhanced_LSTM`
 - `Chronos_Bolt_Tiny`
 - `TimesFM`
+- `ARIMA_Rolling`
+- `Prophet_Periodic_Refit`
 
 Repository audit verification:
 
-- Shape: 1,061 rows x 6 columns.
+- Shape: 1,061 rows x 8 columns.
 - Date range: 2023-08-12 to 2026-07-07.
 - Timestamps are unique and sorted.
 - No missing values were found.
@@ -97,6 +101,8 @@ Authoritative rolling one-step models:
 - Persistence-Enhanced LSTM.
 - Chronos-Bolt-Tiny.
 - TimesFM.
+- ARIMA Rolling One-Step.
+- Prophet 30-Day Periodic Refit.
 
 Additional deterministic benchmark:
 
@@ -109,19 +115,13 @@ Exploratory, failed, or non-authoritative models:
 - Collapsed Transformer.
 - Corrected but over-smoothed Transformer.
 
-Protocol-limited models:
-
-- ARIMA(1,1,1).
-- SARIMA, where available.
-
 Models not included in the completed Bitcoin scope:
 
 - Moirai / Uni2TS.
 - PatchTST.
 - iTransformer.
-- Prophet.
 
-These are not included because they either lack validated saved forecast vectors for the Bitcoin frozen artifact or remain blocked/planned.
+PatchTST and iTransformer remain blocked/planned. Moirai/Uni2TS is likewise deferred to an isolated compatible environment.
 
 ## Authoritative Metrics
 
@@ -130,9 +130,11 @@ Metrics reproduced directly from `results/validated_forecasts.csv`:
 | Model | MAE | RMSE | MAPE | sMAPE |
 |---|---:|---:|---:|---:|
 | Naive | 1290.353242 | 1853.624774 | 1.742747 | 1.744142 |
-| Persistence-Enhanced LSTM | 1323.040782 | 1886.566387 | 1.787392 | 1.794338 |
+| ARIMA Rolling One-Step | 1299.874638 | 1866.302859 | 1.754004 | 1.754209 |
+| Persistence-Enhanced LSTM | 1321.365311 | 1881.091190 | 1.783956 | 1.791645 |
 | TimesFM | 1349.946786 | 1924.199337 | 1.823179 | 1.823895 |
 | Chronos-Bolt-Tiny | 1424.025828 | 1994.007926 | 1.934509 | 1.928782 |
+| Prophet 30-Day Periodic Refit | 8195.262862 | 10781.162873 | 11.199767 | 11.287185 |
 
 The Naive baseline has the strongest point accuracy among the frozen saved-vector models.
 
@@ -168,21 +170,21 @@ The frozen test period is divided into Earlier, Middle, and Later contiguous seg
 
 Chronos-Bolt-Tiny:
 
-- Nominal 80% interval coverage: 0.845429.
-- Average 80% interval width: 5151.959961.
+- Native 80% interval coverage: 0.845429; average width: 5151.959881.
+- Training-only conformalized coverage: 0.815269; average width: 4878.131756.
 - 95% interval unavailable because the required 0.025 and 0.975 quantiles are outside the verified Chronos-Bolt trained quantile range.
 
 TimesFM:
 
-- Nominal 80% interval coverage: 0.330820.
-- Average 80% interval width: 1436.627452.
+- Native 80% interval coverage: 0.330820; average width: 1436.627452.
+- Training-only conformalized coverage: 0.556079; average width: 2518.760264.
 - 95% interval unavailable.
 - Verified quantile range: 0.1 through 0.9.
 
 Interpretation:
 
 - Chronos has lower absolute error from nominal 80% marginal coverage in this task.
-- TimesFM intervals are too narrow and severely under-cover.
+- Training-only calibration brought Chronos close to the nominal target. TimesFM coverage improved materially but remained well below 80%, so no test-residual tuning was used to force nominal coverage.
 - Coverage alone is insufficient: interval width and sharpness matter, wider intervals may improve coverage, and no universal calibration superiority is claimed from one nominal level.
 - Accuracy alone is insufficient for trustworthiness.
 
@@ -194,12 +196,16 @@ Executed results:
 
 | Comparison | DM Statistic | p-value | Winner | Significant at alpha = 0.05 |
 |---|---:|---:|---|---|
-| Naive vs Persistence-Enhanced LSTM | -2.345239 | 0.019199 | Naive | True |
+| Naive vs Persistence-Enhanced LSTM | -2.196432 | 0.028277 | Naive | True |
 | Naive vs Chronos-Bolt-Tiny | -5.482418 | < 0.000001 | Naive | True |
-| Persistence-Enhanced LSTM vs Chronos-Bolt-Tiny | -3.350112 | 0.000836 | Persistence-Enhanced LSTM | True |
+| Naive vs ARIMA Rolling One-Step | -1.018986 | 0.308442 | Naive by RMSE | False |
+| Naive vs Prophet 30-Day Periodic Refit | -20.709702 | < 0.000001 | Naive | True |
+| Persistence-Enhanced LSTM vs Chronos-Bolt-Tiny | -3.621925 | 0.000306 | Persistence-Enhanced LSTM | True |
 | Naive vs TimesFM | -4.278078 | 0.000021 | Naive | True |
-| Persistence-Enhanced LSTM vs TimesFM | -1.541492 | 0.123495 | Persistence-Enhanced LSTM by RMSE | False |
+| Persistence-Enhanced LSTM vs TimesFM | -1.909856 | 0.056421 | Persistence-Enhanced LSTM by RMSE | False |
 | Chronos-Bolt-Tiny vs TimesFM | 2.760989 | 0.005862 | TimesFM | True |
+
+The complete 15-pair table is frozen in `results/bitcoin_dm_pairwise_results.csv`.
 
 Practical effect sizes were recorded as small relative to the average Bitcoin price.
 
@@ -229,13 +235,15 @@ Important interpretation note:
 
 A score of 100 is relative to the best model in the comparison set and does not represent perfect forecast accuracy. A missing uncertainty artifact is not evidence of poor calibration. The two composite scores are exploratory sensitivity summaries: their weights are researcher-defined, components overlap, and normalisation depends on the comparison set. Component evidence remains primary.
 
+Final missing-evidence-penalised ranking: Naive 97.810622, Chronos-Bolt-Tiny 91.318843, TimesFM 90.528647, ARIMA Rolling One-Step 83.559942, Persistence-Enhanced LSTM 79.607361, 7-Day Moving Average 70.729402, and Prophet 30-Day Periodic Refit 22.626693. In the evidence-available ranking, ARIMA leads at 98.305814 because its missing uncertainty dimension is excluded and the remaining weights are renormalised; Naive remains the top fully evidenced model at 97.810622.
+
 ## Validation and Audit Procedure
 
 Notebooks 07 and 08 audit forecast shape, timestamps, alignment, finiteness, metric reproduction, and Naive construction. Notebook 09 performs artifact-only significance testing. Frozen downstream analyses load saved vectors and do not train, refit, or load forecasting checkpoints. The repository verifier `src/verify_research_artifacts.py` independently checks protected hashes, schemas, row counts, keys, and reproduced metrics.
 
 ## Authoritative Artifacts
 
-The principal vector is `results/validated_forecasts.csv`. Supporting vectors are `results/baseline_forecasts.csv`, `results/persistence_enhanced_lstm_forecast.csv`, `results/chronos_bolt_tiny_forecast.csv`, and `results/timesfm_forecast.csv`. Derived robustness, temporal-stability, uncertainty, exploratory composite, effect-size, and significance evidence is protected by [`../results/authoritative_artifact_hashes.md`](../results/authoritative_artifact_hashes.md). Hash equality establishes byte preservation; methodological validity is established by the protocol and audits.
+The principal vector is `results/validated_forecasts.csv`. Supporting point vectors include `results/baseline_forecasts.csv`, `results/persistence_enhanced_lstm_forecast.csv`, `results/chronos_bolt_tiny_forecast.csv`, `results/timesfm_forecast.csv`, `results/arima_rolling_forecast.csv`, and `results/prophet_rolling_forecast.csv`. Calibration, Trust Score, and full pairwise significance CSVs are also protected by [`../results/authoritative_artifact_hashes.md`](../results/authoritative_artifact_hashes.md). Hash equality establishes byte preservation; methodological validity is established by the protocol and audits.
 
 ## Failure Case Studies
 
@@ -267,8 +275,8 @@ Corrected but over-smoothed Transformer:
 ARIMA/SARIMA:
 
 - ARIMA(1,1,1) was executed in the classical notebook as a static multi-step forecast.
-- SARIMA appears in advanced workflow scaffolding.
-- These models are not directly comparable to rolling one-step models unless exact rolling one-step saved vectors are produced.
+- The advanced notebook now provides an exact ARIMA rolling one-step vector using a 128-day context and per-observation state append.
+- SARIMA was dropped as a distinct final model because weekly-seasonality diagnostics did not support a seven-day term and the zero-seasonal specification would duplicate ARIMA.
 
 ## Foundation Model Status
 
@@ -289,7 +297,7 @@ TimesFM:
 Moirai / Uni2TS:
 
 - Current Python 3.13 setup attempt failed.
-- A separate Python 3.11 environment was planned, but Python 3.11 was not available on the audited machine.
+- A separate Python 3.12 environment is the recommended follow-up path.
 - No Moirai smoke-test forecast exists.
 
 PatchTST and iTransformer:
@@ -301,26 +309,27 @@ PatchTST and iTransformer:
 Prophet:
 
 - Package availability was investigated.
-- No validated Prophet forecast artifact is part of the frozen Bitcoin comparison.
+- A validated 1,061-row periodic-refit forecast is part of the frozen Bitcoin comparison; the model refits every 30 days using only the latest 128 observations available before each refit date.
 
 ## Limitations
 
 - The completed case study covers only one domain: Bitcoin finance.
 - Bitcoin is highly non-stationary and volatile; conclusions should not be generalized to energy, weather, or transport before those domains are evaluated.
 - TimesFM and Chronos are evaluated zero-shot; no fine-tuning comparison is included.
-- Some exploratory notebooks are intentionally excluded because they lack validated saved forecast vectors or use non-comparable protocols.
+- Some exploratory notebooks are intentionally excluded because they lack validated saved forecast vectors or use non-comparable protocols. PatchTST/iTransformer and Moirai require an isolated Python 3.12 environment.
 - Notebook output state may differ from artifact state for exploratory notebooks; the frozen comparison should rely on `results/validated_forecasts.csv`.
 
 ## Reproducibility and Environment
 
-The completed workflow was audited on CPU-only Windows 11 build 26100 with Python 3.13.2. Direct dependencies are frozen in [`../requirements-research.txt`](../requirements-research.txt); notebook tooling must be installed explicitly in a clean environment. Chronos-Bolt-Tiny and TimesFM inference completed on CPU. Moirai / Uni2TS was unavailable in the completed Python 3.13 workflow, and PatchTST/iTransformer required a separate supported Python 3.11 or 3.12 NeuralForecast environment. Those unavailable models have no authoritative Bitcoin vectors and are excluded from rankings. Reproducing model generation is substantially more expensive than artifact-only verification and must not overwrite frozen results without a new experiment version.
+The completed workflow was audited on CPU-only Windows 11 build 26100 with Python 3.13.2. Direct dependencies are frozen in [`../requirements-research.txt`](../requirements-research.txt); notebook tooling must be installed explicitly in a clean environment. Chronos-Bolt-Tiny and TimesFM inference completed on CPU. Moirai / Uni2TS and PatchTST/iTransformer require an isolated Python 3.12 environment. Those unavailable models have no authoritative Bitcoin vectors and are excluded from rankings. Reproducing model generation is substantially more expensive than artifact-only verification and must not overwrite frozen results without a new experiment version.
 
 ## Final Bitcoin Conclusions
 
 - The Naive persistence baseline remains the strongest point forecaster among the frozen authoritative Bitcoin models.
+- Rolling ARIMA is second by RMSE and is not significantly different from Naive at alpha 0.05.
 - Persistence-Enhanced LSTM is the strongest supervised neural model with an exact saved forecast vector.
 - TimesFM is the strongest zero-shot foundation model for point forecasting.
 - Chronos-Bolt-Tiny is weaker than TimesFM on point accuracy but has lower absolute error from nominal 80% marginal coverage.
-- TimesFM uncertainty intervals are too narrow and severely under-cover.
+- TimesFM native intervals are too narrow and severely under-cover; training-only conformalization improves coverage to 0.556079 but does not eliminate the gap to 0.80.
 - Advanced model complexity does not guarantee trustworthiness.
 - Trustworthiness depends on protocol comparability, diagnostics, uncertainty calibration, and failure detectability, not just headline error metrics.

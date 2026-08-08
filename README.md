@@ -39,14 +39,14 @@ The central question is whether zero-shot foundation models are consistently tru
 ## Models Evaluated
 
 - **Baselines:** Naive persistence, daily and weekly seasonal naive, moving average.
-- **Statistical:** historical Bitcoin classical models; electricity DHR-ARIMA.
+- **Statistical:** Bitcoin rolling ARIMA and periodic-refit Prophet; electricity DHR-ARIMA.
 - **Deep learning:** Bitcoin Persistence-Enhanced LSTM and protocol-specific electricity LSTMs.
 - **Foundation models:** zero-shot Chronos-Bolt-Tiny and TimesFM.
 - **Unavailable/optional:** Moirai/Uni2TS, PatchTST, and iTransformer have no authoritative results.
 
 ## Evaluation Framework
 
-- **Accuracy:** MAE, RMSE, MAPE, sMAPE, and electricity MASE-48.
+- **Accuracy:** MAE, RMSE, MAPE, sMAPE, Bitcoin MASE-1, and electricity MASE-48.
 - **Regime-Conditional Robustness:** predeclared demand/volatility or market regimes; not comprehensive adversarial robustness.
 - **Temporal Stability:** contiguous chronological test segments; not broad cross-dataset or out-of-distribution generalisation.
 - **Uncertainty:** supported native intervals, empirical coverage, and width.
@@ -60,11 +60,13 @@ Dimension-level evidence is primary. The secondary **Exploratory Composite Trust
 | Rank | Model | MAE | RMSE | MAPE | sMAPE |
 |---:|---|---:|---:|---:|---:|
 | 1 | Naive | 1290.353242 | 1853.624774 | 1.742747 | 1.744142 |
-| 2 | Persistence-Enhanced LSTM | 1323.040782 | 1886.566387 | 1.787392 | 1.794338 |
-| 3 | TimesFM | 1349.946786 | 1924.199337 | 1.823179 | 1.823895 |
-| 4 | Chronos-Bolt-Tiny | 1424.025828 | 1994.007926 | 1.934509 | 1.928782 |
+| 2 | ARIMA Rolling One-Step | 1299.874638 | 1866.302859 | 1.754004 | 1.754209 |
+| 3 | Persistence-Enhanced LSTM | 1321.365311 | 1881.091190 | 1.783956 | 1.791645 |
+| 4 | TimesFM | 1349.946786 | 1924.199337 | 1.823179 | 1.823895 |
+| 5 | Chronos-Bolt-Tiny | 1424.025828 | 1994.007926 | 1.934509 | 1.928782 |
+| 6 | Prophet 30-Day Periodic Refit | 8195.262862 | 10781.162873 | 11.199767 | 11.287185 |
 
-Naive significantly outperforms the three advanced models. TimesFM significantly outperforms Chronos; PE-LSTM versus TimesFM is not significant at α = 0.05. For native nominal 80% intervals, Chronos coverage is approximately 84.5% versus TimesFM's 33.1%; this is lower absolute marginal-coverage error, not universal calibration superiority. Bitcoin provides authoritative rolling one-step evidence only.
+Naive remains the lowest-RMSE model, but its difference from rolling ARIMA is not significant (`p = 0.308442`). Naive significantly outperforms PE-LSTM, TimesFM, Chronos, and Prophet. TimesFM significantly outperforms Chronos; PE-LSTM versus TimesFM is not significant (`p = 0.056421`). Training-only conformal calibration changed Chronos 80% test coverage from 84.54% to 81.53% and TimesFM from 33.08% to 55.61%; TimesFM remains materially under-covered.
 
 ## Key Electricity Results
 
@@ -123,7 +125,7 @@ TimeSeriesFoundationModels/
 | `03_Deep_Learning_LSTM.ipynb` | EXPLORATORY | Raw-price LSTM |
 | `03b_LSTM_Improved.ipynb` | EXPLORATORY | Improved experimental LSTM |
 | `04_Transformers.ipynb` | EXPLORATORY | Failed/collapsed Transformer case study |
-| `05_Advanced_Forecasting_Models.ipynb` | COMPATIBILITY-ONLY | Unavailable-model scaffold |
+| `05_Advanced_Forecasting_Models.ipynb` | AUTHORITATIVE GENERATION — PARTIAL MODEL SET | Rolling ARIMA and periodic-refit Prophet; SARIMA omitted and neural models deferred |
 | `05_Foundation_Models.ipynb` | AUTHORITATIVE GENERATION | Bitcoin foundation-model evidence |
 | `06_Trustworthiness.ipynb` | AUTHORITATIVE ANALYSIS | Bitcoin multidimensional trust evaluation |
 | `07_Model_Validation_Audit.ipynb` | AUTHORITATIVE AUDIT | Bitcoin saved-vector validation |
@@ -149,8 +151,8 @@ Use the master notebooks for routine inspection and artifact-based analysis. Use
 - Bitcoin: `results/validated_forecasts.csv`
 - Electricity A: `results/electricity/protocol_a_validated_forecasts.csv`
 - Electricity B: `results/electricity/protocol_b_validated_forecasts.csv`
-- Trust evidence: `protocol_a_trust_scores.csv`, `protocol_b_trust_scores.csv`, and `trust_score_sensitivity.csv`
-- Statistical evidence: protocol-specific DM and effect-size CSVs
+- Bitcoin trust evidence: `bitcoin_trust_scores_penalised.csv` and `bitcoin_trust_scores_evidence_available.csv`
+- Statistical evidence: `bitcoin_dm_pairwise_results.csv` plus electricity protocol-specific DM and effect-size CSVs
 - Cross-domain: the four `results/cross_domain_*.csv` files
 
 The complete protected set and SHA-256 values are in [`results/authoritative_artifact_hashes.md`](results/authoritative_artifact_hashes.md). See [`results/README.md`](results/README.md) for artifact classification.
@@ -169,7 +171,7 @@ pip install -r requirements-research.txt
 
 ## Environment
 
-The audited completed environment is CPU-only Windows 11 build 26100 with Python 3.13.2. [`requirements-research.txt`](requirements-research.txt) is authoritative for direct research dependencies. Notebook tooling must be installed explicitly because the audited workstation resolves some Jupyter components outside `.venv`. Chronos-Bolt-Tiny and TimesFM inference completed on CPU. Moirai / Uni2TS was unavailable in the completed Python 3.13 workflow; PatchTST and iTransformer require a separate supported Python 3.11 or 3.12 NeuralForecast environment and have no authoritative forecasts. Artifact-only verification does not require model checkpoints.
+The audited completed environment is CPU-only Windows 11 build 26100 with Python 3.13.2. [`requirements-research.txt`](requirements-research.txt) is authoritative for direct research dependencies. Notebook tooling must be installed explicitly because the audited workstation resolves some Jupyter components outside `.venv`. Chronos-Bolt-Tiny and TimesFM inference completed on CPU. Moirai / Uni2TS was unavailable in the completed Python 3.13 workflow; PatchTST and iTransformer require an isolated Python 3.12 environment and have no authoritative forecasts. Artifact-only verification does not require model checkpoints.
 
 ## Limitations
 
@@ -177,6 +179,6 @@ Only two domains, one Bitcoin asset, and one electricity region are complete. Fr
 
 ## Future Work
 
-Weather is the recommended next case study, followed by Transport. Other priorities are additional electricity regions, conformal calibration, foundation-model scaling, and compatible evaluation of additional model families.
+Weather is the recommended next case study, followed by Transport. Other priorities are additional electricity regions, foundation-model scaling, and compatible Python 3.12 evaluation of Moirai, PatchTST, and iTransformer.
 
 Detailed reports: [`Bitcoin case study`](docs/bitcoin_case_study.md) and [`Electricity case study`](docs/electricity_case_study.md). The primary cross-domain narrative is the [`research manuscript`](paper/research_manuscript.md).
