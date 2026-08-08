@@ -213,7 +213,7 @@ Executed results:
 | Persistence-Enhanced LSTM vs TimesFM | -1.909856 | 0.056421 | Persistence-Enhanced LSTM by RMSE | False |
 | Chronos-Bolt-Tiny vs TimesFM | 2.760989 | 0.005862 | TimesFM | True |
 
-The complete 28-pair table for the eight saved forecast vectors is frozen in `results/bitcoin_dm_pairwise_results.csv`. Naive is not significantly different from Simple Exponential Smoothing (`p = 0.666843`) or Holt-Winters (`p = 0.067710`); both smoothing models significantly outperform TimesFM, Chronos, and Prophet.
+Notebook 09 now evaluates all 36 pairs among the same nine models used by the Trust Score analysis. The previously missing model was the 7-Day Moving Average: unlike the other eight models, it is not a column in `validated_forecasts.csv`, and the earlier significance workflow was restricted to saved vectors. This was an integration oversight, not a methodological exclusion. The benchmark is now reconstructed exactly as in Notebook 06 from the seven observations strictly before each forecast date, audited for leakage and alignment, and compared against every other model. Naive is not significantly different from Simple Exponential Smoothing (`p = 0.666843`) or Holt-Winters (`p = 0.067710`); both smoothing models significantly outperform TimesFM, Chronos, and Prophet.
 
 Practical effect sizes were recorded as small relative to the average Bitcoin price.
 

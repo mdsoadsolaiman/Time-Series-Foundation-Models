@@ -70,6 +70,8 @@ Dimension-level evidence is primary. The secondary **Exploratory Composite Trust
 
 Naive remains the lowest-RMSE model. Its differences from Simple Exponential Smoothing (`p = 0.666843`), Holt-Winters (`p = 0.067710`), and rolling ARIMA (`p = 0.308442`) are not significant. Both smoothing models significantly outperform TimesFM, Chronos, and Prophet. Training-only conformal calibration changed Chronos 80% test coverage from 84.54% to 81.53% and TimesFM from 33.08% to 55.61%; TimesFM remains materially under-covered.
 
+The significance analysis covers all 36 pairs among the nine Trust Score models. Eight vectors come from the validated artifact; the 7-Day Moving Average is reconstructed deterministically from seven strictly prior observations, matching Notebook 06.
+
 After applying the same validation-residual empirical uncertainty method to ARIMA and both smoothing models, Naive leads both Trust Score variants at `97.803780`; Simple Exponential Smoothing ranks second at `97.466671`, followed by Holt-Winters at `96.579302` and ARIMA at `96.545355`.
 
 The variants are ranked independently because missing uncertainty evidence changes the PE-LSTM result.
