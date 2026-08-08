@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 from prophet import Prophet
 from statsmodels.tsa.arima.model import ARIMA
+from statsmodels.tsa.holtwinters import ExponentialSmoothing, SimpleExpSmoothing
 
 
 def rolling_arima_log_return_forecast(
@@ -32,6 +33,49 @@ def rolling_arima_log_return_forecast(
         )
         fitted = fitted.append(observed_return, refit=False)
     return pd.Series(predictions, index=test_index, name="ARIMA_Rolling")
+
+
+def rolling_simple_exp_smoothing_forecast(
+    target: pd.Series,
+    test_index: pd.DatetimeIndex,
+    context_length: int = 128,
+) -> pd.Series:
+    """Refit SES on the latest strictly-prior context for every forecast day."""
+    predictions = []
+    for timestamp in test_index:
+        history = target.loc[target.index < timestamp].tail(context_length)
+        if len(history) != context_length:
+            raise ValueError(f"Insufficient SES context before {timestamp}")
+        if not timestamp > history.index.max():
+            raise ValueError("SES forecast date must follow the context window")
+        fitted = SimpleExpSmoothing(
+            history.astype(float), initialization_method="estimated"
+        ).fit(optimized=True)
+        predictions.append(float(fitted.forecast(1).iloc[0]))
+    return pd.Series(predictions, index=test_index, name="Simple_Exp_Smoothing")
+
+
+def rolling_holt_winters_forecast(
+    target: pd.Series,
+    test_index: pd.DatetimeIndex,
+    context_length: int = 128,
+) -> pd.Series:
+    """Refit additive-trend, non-seasonal Holt-Winters for every forecast day."""
+    predictions = []
+    for timestamp in test_index:
+        history = target.loc[target.index < timestamp].tail(context_length)
+        if len(history) != context_length:
+            raise ValueError(f"Insufficient Holt-Winters context before {timestamp}")
+        if not timestamp > history.index.max():
+            raise ValueError("Holt-Winters forecast date must follow the context window")
+        fitted = ExponentialSmoothing(
+            history.astype(float),
+            trend="add",
+            seasonal=None,
+            initialization_method="estimated",
+        ).fit(optimized=True)
+        predictions.append(float(fitted.forecast(1).iloc[0]))
+    return pd.Series(predictions, index=test_index, name="Holt_Winters")
 
 
 def periodic_refit_prophet_forecast(
@@ -131,3 +175,35 @@ def generate_arima_validation_artifact(project_root: Path) -> pd.DataFrame:
     if output["Timestamp"].max() >= target.iloc[split:].index.min():
         raise ValueError("ARIMA validation artifact overlaps the test period")
     return output
+
+
+def generate_exponential_smoothing_validation_artifacts(
+    project_root: Path,
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Save strictly pre-test validation vectors for empirical uncertainty scoring."""
+    from src.data_loader import load_bitcoin_data
+    from src.preprocessing import prepare_daily_bitcoin_data
+
+    raw = load_bitcoin_data(project_root / "data" / "bitcoin" / "btcusd_1-min_data.csv")
+    target = prepare_daily_bitcoin_data(raw)["Close"].dropna().astype(float)
+    split = int(len(target) * 0.8)
+    validation_index = target.iloc[:split].tail(1061).index
+    ses = rolling_simple_exp_smoothing_forecast(target, validation_index).rename(
+        "Simple_Exp_Smoothing_Validation"
+    )
+    holt = rolling_holt_winters_forecast(target, validation_index).rename(
+        "Holt_Winters_Validation"
+    )
+    ses_frame = validate_and_save_forecast(
+        ses,
+        validation_index,
+        project_root / "results" / "simple_exp_smoothing_validation_forecast.csv",
+    )
+    holt_frame = validate_and_save_forecast(
+        holt,
+        validation_index,
+        project_root / "results" / "holt_winters_validation_forecast.csv",
+    )
+    if max(ses_frame["Timestamp"].max(), holt_frame["Timestamp"].max()) >= target.iloc[split:].index.min():
+        raise ValueError("Exponential-smoothing validation artifacts overlap the test period")
+    return ses_frame, holt_frame
