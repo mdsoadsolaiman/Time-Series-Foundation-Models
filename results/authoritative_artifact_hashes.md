@@ -10,11 +10,12 @@ These SHA-256 hashes freeze the authoritative and supporting evidence before the
 | `results/chronos_bolt_tiny_forecast.csv` | `0057334E226D9CD11439F55F004902AB4EFE88222434732A2E7D908A30BF4DD9` | Bitcoin Chronos forecasts | Supporting authoritative evidence |
 | `results/timesfm_forecast.csv` | `3960962297E7296C3ACB31946C47AB1E019A36C6611960EB2091071892695C10` | Bitcoin TimesFM forecasts | Supporting authoritative evidence |
 | `results/arima_rolling_forecast.csv` | `ACA63F0202B1B990D80ADA0BC000A67484108F3C6341F0C4C1D8E5D055D79A78` | Bitcoin rolling one-step ARIMA forecasts | Authoritative evidence |
+| `results/arima_validation_forecast.csv` | `F3BCCC94BF786549D3DA4A4873A57A8FD4962AF3956F225113ACCCCAC4C3AF5C` | Bitcoin training-only ARIMA validation forecasts | Authoritative evidence |
 | `results/prophet_rolling_forecast.csv` | `6F0B505E7290A475B6170B93782D8E9A41CAD3791D50A81517E3E847706FB9B2` | Bitcoin periodic-refit Prophet forecasts | Authoritative evidence |
 | `results/foundation_uncertainty_calibration.csv` | `9503CC926176B8BD64B5B785A9AC39A455E9D6D642230BAB5C7173EC0F41CA12` | Bitcoin native and training-calibrated intervals | Authoritative evidence |
 | `results/foundation_uncertainty_summary.csv` | `9DA734CB9265E07FE8AE47122F674E098E5395C7CD7EBD74E9E253DFFF8FD654` | Bitcoin uncertainty calibration summary | Authoritative evidence |
-| `results/bitcoin_trust_scores_penalised.csv` | `341BF69E4A0C1212231DF8D14E8439534B98290AD111AB3C1DC459C31A6ACE3C` | Bitcoin missing-evidence-penalised Trust Scores | Authoritative evidence |
-| `results/bitcoin_trust_scores_evidence_available.csv` | `87A24BD076E8A35486CD8F82FFD660C8CD6A7F90EE6028A1F12E525490395F3B` | Bitcoin evidence-available Trust Scores | Authoritative evidence |
+| `results/bitcoin_trust_scores_penalised.csv` | `956587E17920B0B54864D0AB4F20DC2FEDF0C272031E1324A36F437138EB81BA` | Bitcoin missing-evidence-penalised Trust Scores | Authoritative evidence |
+| `results/bitcoin_trust_scores_evidence_available.csv` | `94F27359F52259CAF40587E07B480C27AECD8C3803F3B41D4E85C92054700500` | Bitcoin evidence-available Trust Scores | Authoritative evidence |
 | `results/bitcoin_dm_pairwise_results.csv` | `010C3B9CE645AC48FA6E6CB97692090D70CE446CC27FC4684EDFC56F6C0FA388` | Bitcoin full pairwise Diebold-Mariano results | Authoritative evidence |
 | `results/electricity/protocol_a_validated_forecasts.csv` | `E48D3E53BE01F2365E782CEB192B000044A4964BF7FA7EAAA104C8F640732C95` | Electricity rolling one-step forecasts | Authoritative |
 | `results/electricity/protocol_b_validated_forecasts.csv` | `064D0D63688126B53033C18DE94B9232173E94CC595920DF9C45AB3442DCB19E` | Electricity 48-step day-ahead forecasts | Authoritative |
@@ -50,3 +51,7 @@ Hash equality establishes byte-level preservation; it does not replace methodolo
 - `results/bitcoin_trust_scores_penalised.csv`: added the Step 6 complete missing-evidence-penalised ranking.
 - `results/bitcoin_trust_scores_evidence_available.csv`: added the Step 6 complete evidence-available ranking.
 - `results/bitcoin_dm_pairwise_results.csv`: added all 15 Step 7 pairwise significance comparisons.
+- Step B — Notebook 08 diff resolution: no artifact hash changed; the rerun-only notebook diff was discarded after all saved audit values reproduced exactly.
+- `results/arima_validation_forecast.csv`: added in Step C to preserve the 1,061 training-only ARIMA forecasts used for empirical residual intervals; no test date is present.
+- `results/bitcoin_trust_scores_penalised.csv`: changed in Step C because ARIMA now has an 80%/95% empirical uncertainty score instead of a missing-evidence penalty; ARIMA rose from 83.559942 to 96.552205 while Naive remained first at 97.810622.
+- `results/bitcoin_trust_scores_evidence_available.csv`: changed in Step C because ARIMA's uncertainty dimension is now included rather than excluded and renormalised; ARIMA fell from 98.305814 to 96.552205, so Naive now leads at 97.810622.

@@ -71,7 +71,7 @@ def metrics(actual: pd.Series, predicted: pd.Series) -> dict[str, float]:
 def verify_hashes(v: Verification) -> None:
     text = LEDGER.read_text(encoding="utf-8")
     entries = re.findall(r"\| `(?P<path>results/[^`]+)` \| `(?P<hash>[A-F0-9]{64})` \|", text)
-    v.check(len(entries) == 32, "ledger contains 32 protected artifacts")
+    v.check(len(entries) == 33, "ledger contains 33 protected artifacts")
     for relative, expected in entries:
         path = ROOT / relative
         v.check(path.is_file(), f"exists: {relative}")
@@ -119,6 +119,22 @@ def verify_point_vector(path: Path, model_column: str, expected_timestamps: pd.S
     v.check(np.isfinite(frame[model_column]).all(), f"finite forecasts: {relative}")
 
 
+def verify_arima_validation(v: Verification) -> None:
+    """Verify the training-only ARIMA vector used to construct empirical intervals."""
+    path = ROOT / "results" / "arima_validation_forecast.csv"
+    frame = pd.read_csv(path)
+    timestamps = pd.to_datetime(frame["Timestamp"], utc=True)
+    v.check(frame.shape == (1061, 2), "shape: results/arima_validation_forecast.csv")
+    v.check(frame.columns.tolist() == ["Timestamp", "ARIMA_Rolling_Validation"],
+            "schema: results/arima_validation_forecast.csv")
+    v.check(timestamps.is_unique and timestamps.is_monotonic_increasing,
+            "ordered unique timestamps: results/arima_validation_forecast.csv")
+    v.check(timestamps.max() == pd.Timestamp("2023-08-11", tz="UTC"),
+            "ends before Bitcoin test: results/arima_validation_forecast.csv")
+    v.check(np.isfinite(frame["ARIMA_Rolling_Validation"]).all(),
+            "finite forecasts: results/arima_validation_forecast.csv")
+
+
 def main() -> int:
     v = Verification()
     verify_hashes(v)
@@ -142,6 +158,7 @@ def main() -> int:
     validated = pd.read_csv(ROOT / "results" / "validated_forecasts.csv")
     verify_point_vector(ROOT / "results" / "arima_rolling_forecast.csv", "ARIMA_Rolling", validated["Timestamp"], v)
     verify_point_vector(ROOT / "results" / "prophet_rolling_forecast.csv", "Prophet_Periodic_Refit", validated["Timestamp"], v)
+    verify_arima_validation(v)
     verify_forecast(
         ROOT / "results" / "electricity" / "protocol_a_validated_forecasts.csv", 46176,
         ["Timestamp", "Actual", "Naive", "Daily_Seasonal_Naive", "Weekly_Seasonal_Naive", "Moving_Average", "DHR_ARIMA", "LSTM", "Chronos_Bolt_Tiny", "TimesFM"],
