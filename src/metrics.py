@@ -63,3 +63,13 @@ def mase(y_true, y_pred, y_train, seasonal_period=1):
         raise ValueError("MASE scaling denominator must be finite and non-zero.")
 
     return np.mean(np.abs(true - pred)) / scale
+
+
+def forecast_metric_row(y_true, y_pred):
+    """Return the four-metric dictionary duplicated across Bitcoin notebooks."""
+    return {
+        "MAE": mae(y_true, y_pred),
+        "RMSE": rmse(y_true, y_pred),
+        "MAPE": mape(y_true, y_pred),
+        "sMAPE": smape(y_true, y_pred),
+    }
