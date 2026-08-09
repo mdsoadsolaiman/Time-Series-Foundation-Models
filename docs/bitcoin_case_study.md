@@ -64,7 +64,7 @@ This protocol is used for the authoritative saved vectors:
 
 The 7-Day Moving Average is a deterministic rolling one-step benchmark recreated from the historical actual series.
 
-ARIMA uses per-observation state updates. Simple Exponential Smoothing and additive-trend, non-seasonal Holt-Winters are refitted on the latest 128 strictly prior prices for every forecast date, making both true rolling one-step evaluations. Prophet uses a clearly labelled 30-day periodic-refit protocol with a strict 128-day past-only context. SARIMA is omitted because weekly seasonality was unsupported.
+Notebook 02 is the single source of truth for ARIMA, Simple Exponential Smoothing, and Holt-Winters: it retains their original static multi-step implementations and presents the authoritative fair rolling one-step vectors directly beside them. ARIMA uses per-observation state updates. Simple Exponential Smoothing and additive-trend, non-seasonal Holt-Winters are refitted on the latest 128 strictly prior prices for every forecast date. Notebook 05 now contains Prophet's clearly labelled 30-day periodic-refit protocol and the deferred PatchTST/iTransformer status only. SARIMA is omitted because weekly seasonality was unsupported.
 
 ## Authoritative Forecast Artifact
 
@@ -311,7 +311,8 @@ Corrected but over-smoothed Transformer:
 ARIMA/SARIMA:
 
 - ARIMA(1,1,1) was executed in the classical notebook as a static multi-step forecast.
-- The advanced notebook now provides an exact ARIMA rolling one-step vector using a 128-day context and per-observation state append.
+- The classical notebook now places the exact ARIMA rolling one-step vector directly below the historical static result, using a 128-day context and per-observation state append.
+- The same notebook places the authoritative rolling Simple Exponential Smoothing and Holt-Winters results beside their retained static multi-step implementations and includes the three-model before/after protocol table.
 - SARIMA was dropped as a distinct final model because weekly-seasonality diagnostics did not support a seven-day term and the zero-seasonal specification would duplicate ARIMA.
 
 ## Foundation Model Status
@@ -346,6 +347,7 @@ Prophet:
 
 - Package availability was investigated.
 - A validated 1,061-row periodic-refit forecast is part of the frozen Bitcoin comparison; the model refits every 30 days using only the latest 128 observations available before each refit date.
+- Its generation and the deferred PatchTST/iTransformer environment notes remain in Notebook 05; the three consolidated classical models are no longer duplicated there.
 
 ## Limitations
 

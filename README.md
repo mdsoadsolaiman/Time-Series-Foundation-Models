@@ -153,11 +153,11 @@ TimeSeriesFoundationModels/
 | `Bitcoin_Master.ipynb` | MASTER / RECOMMENDED ENTRY POINT | Safe Bitcoin orchestration, validation, and artifact-based analysis |
 | `Electricity_Master.ipynb` | MASTER / RECOMMENDED ENTRY POINT | Safe Electricity orchestration, validation, and artifact-based analysis |
 | `01_EDA.ipynb` | AUTHORITATIVE | Bitcoin data audit and daily preparation |
-| `02_Classical_Models.ipynb` | PROTOCOL-LIMITED / HISTORICAL | Classical Bitcoin forecasts without equivalent frozen rolling vectors |
+| `02_Classical_Models.ipynb` | AUTHORITATIVE FAIR RESULTS + HISTORICAL STATIC-PROTOCOL CONTEXT | Single source of truth for ARIMA, Simple Exponential Smoothing, and Holt-Winters: retained static multi-step history plus verified rolling one-step results |
 | `03_Deep_Learning_LSTM.ipynb` | EXPLORATORY | Raw-price LSTM |
 | `03b_LSTM_Improved.ipynb` | EXPLORATORY | Improved experimental LSTM |
 | `04_Transformers.ipynb` | EXPLORATORY | Failed/collapsed Transformer case study |
-| `05_Advanced_Forecasting_Models.ipynb` | AUTHORITATIVE GENERATION — COMPLETE ADVANCED MODEL SET | Rolling ARIMA, Simple Exponential Smoothing, and Holt-Winters plus periodic-refit Prophet; SARIMA omitted and neural models deferred |
+| `05_Advanced_Forecasting_Models.ipynb` | AUTHORITATIVE GENERATION — PROPHET + DEFERRED NEURALFORECAST SCOPE | Periodic-refit Prophet generation and deferred PatchTST/iTransformer environment status; classical models now live in Notebook 02 |
 | `05_Foundation_Models.ipynb` | AUTHORITATIVE GENERATION | Bitcoin foundation-model evidence |
 | `06_Trustworthiness.ipynb` | AUTHORITATIVE ANALYSIS | Bitcoin multidimensional trust evaluation |
 | `07_Model_Validation_Audit.ipynb` | AUTHORITATIVE AUDIT | Bitcoin saved-vector validation |
