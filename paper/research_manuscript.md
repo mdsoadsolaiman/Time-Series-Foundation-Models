@@ -85,7 +85,7 @@ Electricity DHR-ARIMA combines preselected daily/weekly Fourier terms with non-s
 
 ### 5.3 LSTM
 
-Bitcoin's raw-price LSTM is exploratory; its Persistence-Enhanced LSTM is authoritative only through the saved validated vector. Electricity uses protocol-specific deterministic LSTMs. They are one family but not identical architectures, and single deterministic runs do not quantify training-seed uncertainty.
+Bitcoin's authoritative neural model is the Persistence-Enhanced Log-Return LSTM represented by its frozen validated vector. Electricity uses protocol-specific deterministic LSTMs. They are one family but not identical architectures, and single deterministic runs do not quantify training-seed uncertainty.
 
 ### 5.4 Chronos-Bolt-Tiny
 
@@ -126,11 +126,11 @@ Paired loss tests use HAC variance. Protocol B aggregates by daily origin; Benja
 | Rank | Model | MAE | RMSE | sMAPE (%) |
 |---:|---|---:|---:|---:|
 | 1 | Naive | 1290.35 | 1853.62 | 1.7441 |
-| 2 | Persistence-Enhanced LSTM | 1323.04 | 1886.57 | 1.7943 |
+| 2 | Persistence-Enhanced Log-Return LSTM | 1321.37 | 1881.09 | 1.7916 |
 | 3 | TimesFM | 1349.95 | 1924.20 | 1.8239 |
 | 4 | Chronos-Bolt-Tiny | 1424.03 | 1994.01 | 1.9288 |
 
-Naive significantly beats both foundation models. TimesFM significantly beats Chronos; LSTM–TimesFM is not significant at 5%. Chronos coverage is 84.5%, versus TimesFM’s 33.1%.
+Naive significantly beats both foundation models. TimesFM significantly beats Chronos; Persistence-Enhanced Log-Return LSTM–TimesFM is not significant at 5% (`p = 0.056421`). Chronos coverage is 84.5%, versus TimesFM’s 33.1%.
 
 ![Bitcoin forecasts](../figures/bitcoin/bitcoin_forecast_comparison.png)
 

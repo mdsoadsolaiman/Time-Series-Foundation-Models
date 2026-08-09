@@ -54,7 +54,7 @@ The completed primary comparison uses a rolling one-step-ahead protocol:
 This protocol is used for the authoritative saved vectors:
 
 - Naive
-- Persistence-Enhanced LSTM
+- Persistence-Enhanced Log-Return LSTM
 - Chronos-Bolt-Tiny
 - TimesFM
 - ARIMA Rolling One-Step
@@ -102,7 +102,7 @@ Do not overwrite this file unless intentionally regenerating the frozen Bitcoin 
 Authoritative rolling one-step models:
 
 - Naive persistence baseline.
-- Persistence-Enhanced LSTM.
+- Persistence-Enhanced Log-Return LSTM.
 - Chronos-Bolt-Tiny.
 - TimesFM.
 - ARIMA Rolling One-Step.
@@ -116,8 +116,6 @@ Additional deterministic benchmark:
 
 Exploratory, failed, or non-authoritative models:
 
-- Original raw-price LSTM.
-- Improved experimental LSTM.
 - Collapsed Transformer.
 - Corrected but over-smoothed Transformer.
 
@@ -139,7 +137,7 @@ Metrics reproduced directly from `results/validated_forecasts.csv`:
 | Simple Exponential Smoothing Rolling One-Step | 1290.358684 | 1855.731424 | 1.742685 | 1.743871 |
 | ARIMA Rolling One-Step | 1299.874638 | 1866.302859 | 1.754004 | 1.754209 |
 | Holt-Winters Rolling One-Step | 1308.541314 | 1871.702185 | 1.763640 | 1.763424 |
-| Persistence-Enhanced LSTM | 1321.365311 | 1881.091190 | 1.783956 | 1.791645 |
+| Persistence-Enhanced Log-Return LSTM | 1321.365311 | 1881.091190 | 1.783956 | 1.791645 |
 | TimesFM | 1349.946786 | 1924.199337 | 1.823179 | 1.823895 |
 | Chronos-Bolt-Tiny | 1424.025828 | 1994.007926 | 1.934509 | 1.928782 |
 | Prophet 30-Day Periodic Refit | 8195.262862 | 10781.162873 | 11.199767 | 11.287185 |
@@ -204,13 +202,13 @@ Executed results:
 
 | Comparison | DM Statistic | p-value | Winner | Significant at alpha = 0.05 |
 |---|---:|---:|---|---|
-| Naive vs Persistence-Enhanced LSTM | -2.196432 | 0.028277 | Naive | True |
+| Naive vs Persistence-Enhanced Log-Return LSTM | -2.196432 | 0.028277 | Naive | True |
 | Naive vs Chronos-Bolt-Tiny | -5.482418 | < 0.000001 | Naive | True |
 | Naive vs ARIMA Rolling One-Step | -1.018986 | 0.308442 | Naive by RMSE | False |
 | Naive vs Prophet 30-Day Periodic Refit | -20.709702 | < 0.000001 | Naive | True |
-| Persistence-Enhanced LSTM vs Chronos-Bolt-Tiny | -3.621925 | 0.000306 | Persistence-Enhanced LSTM | True |
+| Persistence-Enhanced Log-Return LSTM vs Chronos-Bolt-Tiny | -3.621925 | 0.000306 | Persistence-Enhanced Log-Return LSTM | True |
 | Naive vs TimesFM | -4.278078 | 0.000021 | Naive | True |
-| Persistence-Enhanced LSTM vs TimesFM | -1.909856 | 0.056421 | Persistence-Enhanced LSTM by RMSE | False |
+| Persistence-Enhanced Log-Return LSTM vs TimesFM | -1.909856 | 0.056421 | Persistence-Enhanced Log-Return LSTM by RMSE | False |
 | Chronos-Bolt-Tiny vs TimesFM | 2.760989 | 0.005862 | TimesFM | True |
 
 Notebook 09 now evaluates all 36 pairs among the same nine models used by the Trust Score analysis. The previously missing model was the 7-Day Moving Average: unlike the other eight models, it is not a column in `validated_forecasts.csv`, and the earlier significance workflow was restricted to saved vectors. This was an integration oversight, not a methodological exclusion. The benchmark is now reconstructed exactly as in Notebook 06 from the seven observations strictly before each forecast date, audited for leakage and alignment, and compared against every other model. Naive is not significantly different from Simple Exponential Smoothing (`p = 0.666843`) or Holt-Winters (`p = 0.067710`); both smoothing models significantly outperform TimesFM, Chronos, and Prophet.
@@ -255,7 +253,7 @@ The two variants are ranked independently; no shared rank is implied.
 | 4 | ARIMA Rolling One-Step | 96.545355 |
 | 5 | Chronos-Bolt-Tiny | 91.312313 |
 | 6 | TimesFM | 90.521931 |
-| 7 | Persistence-Enhanced LSTM | 79.600601 |
+| 7 | Persistence-Enhanced Log-Return LSTM | 79.600601 |
 | 8 | 7-Day Moving Average | 70.724359 |
 | 9 | Prophet 30-Day Periodic Refit | 22.624980 |
 
@@ -265,13 +263,13 @@ The two variants are ranked independently; no shared rank is implied.
 | 2 | Simple Exponential Smoothing Rolling One-Step | 97.466671 |
 | 3 | Holt-Winters Rolling One-Step | 96.579302 |
 | 4 | ARIMA Rolling One-Step | 96.545355 |
-| 5 | Persistence-Enhanced LSTM | 93.647766 |
+| 5 | Persistence-Enhanced Log-Return LSTM | 93.647766 |
 | 6 | Chronos-Bolt-Tiny | 91.312313 |
 | 7 | TimesFM | 90.521931 |
 | 8 | 7-Day Moving Average | 70.724359 |
 | 9 | Prophet 30-Day Periodic Refit | 26.617624 |
 
-Naive leads both variants. PE-LSTM is seventh when missing uncertainty evidence is penalised and fifth when only available evidence is scored.
+Naive leads both variants. PE Log-Return LSTM is seventh when missing uncertainty evidence is penalised and fifth when only available evidence is scored.
 
 ## Validation and Audit Procedure
 
@@ -283,24 +281,13 @@ The principal vector is `results/validated_forecasts.csv`. Supporting point vect
 
 ## Failure Case Studies
 
-Original raw-price LSTM:
+Historical provenance note: Earlier raw-price LSTM variants were evaluated during model development and showed lag, range compression, and poor extrapolation under the non-stationary price-level formulation. They were superseded by the Persistence-Enhanced Log-Return LSTM and are excluded from the authoritative comparison. Notebook 03 preserves the original negative-result evidence alongside the authoritative log-return replacement.
 
-- Its original implementation and archived RMSE near 20,600 remain in Notebook 03 as an exploratory supervised-neural failure case.
-- Underperformed the Naive baseline.
-- Diagnostics indicated non-stationarity, range issues, lag, and over-smoothing.
-- Not included as an authoritative saved-vector model unless an exact validated vector is available.
-
-Persistence-Enhanced LSTM:
+Persistence-Enhanced Log-Return LSTM:
 
 - Authoritative deterministic generation now lives in Notebook 03 directly below the historical raw-price experiment.
 - Its log-return formulation, thread pinning, global seed, and deterministic TensorFlow operations reproduced the frozen forecast vector exactly across three fresh-kernel runs.
 - Notebook 07 now reads and audits the saved vector without retraining it.
-
-Improved experimental LSTM:
-
-- Notebook scaffold exists.
-- Saved notebook is unexecuted.
-- Not part of the frozen authoritative Bitcoin comparison.
 
 Collapsed Transformer:
 
@@ -374,7 +361,7 @@ The completed workflow was audited on CPU-only Windows 11 build 26100 with Pytho
 
 - The Naive persistence baseline remains the strongest point forecaster among the frozen authoritative Bitcoin models.
 - Simple Exponential Smoothing is second by RMSE; Holt-Winters and ARIMA are close behind, and none differs significantly from Naive at alpha 0.05.
-- Persistence-Enhanced LSTM is the strongest supervised neural model with an exact saved forecast vector.
+- Persistence-Enhanced Log-Return LSTM is the strongest supervised neural model with an exact saved forecast vector.
 - TimesFM is the strongest zero-shot foundation model for point forecasting.
 - Chronos-Bolt-Tiny is weaker than TimesFM on point accuracy but has lower absolute error from nominal 80% marginal coverage.
 - TimesFM native intervals are too narrow and severely under-cover; training-only conformalization improves coverage to 0.556079 but does not eliminate the gap to 0.80.

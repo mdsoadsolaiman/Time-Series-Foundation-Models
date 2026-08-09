@@ -15,7 +15,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 LEDGER = ROOT / "results" / "authoritative_artifact_hashes.md"
 MODEL_NAMES = {
-    "Persistence_Enhanced_LSTM": "Persistence-Enhanced LSTM",
+    "Persistence_Enhanced_LSTM": "Persistence-Enhanced Log-Return LSTM",
     "Chronos_Bolt_Tiny": "Chronos-Bolt-Tiny",
     "Daily_Seasonal_Naive": "Daily Seasonal Naive",
     "Weekly_Seasonal_Naive": "Weekly Seasonal Naive",
@@ -28,7 +28,7 @@ MODEL_NAMES = {
 }
 BITCOIN_METRICS = {
     "Naive": (1290.3532422243168, 1853.6247736716243, 1.742746521465369, 1.7441417265023809),
-    "Persistence-Enhanced LSTM": (1321.3653105878764, 1881.0911899658583, 1.7839563296496557, 1.7916454886549884),
+    "Persistence-Enhanced Log-Return LSTM": (1321.3653105878764, 1881.0911899658583, 1.7839563296496557, 1.7916454886549884),
     "Chronos-Bolt-Tiny": (1424.0258275653864, 1994.0079263996643, 1.934509000360176, 1.928782487065369),
     "TimesFM": (1349.9467856090953, 1924.1993369259183, 1.8231794164362922, 1.823894758464343),
     "ARIMA Rolling One-Step": (1299.8746375937496, 1866.3028590728163, 1.754003843176303, 1.7542088564346432),

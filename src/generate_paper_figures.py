@@ -26,11 +26,12 @@ from src.preprocessing import prepare_daily_bitcoin_data
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results"
 FIGURES = ROOT / "figures"
-COLORS = {"Actual": "#222222", "Naive": "#0072B2", "Persistence-Enhanced LSTM": "#009E73",
-          "LSTM": "#009E73", "TimesFM": "#D55E00", "Chronos-Bolt-Tiny": "#CC79A7",
+COLORS = {"Actual": "#222222", "Naive": "#0072B2", "ARIMA Rolling One-Step": "#56B4E9", "PE Log-Return LSTM": "#009E73",
+          "LSTM": "#009E73", "Protocol-Specific LSTM": "#9467BD", "TimesFM": "#D55E00", "Chronos-Bolt-Tiny": "#CC79A7",
           "DHR-ARIMA": "#56B4E9", "Daily Seasonal Naive": "#E69F00"}
-NAME = {"Persistence_Enhanced_LSTM": "Persistence-Enhanced LSTM", "Chronos_Bolt_Tiny": "Chronos-Bolt-Tiny",
-        "DHR_ARIMA": "DHR-ARIMA", "Daily_Seasonal_Naive": "Daily Seasonal Naive"}
+NAME = {"Persistence_Enhanced_LSTM": "PE Log-Return LSTM",
+        "Persistence-Enhanced Log-Return LSTM": "PE Log-Return LSTM", "Chronos_Bolt_Tiny": "Chronos-Bolt-Tiny",
+        "ARIMA_Rolling": "ARIMA Rolling One-Step", "DHR_ARIMA": "DHR-ARIMA", "Daily_Seasonal_Naive": "Daily Seasonal Naive"}
 
 def bitcoin_seasonality_diagnostic():
     """Plot ACF and weekly STL diagnostics for daily Bitcoin log returns."""
@@ -87,7 +88,7 @@ def bitcoin_step9_figures():
         "Naive": forecasts["Naive"].to_numpy(dtype=float),
         "7-Day MA": moving_average,
         "ARIMA": forecasts["ARIMA_Rolling"].to_numpy(dtype=float),
-        "PE-LSTM": forecasts["Persistence_Enhanced_LSTM"].to_numpy(dtype=float),
+        "PE Log-Return LSTM": forecasts["Persistence_Enhanced_LSTM"].to_numpy(dtype=float),
         "Chronos": forecasts["Chronos_Bolt_Tiny"].to_numpy(dtype=float),
         "TimesFM": forecasts["TimesFM"].to_numpy(dtype=float),
         "Prophet": forecasts["Prophet_Periodic_Refit"].to_numpy(dtype=float),
@@ -132,11 +133,13 @@ def bitcoin_step9_figures():
 
     penalised = pd.read_csv(RESULTS / "bitcoin_trust_scores_penalised.csv", index_col="Model")
     available = pd.read_csv(RESULTS / "bitcoin_trust_scores_evidence_available.csv", index_col="Model")
-    order = penalised["Overall Trust Score - Missing Evidence Penalised"].sort_values().index
-    fig, axes = plt.subplots(1, 2, figsize=(13, 5.8), sharey=True)
-    axes[0].barh(order, penalised.loc[order, "Overall Trust Score - Missing Evidence Penalised"], color="#0072B2")
+    penalised_order = penalised["Overall Trust Score - Missing Evidence Penalised"].sort_values().index
+    available_order = available["Evidence-Available Trust Score"].sort_values().index
+    display = lambda names: ["PE Log-Return LSTM" if name == "Persistence-Enhanced LSTM" else name for name in names]
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5.8))
+    axes[0].barh(display(penalised_order), penalised.loc[penalised_order, "Overall Trust Score - Missing Evidence Penalised"], color="#0072B2")
     axes[0].set(title="Missing evidence penalised", xlabel="Trust Score", xlim=(0, 100))
-    axes[1].barh(order, available.loc[order, "Evidence-Available Trust Score"], color="#009E73")
+    axes[1].barh(display(available_order), available.loc[available_order, "Evidence-Available Trust Score"], color="#009E73")
     axes[1].set(title="Evidence available", xlabel="Trust Score", xlim=(0, 100))
     for ax in axes: ax.grid(axis="x", alpha=.2)
     fig.suptitle("Bitcoin Trust Score rankings")
@@ -149,7 +152,7 @@ def bitcoin_step9_figures():
     for run, color in zip([1, 2, 3], ["#0072B2", "#E69F00", "#009E73"]):
         ax.plot(dates, deterministic, lw=1.2, alpha=.75, label=f"Fresh-kernel run {run}", color=color)
     ax.fill_between(dates, deterministic, deterministic, color="#CC79A7", alpha=.25, label="Run range (max = min)")
-    ax.set(title="PE-LSTM determinism verification: three bit-identical runs", xlabel="Date", ylabel="Forecast close (USD)")
+    ax.set(title="PE Log-Return LSTM determinism: three bit-identical runs", xlabel="Date", ylabel="Forecast close (USD)")
     ax.legend(frameon=False, ncol=2)
     ax.grid(alpha=.2)
     fig.tight_layout()
@@ -236,13 +239,20 @@ def main():
     plt.rcParams.update({"font.size": 10, "axes.titlesize": 13, "axes.labelsize": 11, "figure.facecolor": "white"})
     btc = pd.read_csv(RESULTS / "validated_forecasts.csv")
     mid = max(0, len(btc)//2 - 60)
-    line_plot(btc.iloc[mid:mid+120], ["Actual", "Naive", "Persistence_Enhanced_LSTM", "TimesFM", "Chronos_Bolt_Tiny"],
+    line_plot(btc.iloc[mid:mid+120], ["Actual", "Naive", "ARIMA_Rolling", "Persistence_Enhanced_LSTM", "TimesFM", "Chronos_Bolt_Tiny"],
               "Bitcoin forecasts: representative 120-day window", "Daily close (USD)", FIGURES/"bitcoin"/"bitcoin_forecast_comparison.png")
 
     comp = pd.read_csv(RESULTS / "cross_domain_model_comparison.csv")
-    b = comp[comp.Domain.eq("Bitcoin")].sort_values("Within_Domain_Rank")
-    fig, ax = plt.subplots(figsize=(8.8, 4.8)); labels=[NAME.get(x,x) for x in b.Model]
-    ax.bar(labels, b.sMAPE, color=[COLORS.get(x,"#999999") for x in labels]); ax.set(ylabel="sMAPE (%)", title="Bitcoin point accuracy (lower is better)")
+    bitcoin_models = {
+        "Naive": "Naive",
+        "ARIMA Rolling One-Step": "ARIMA_Rolling",
+        "PE Log-Return LSTM": "Persistence_Enhanced_LSTM",
+        "Chronos-Bolt-Tiny": "Chronos_Bolt_Tiny",
+        "TimesFM": "TimesFM",
+    }
+    b = pd.Series({label: 100 * np.mean(2 * np.abs(btc[col] - btc["Actual"]) / (np.abs(btc[col]) + np.abs(btc["Actual"]))) for label, col in bitcoin_models.items()}).sort_values()
+    fig, ax = plt.subplots(figsize=(10.2, 4.8)); labels=list(b.index)
+    ax.bar(labels, b.values, color=[COLORS.get(x,"#999999") for x in labels]); ax.set(ylabel="sMAPE (%)", title="Bitcoin point accuracy (lower is better)")
     ax.tick_params(axis="x", rotation=18); ax.grid(axis="y", alpha=.2); save(fig, FIGURES/"bitcoin"/"bitcoin_model_accuracy.png")
 
     unc = pd.read_csv(RESULTS / "cross_domain_uncertainty_comparison.csv")
@@ -275,8 +285,10 @@ def main():
     axs[0].set_ylabel("Model"); fig.suptitle("Electricity accuracy rankings by protocol"); save(fig,FIGURES/"electricity"/"electricity_model_accuracy.png")
     coverage_plot(unc[unc.Domain.eq("Electricity")],"Electricity native interval calibration",FIGURES/"electricity"/"electricity_uncertainty_calibration.png")
 
-    common=comp[comp.Model.isin(["Naive","LSTM","Chronos-Bolt-Tiny","TimesFM"])].copy(); common["Task"]=common.Domain.where(common.Domain.eq("Bitcoin"),common.Protocol.str.extract(r"(Protocol [AB])")[0].str.replace("Protocol ","Electricity "))
-    piv=common.pivot(index="Model",columns="Task",values="Within_Domain_Rank").reindex(["Naive","LSTM","Chronos-Bolt-Tiny","TimesFM"])
+    neural_models = ["Persistence-Enhanced Log-Return LSTM", "LSTM"]
+    common=comp[comp.Model.isin(["Naive",*neural_models,"Chronos-Bolt-Tiny","TimesFM"])].copy(); common["Task"]=common.Domain.where(common.Domain.eq("Bitcoin"),common.Protocol.str.extract(r"(Protocol [AB])")[0].str.replace("Protocol ","Electricity "))
+    common["Display Model"] = common.Model.replace({"Persistence-Enhanced Log-Return LSTM": "PE Log-Return LSTM", "LSTM": "Protocol-Specific LSTM"})
+    piv=common.pivot(index="Display Model",columns="Task",values="Within_Domain_Rank").reindex(["Naive","PE Log-Return LSTM","Protocol-Specific LSTM","Chronos-Bolt-Tiny","TimesFM"])
     fig,ax=plt.subplots(figsize=(9,5)); x=np.arange(len(piv.columns));
     for m,row in piv.iterrows(): ax.plot(x,row,marker="o",lw=2,label=m,color=COLORS.get(m))
     ax.set_xticks(x,piv.columns); ax.set_yticks(range(1,9)); ax.invert_yaxis(); ax.set(ylabel="Within-domain rank (1 = best)",title="Model rank across completed domain–protocol tasks"); ax.legend(frameon=False,ncol=2); ax.grid(alpha=.2); save(fig,FIGURES/"cross_domain"/"model_rank_across_domains.png")

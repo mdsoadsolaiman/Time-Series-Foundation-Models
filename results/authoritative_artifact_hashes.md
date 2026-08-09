@@ -37,7 +37,7 @@ These SHA-256 hashes freeze the authoritative and supporting evidence before the
 | `results/electricity/protocol_a_effect_sizes.csv` | `AA689049399834A8B6B9588646B551915C7E93FF7C7F150CC25831701D79A126` | Protocol A effect sizes | Authoritative evidence |
 | `results/electricity/protocol_b_effect_sizes.csv` | `D4F1F10B502AADCD482A50DDE128A8DFE63754EF8B106583C15D2CC1EAEE30E2` | Protocol B effect sizes | Authoritative evidence |
 | `results/electricity/protocol_b_horizon_significance.csv` | `DF5F71D1E66A8B67E4E95709599A5CE344767E7E0821E1353D118EFF4D86CD16` | Horizon-level significance | Authoritative evidence |
-| `results/cross_domain_model_comparison.csv` | `E24C650C9383D98CD18300C827B94F2CA29DBF41FB0BE8F8E0C1DA986B51DF0A` | Cross-domain ranks and metrics | Authoritative synthesis |
+| `results/cross_domain_model_comparison.csv` | `9287D0FFA7FBF5186B7FF3886328EE3127F86D1A3915E5097854D10D54E399D0` | Cross-domain ranks and metrics | Authoritative synthesis |
 | `results/cross_domain_foundation_model_comparison.csv` | `3BEAEAEB2BA9C0493CC1E96FF0F44B9B7EEBA49184ACF4ACB839C634F62ECFB4` | Foundation-model comparison | Authoritative synthesis |
 | `results/cross_domain_uncertainty_comparison.csv` | `591637120FAB3C49A6D3130DBE3243B6A616FB1C0F095679B2CD58D877B57BA2` | Cross-domain calibration comparison | Authoritative synthesis |
 | `results/cross_domain_significance_summary.csv` | `AB16CBB3CD382C11B6F8B0A7FD39D890684F6C03E9A4DBBEFFDFE330F4D19379` | Cross-domain significance summary | Authoritative synthesis |
@@ -64,3 +64,4 @@ Hash equality establishes byte-level preservation; it does not replace methodolo
 - `results/bitcoin_trust_scores_penalised.csv` and `results/bitcoin_trust_scores_evidence_available.csv`: recomputed for nine models with validation-residual empirical uncertainty evidence for both smoothing models; Naive remains first.
 - `results/bitcoin_dm_pairwise_results.csv`: expanded from 15 to 28 comparisons so both smoothing models are tested against every previously saved Bitcoin forecast vector.
 - Classical-notebook consolidation: moved the authoritative ARIMA, Simple Exponential Smoothing, and Holt-Winters rolling displays from Notebook 05 into their original Notebook 02 home beside the unchanged historical static sections. Notebook 05 now retains Prophet and deferred PatchTST/iTransformer content only. All 37 protected artifacts remained byte-identical, so no SHA-256 value changed.
+- Bitcoin presentation alignment: refreshed only the derived `results/cross_domain_model_comparison.csv` Bitcoin neural row from the frozen PE Log-Return LSTM vector, replacing stale metrics and the ambiguous display name. Electricity rows and all forecast artifacts remained byte-identical.

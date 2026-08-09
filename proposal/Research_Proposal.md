@@ -41,7 +41,7 @@ Two domains are complete. All statements below are preliminary findings from thi
 
 ### 4.1 Finance — Bitcoin
 
-The Bitcoin study evaluates 1,061 daily test observations using rolling one-step forecasts. Naive persistence achieves the best point accuracy (MAE 1290.35), followed by the Persistence-Enhanced LSTM, TimesFM, and Chronos-Bolt-Tiny. Naive significantly outperforms both foundation models under the primary loss comparison, while TimesFM significantly outperforms Chronos. The Persistence-Enhanced LSTM and TimesFM are not significantly different at the 5% level.
+The Bitcoin study evaluates 1,061 daily test observations using rolling one-step forecasts. Naive persistence achieves the best point accuracy (MAE 1290.35), followed by the Persistence-Enhanced Log-Return LSTM, TimesFM, and Chronos-Bolt-Tiny. Naive significantly outperforms both foundation models under the primary loss comparison, while TimesFM significantly outperforms Chronos. The Persistence-Enhanced Log-Return LSTM and TimesFM are not significantly different at the 5% level (`p = 0.056421`).
 
 Point ranking does not match marginal-coverage evidence. For nominal 80% intervals, Chronos attains approximately 84.5% empirical coverage, compared with 33.1% for TimesFM. Chronos therefore has lower absolute coverage error in this task. Coverage alone is not sufficient, because interval width and sharpness also matter.
 
