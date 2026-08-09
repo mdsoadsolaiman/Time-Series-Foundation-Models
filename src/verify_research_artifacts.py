@@ -21,6 +21,20 @@ MODEL_NAMES = {
     "Weekly_Seasonal_Naive": "Weekly Seasonal Naive",
     "Moving_Average": "Moving Average",
     "DHR_ARIMA": "DHR-ARIMA",
+    "ARIMA_Rolling": "ARIMA Rolling One-Step",
+    "Prophet_Periodic_Refit": "Prophet 30-Day Periodic Refit",
+    "Simple_Exp_Smoothing": "Simple Exponential Smoothing Rolling One-Step",
+    "Holt_Winters": "Holt-Winters Rolling One-Step",
+}
+BITCOIN_METRICS = {
+    "Naive": (1290.3532422243168, 1853.6247736716243, 1.742746521465369, 1.7441417265023809),
+    "Persistence-Enhanced LSTM": (1321.3653105878764, 1881.0911899658583, 1.7839563296496557, 1.7916454886549884),
+    "Chronos-Bolt-Tiny": (1424.0258275653864, 1994.0079263996643, 1.934509000360176, 1.928782487065369),
+    "TimesFM": (1349.9467856090953, 1924.1993369259183, 1.8231794164362922, 1.823894758464343),
+    "ARIMA Rolling One-Step": (1299.8746375937496, 1866.3028590728163, 1.754003843176303, 1.7542088564346432),
+    "Prophet 30-Day Periodic Refit": (8195.262861996911, 10781.162873031499, 11.199767058617569, 11.287185079510287),
+    "Simple Exponential Smoothing Rolling One-Step": (1290.3586838554463, 1855.731424427488, 1.742684503138682, 1.7438706638415447),
+    "Holt-Winters Rolling One-Step": (1308.5413137114867, 1871.7021852846603, 1.7636397847762826, 1.7634242845198493),
 }
 
 
@@ -61,7 +75,7 @@ def metrics(actual: pd.Series, predicted: pd.Series) -> dict[str, float]:
 def verify_hashes(v: Verification) -> None:
     text = LEDGER.read_text(encoding="utf-8")
     entries = re.findall(r"\| `(?P<path>results/[^`]+)` \| `(?P<hash>[A-F0-9]{64})` \|", text)
-    v.check(len(entries) == 25, "ledger contains 25 protected artifacts")
+    v.check(len(entries) == 37, "ledger contains 37 protected artifacts")
     for relative, expected in entries:
         path = ROOT / relative
         v.check(path.is_file(), f"exists: {relative}")
@@ -88,21 +102,83 @@ def verify_forecast(path: Path, expected_rows: int, expected_columns: list[str],
         if column in {"Timestamp", "Origin", "Horizon", "Actual"}:
             continue
         label = MODEL_NAMES.get(column, column)
+        if label not in expected.index:
+            continue
         observed = metrics(frame["Actual"], frame[column])
         for metric, value in observed.items():
             target = float(expected.loc[label, metric])
             v.check(np.isclose(value, target, rtol=1e-10, atol=1e-10), f"{protocol}: {label} {metric}")
 
 
+def verify_point_vector(path: Path, model_column: str, expected_timestamps: pd.Series,
+                        v: Verification) -> None:
+    """Verify a standalone 1,061-row Bitcoin point-forecast artifact."""
+    frame = pd.read_csv(path)
+    relative = path.relative_to(ROOT).as_posix()
+    v.check(frame.shape == (1061, 2), f"shape: {relative}")
+    v.check(frame.columns.tolist() == ["Timestamp", model_column], f"schema: {relative}")
+    v.check(frame["Timestamp"].equals(expected_timestamps), f"aligned timestamps: {relative}")
+    v.check(frame["Timestamp"].is_unique, f"unique timestamps: {relative}")
+    v.check(not frame.isna().any().any(), f"no missing values: {relative}")
+    v.check(np.isfinite(frame[model_column]).all(), f"finite forecasts: {relative}")
+
+
+def verify_arima_validation(v: Verification) -> None:
+    """Verify the training-only ARIMA vector used to construct empirical intervals."""
+    path = ROOT / "results" / "arima_validation_forecast.csv"
+    frame = pd.read_csv(path)
+    timestamps = pd.to_datetime(frame["Timestamp"], utc=True)
+    v.check(frame.shape == (1061, 2), "shape: results/arima_validation_forecast.csv")
+    v.check(frame.columns.tolist() == ["Timestamp", "ARIMA_Rolling_Validation"],
+            "schema: results/arima_validation_forecast.csv")
+    v.check(timestamps.is_unique and timestamps.is_monotonic_increasing,
+            "ordered unique timestamps: results/arima_validation_forecast.csv")
+    v.check(timestamps.max() == pd.Timestamp("2023-08-11", tz="UTC"),
+            "ends before Bitcoin test: results/arima_validation_forecast.csv")
+    v.check(np.isfinite(frame["ARIMA_Rolling_Validation"]).all(),
+            "finite forecasts: results/arima_validation_forecast.csv")
+
+
+def verify_smoothing_validation(path: Path, model_column: str, v: Verification) -> None:
+    """Verify a training-only smoothing vector used for empirical intervals."""
+    frame = pd.read_csv(path)
+    timestamps = pd.to_datetime(frame["Timestamp"], utc=True)
+    relative = path.relative_to(ROOT).as_posix()
+    v.check(frame.shape == (1061, 2), f"shape: {relative}")
+    v.check(frame.columns.tolist() == ["Timestamp", model_column], f"schema: {relative}")
+    v.check(timestamps.is_unique and timestamps.is_monotonic_increasing, f"ordered unique timestamps: {relative}")
+    v.check(timestamps.max() == pd.Timestamp("2023-08-11", tz="UTC"), f"ends before Bitcoin test: {relative}")
+    v.check(np.isfinite(frame[model_column]).all(), f"finite forecasts: {relative}")
+
+
 def main() -> int:
     v = Verification()
     verify_hashes(v)
     comparison = pd.read_csv(ROOT / "results" / "cross_domain_model_comparison.csv")
+    bitcoin_comparison = pd.DataFrame(
+        [
+            {"Model": model, "Protocol": "Rolling one-step daily", "MAE": values[0],
+             "RMSE": values[1], "MAPE": values[2], "sMAPE": values[3]}
+            for model, values in BITCOIN_METRICS.items()
+        ]
+    )
+    comparison = pd.concat(
+        [comparison.loc[~comparison["Protocol"].eq("Rolling one-step daily")], bitcoin_comparison],
+        ignore_index=True,
+    )
     verify_forecast(
         ROOT / "results" / "validated_forecasts.csv", 1061,
-        ["Timestamp", "Actual", "Naive", "Persistence_Enhanced_LSTM", "Chronos_Bolt_Tiny", "TimesFM"],
+        ["Timestamp", "Actual", "Naive", "Persistence_Enhanced_LSTM", "Chronos_Bolt_Tiny", "TimesFM", "ARIMA_Rolling", "Prophet_Periodic_Refit", "Simple_Exp_Smoothing", "Holt_Winters"],
         "Rolling one-step daily", comparison, v,
     )
+    validated = pd.read_csv(ROOT / "results" / "validated_forecasts.csv")
+    verify_point_vector(ROOT / "results" / "arima_rolling_forecast.csv", "ARIMA_Rolling", validated["Timestamp"], v)
+    verify_point_vector(ROOT / "results" / "prophet_rolling_forecast.csv", "Prophet_Periodic_Refit", validated["Timestamp"], v)
+    verify_point_vector(ROOT / "results" / "simple_exp_smoothing_forecast.csv", "Simple_Exp_Smoothing", validated["Timestamp"], v)
+    verify_point_vector(ROOT / "results" / "holt_winters_forecast.csv", "Holt_Winters", validated["Timestamp"], v)
+    verify_arima_validation(v)
+    verify_smoothing_validation(ROOT / "results" / "simple_exp_smoothing_validation_forecast.csv", "Simple_Exp_Smoothing_Validation", v)
+    verify_smoothing_validation(ROOT / "results" / "holt_winters_validation_forecast.csv", "Holt_Winters_Validation", v)
     verify_forecast(
         ROOT / "results" / "electricity" / "protocol_a_validated_forecasts.csv", 46176,
         ["Timestamp", "Actual", "Naive", "Daily_Seasonal_Naive", "Weekly_Seasonal_Naive", "Moving_Average", "DHR_ARIMA", "LSTM", "Chronos_Bolt_Tiny", "TimesFM"],

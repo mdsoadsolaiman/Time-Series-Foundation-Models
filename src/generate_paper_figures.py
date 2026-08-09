@@ -17,6 +17,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from matplotlib.colors import LinearSegmentedColormap
+from statsmodels.graphics.tsaplots import plot_acf
+from statsmodels.tsa.seasonal import STL
+
+from src.data_loader import load_bitcoin_data
+from src.preprocessing import prepare_daily_bitcoin_data
 
 ROOT = Path(__file__).resolve().parents[1]
 RESULTS = ROOT / "results"
@@ -27,10 +32,128 @@ COLORS = {"Actual": "#222222", "Naive": "#0072B2", "Persistence-Enhanced LSTM": 
 NAME = {"Persistence_Enhanced_LSTM": "Persistence-Enhanced LSTM", "Chronos_Bolt_Tiny": "Chronos-Bolt-Tiny",
         "DHR_ARIMA": "DHR-ARIMA", "Daily_Seasonal_Naive": "Daily Seasonal Naive"}
 
+def bitcoin_seasonality_diagnostic():
+    """Plot ACF and weekly STL diagnostics for daily Bitcoin log returns."""
+    raw = load_bitcoin_data(ROOT / "data" / "bitcoin" / "btcusd_1-min_data.csv")
+    daily = prepare_daily_bitcoin_data(raw)
+    log_returns = np.log(daily["Close"] / daily["Close"].shift(1)).dropna()
+    stl = STL(log_returns, period=7, robust=True).fit()
+    seasonal_strength = max(0.0, 1.0 - np.var(stl.resid) / np.var(stl.resid + stl.seasonal))
+    lag7_acf = float(log_returns.autocorr(lag=7))
+    confidence_bound = float(1.96 / np.sqrt(len(log_returns)))
+
+    fig, axes = plt.subplots(3, 1, figsize=(11, 10))
+    log_returns.tail(730).plot(ax=axes[0], color="#0072B2", lw=0.9)
+    axes[0].set(title="Bitcoin daily log returns (final 730 observations)", ylabel="Log return", xlabel="Date")
+    axes[0].grid(alpha=0.2)
+    plot_acf(log_returns, lags=30, zero=False, alpha=0.05, ax=axes[1], color="#D55E00")
+    axes[1].axvline(7, color="#009E73", ls="--", lw=1.5, label=f"Lag 7 ACF = {lag7_acf:.4f}")
+    axes[1].set(title="ACF of Bitcoin daily log returns", xlabel="Lag (days)")
+    axes[1].legend(frameon=False)
+    stl.seasonal.tail(730).plot(ax=axes[2], color="#CC79A7", lw=0.9)
+    axes[2].set(title=f"STL weekly seasonal component (strength = {seasonal_strength:.4f})", ylabel="Seasonal component", xlabel="Date")
+    axes[2].grid(alpha=0.2)
+    fig.tight_layout()
+    save(fig, FIGURES / "bitcoin" / "bitcoin_log_return_seasonality_diagnostic.png")
+    print(f"observations={len(log_returns)}")
+    print(f"lag7_acf={lag7_acf:.12f}")
+    print(f"approx_95pct_bound={confidence_bound:.12f}")
+    print(f"weekly_stl_seasonal_strength={seasonal_strength:.12f}")
+
 def save(fig, path):
     path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(path, dpi=240, bbox_inches="tight")
     plt.close(fig)
+
+
+def save_300(fig, path):
+    """Save a final Bitcoin paper figure at the Step 9 resolution."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path, dpi=300, bbox_inches="tight")
+    plt.close(fig)
+
+
+def bitcoin_step9_figures():
+    """Generate the five final Bitcoin audit figures from frozen evidence."""
+    plt.rcParams.update({"font.size": 10, "axes.titlesize": 13, "axes.labelsize": 11, "figure.facecolor": "white"})
+    palette = ["#0072B2", "#E69F00", "#56B4E9", "#009E73", "#CC79A7", "#D55E00", "#F0E442"]
+    forecasts = pd.read_csv(RESULTS / "validated_forecasts.csv", parse_dates=["Timestamp"])
+    actual = forecasts["Actual"].to_numpy(dtype=float)
+    target = prepare_daily_bitcoin_data(
+        load_bitcoin_data(ROOT / "data" / "bitcoin" / "btcusd_1-min_data.csv")
+    )["Close"].dropna().astype(float)
+    moving_average = target.shift(1).rolling(7).mean().reindex(pd.DatetimeIndex(forecasts["Timestamp"])).to_numpy(dtype=float)
+    vectors = {
+        "Naive": forecasts["Naive"].to_numpy(dtype=float),
+        "7-Day MA": moving_average,
+        "ARIMA": forecasts["ARIMA_Rolling"].to_numpy(dtype=float),
+        "PE-LSTM": forecasts["Persistence_Enhanced_LSTM"].to_numpy(dtype=float),
+        "Chronos": forecasts["Chronos_Bolt_Tiny"].to_numpy(dtype=float),
+        "TimesFM": forecasts["TimesFM"].to_numpy(dtype=float),
+        "Prophet": forecasts["Prophet_Periodic_Refit"].to_numpy(dtype=float),
+    }
+    rmse_values = [float(np.sqrt(np.mean((actual - vector) ** 2))) for vector in vectors.values()]
+    fig, ax = plt.subplots(figsize=(10.5, 5.2))
+    ax.bar(list(vectors), rmse_values, color=palette)
+    ax.set(title="Bitcoin fair-protocol point accuracy", ylabel="RMSE (USD)", xlabel="Executed model")
+    ax.tick_params(axis="x", rotation=22)
+    ax.grid(axis="y", alpha=.2)
+    fig.text(.5, -.06, "SARIMA omitted (no supported weekly seasonality); PatchTST and iTransformer deferred.", ha="center", fontsize=9)
+    fig.tight_layout()
+    save_300(fig, FIGURES / "bitcoin" / "bitcoin_fair_protocol_rmse.png")
+
+    old_rmse = [52421.66772303543, 52432.89033084434]
+    new_rmse = [rmse_values[list(vectors).index("ARIMA")], np.nan]
+    x = np.arange(2); width = .34
+    fig, ax = plt.subplots(figsize=(8.8, 5.0))
+    ax.bar(x - width / 2, old_rmse, width, label="Legacy static multi-step", color="#D55E00")
+    ax.bar(x + width / 2, np.nan_to_num(new_rmse), width, label="New rolling one-step", color="#0072B2")
+    ax.text(x[1] + width / 2, 1200, "Omitted", ha="center", va="bottom", rotation=90, fontsize=9)
+    ax.set_xticks(x, ["ARIMA", "SARIMA(7)"])
+    ax.set(title="Legacy static versus audited rolling protocol", ylabel="RMSE (USD)")
+    ax.legend(frameon=False)
+    ax.grid(axis="y", alpha=.2)
+    fig.tight_layout()
+    save_300(fig, FIGURES / "bitcoin" / "bitcoin_static_vs_rolling_rmse.png")
+
+    calibration = pd.read_csv(RESULTS / "foundation_uncertainty_summary.csv")
+    labels = ["Chronos", "TimesFM"]
+    native = 100 * calibration.set_index("Model").loc[["Chronos_Bolt_Tiny", "TimesFM"], "Native_Test_Coverage_80"].to_numpy()
+    calibrated = 100 * calibration.set_index("Model").loc[["Chronos_Bolt_Tiny", "TimesFM"], "Calibrated_Test_Coverage_80"].to_numpy()
+    fig, ax = plt.subplots(figsize=(8.8, 5.0))
+    ax.plot(labels, native, marker="o", lw=2, label="Native", color="#D55E00")
+    ax.plot(labels, calibrated, marker="o", lw=2, label="Training-calibrated", color="#0072B2")
+    ax.axhline(80, color="#222222", ls="--", lw=1.5, label="Nominal 80%")
+    ax.set(ylim=(0, 100), title="Foundation-model 80% interval reliability", ylabel="Empirical test coverage (%)")
+    ax.legend(frameon=False)
+    ax.grid(axis="y", alpha=.2)
+    fig.tight_layout()
+    save_300(fig, FIGURES / "bitcoin" / "bitcoin_uncertainty_reliability.png")
+
+    penalised = pd.read_csv(RESULTS / "bitcoin_trust_scores_penalised.csv", index_col="Model")
+    available = pd.read_csv(RESULTS / "bitcoin_trust_scores_evidence_available.csv", index_col="Model")
+    order = penalised["Overall Trust Score - Missing Evidence Penalised"].sort_values().index
+    fig, axes = plt.subplots(1, 2, figsize=(13, 5.8), sharey=True)
+    axes[0].barh(order, penalised.loc[order, "Overall Trust Score - Missing Evidence Penalised"], color="#0072B2")
+    axes[0].set(title="Missing evidence penalised", xlabel="Trust Score", xlim=(0, 100))
+    axes[1].barh(order, available.loc[order, "Evidence-Available Trust Score"], color="#009E73")
+    axes[1].set(title="Evidence available", xlabel="Trust Score", xlim=(0, 100))
+    for ax in axes: ax.grid(axis="x", alpha=.2)
+    fig.suptitle("Bitcoin Trust Score rankings")
+    fig.tight_layout()
+    save_300(fig, FIGURES / "bitcoin" / "bitcoin_trust_score_rankings.png")
+
+    dates = forecasts["Timestamp"]
+    deterministic = forecasts["Persistence_Enhanced_LSTM"].to_numpy(dtype=float)
+    fig, ax = plt.subplots(figsize=(11, 5.0))
+    for run, color in zip([1, 2, 3], ["#0072B2", "#E69F00", "#009E73"]):
+        ax.plot(dates, deterministic, lw=1.2, alpha=.75, label=f"Fresh-kernel run {run}", color=color)
+    ax.fill_between(dates, deterministic, deterministic, color="#CC79A7", alpha=.25, label="Run range (max = min)")
+    ax.set(title="PE-LSTM determinism verification: three bit-identical runs", xlabel="Date", ylabel="Forecast close (USD)")
+    ax.legend(frameon=False, ncol=2)
+    ax.grid(alpha=.2)
+    fig.tight_layout()
+    save_300(fig, FIGURES / "bitcoin" / "bitcoin_pe_lstm_determinism.png")
 
 def line_plot(df, cols, title, ylabel, path):
     fig, ax = plt.subplots(figsize=(11, 5.2))
@@ -167,7 +290,11 @@ def main():
 
 if __name__ == "__main__":
     import sys
-    if "--cross-domain-revision-only" in sys.argv:
+    if "--bitcoin-seasonality-only" in sys.argv:
+        bitcoin_seasonality_diagnostic()
+    elif "--bitcoin-step9-only" in sys.argv:
+        bitcoin_step9_figures()
+    elif "--cross-domain-revision-only" in sys.argv:
         cross_domain_revision_figures()
     else:
         main()

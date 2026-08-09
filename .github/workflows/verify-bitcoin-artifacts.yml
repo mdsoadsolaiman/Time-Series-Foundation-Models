@@ -1,0 +1,28 @@
+name: Verify Bitcoin research artifacts
+
+on:
+  push:
+    paths:
+      - "notebooks/0*.ipynb"
+      - "notebooks/18*.ipynb"
+      - "src/**"
+      - "results/**"
+      - "!results/electricity/**"
+  pull_request:
+    paths:
+      - "notebooks/0*.ipynb"
+      - "notebooks/18*.ipynb"
+      - "src/**"
+      - "results/**"
+      - "!results/electricity/**"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - run: pip install numpy==2.4.6 pandas==3.0.3
+      - run: python src/verify_research_artifacts.py
