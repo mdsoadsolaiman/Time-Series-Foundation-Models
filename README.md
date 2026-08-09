@@ -22,7 +22,7 @@ The central question is whether zero-shot foundation models are consistently tru
 
 ### Domain 1 — Finance: Bitcoin
 
-**Completed.** Daily Bitcoin Close is evaluated over 1,061 test days with rolling one-step forecasts. The authoritative comparison is `results/validated_forecasts.csv`.
+**Completed and rebuilt.** Daily Bitcoin Close is evaluated over 1,061 test days with ten analytical models. Nine vectors are frozen in `results/validated_forecasts.csv`; the 7-Day Moving Average is reconstructed deterministically. Corrected downstream analysis uses training-defined regimes, Temporal Stability, method-labelled uncertainty, HAC inference, and Holm correction.
 
 ### Domain 2 — Energy: South Australian Electricity Demand
 
@@ -48,60 +48,40 @@ The central question is whether zero-shot foundation models are consistently tru
 
 - **Accuracy:** MAE, RMSE, MAPE, sMAPE, Bitcoin MASE-1, and electricity MASE-48.
 - **Regime-Conditional Robustness:** predeclared demand/volatility or market regimes; not comprehensive adversarial robustness.
-- **Temporal Stability:** contiguous chronological test segments; not broad cross-dataset or out-of-distribution generalisation.
+- **Temporal Stability:** contiguous chronological test segments; not broad cross-dataset or out-of-distribution transfer.
 - **Uncertainty:** supported native intervals, empirical coverage, and width.
 - **Transparency and Auditability:** interpretation, complexity, reproducibility, and failure detectability; not direct XAI.
-- **Statistical significance:** protocol-appropriate Diebold–Mariano tests.
+- **Statistical significance:** protocol-appropriate Diebold–Mariano tests; Bitcoin uses Newey–West HAC variance and Holm family-wise correction.
 
 Dimension-level evidence is primary. The secondary **Exploratory Composite Trustworthiness Summary** retains researcher-defined 35/20/20/15/10 weights. Components are not statistically independent, normalisation depends on the comparison set, and neither summary is a universal measurement instrument.
 
 ## Key Bitcoin Results
 
-| Rank | Model | MAE | RMSE | MAPE | sMAPE |
-|---:|---|---:|---:|---:|---:|
-| 1 | Naive | 1290.353242 | 1853.624774 | 1.742747 | 1.744142 |
-| 2 | Simple Exponential Smoothing Rolling One-Step | 1290.358684 | 1855.731424 | 1.742685 | 1.743871 |
-| 3 | ARIMA Rolling One-Step | 1299.874638 | 1866.302859 | 1.754004 | 1.754209 |
-| 4 | Holt-Winters Rolling One-Step | 1308.541314 | 1871.702185 | 1.763640 | 1.763424 |
-| 5 | Persistence-Enhanced Log-Return LSTM | 1321.365311 | 1881.091190 | 1.783956 | 1.791645 |
-| 6 | TimesFM | 1349.946786 | 1924.199337 | 1.823179 | 1.823895 |
-| 7 | Chronos-Bolt-Tiny | 1424.025828 | 1994.007926 | 1.934509 | 1.928782 |
-| 8 | Persistence-Enhanced Log-Return Transformer | 2019.366342 | 2559.749810 | 2.710936 | 2.759271 |
-| 9 | Prophet 30-Day Periodic Refit | 8195.262862 | 10781.162873 | 11.199767 | 11.287185 |
+| Rank | Model | MAE | RMSE | MASE |
+|---:|---|---:|---:|---:|
+| 1 | Naive | 1290.353 | 1853.625 | 4.576 |
+| 2 | Simple Exponential Smoothing — Rolling One-Step | 1290.359 | 1855.731 | 4.576 |
+| 3 | ARIMA Rolling One-Step | 1299.875 | 1866.303 | 4.609 |
+| 4 | Additive-Trend Exponential Smoothing | 1308.541 | 1871.702 | 4.640 |
+| 5 | Persistence-Enhanced Log-Return LSTM | 1321.365 | 1881.091 | 4.686 |
+| 6 | TimesFM | 1349.947 | 1924.199 | 4.787 |
+| 7 | Chronos-Bolt-Tiny | 1424.026 | 1994.008 | 5.050 |
+| 8 | Persistence-Enhanced Log-Return Transformer | 2019.366 | 2559.750 | 7.161 |
+| 9 | Prophet — 30-Day Periodic Refit | 8195.263 | 10781.163 | 29.061 |
 
-Naive remains the lowest-RMSE model. Its differences from Simple Exponential Smoothing (`p = 0.666843`), Holt-Winters (`p = 0.067710`), and rolling ARIMA (`p = 0.308442`) are not significant. Both smoothing models significantly outperform TimesFM, Chronos, and Prophet. Training-only conformal calibration changed Chronos 80% test coverage from 84.54% to 81.53% and TimesFM from 33.08% to 55.61%; TimesFM remains materially under-covered.
+The 7-Day Moving Average is the tenth analytical model and is reconstructed
+downstream from seven strictly prior prices. The corrected inference artifact
+covers all 45 pairs with HAC lag 6: 39 pairs are raw-significant and 33 remain
+significant after Holm correction.
 
-The significance analysis covers all 45 pairs among the ten Trust Score models. Nine vectors come from the validated artifact; the 7-Day Moving Average is reconstructed deterministically from seven strictly prior observations, matching Notebook 06.
+The exploratory composite is secondary. Naive leads the missing-evidence-
+penalised summary at `97.051891`, followed by SES at `96.970846`, ARIMA at
+`96.266697`, and additive-trend smoothing at `96.179827`. PE-LSTM scores
+`81.342547` with missing uncertainty penalised and `95.697114` on available
+dimensions. Full evidence is generated in the versioned Bitcoin CSVs.
 
-After applying the same validation-residual empirical uncertainty method to ARIMA and both smoothing models, Naive leads both Trust Score variants at `97.803780`; Simple Exponential Smoothing ranks second at `97.466671`, followed by Holt-Winters at `96.579302` and ARIMA at `96.545355`.
-
-The variants are ranked independently because missing uncertainty evidence changes the PE Log-Return LSTM result.
-
-| Penalised Rank | Model | Missing-Evidence-Penalised Score |
-|---:|---|---:|
-| 1 | Naive | 97.803780 |
-| 2 | Simple Exponential Smoothing Rolling One-Step | 97.466671 |
-| 3 | Holt-Winters Rolling One-Step | 96.579302 |
-| 4 | ARIMA Rolling One-Step | 96.545355 |
-| 5 | Chronos-Bolt-Tiny | 91.312313 |
-| 6 | TimesFM | 90.521931 |
-| 7 | Persistence-Enhanced Log-Return LSTM | 79.600601 |
-| 8 | 7-Day Moving Average | 70.724359 |
-| 9 | Persistence-Enhanced Log-Return Transformer | 70.412635 |
-| 10 | Prophet 30-Day Periodic Refit | 22.624980 |
-
-| Evidence-Available Rank | Model | Evidence-Available Score |
-|---:|---|---:|
-| 1 | Naive | 97.803780 |
-| 2 | Simple Exponential Smoothing Rolling One-Step | 97.466671 |
-| 3 | Holt-Winters Rolling One-Step | 96.579302 |
-| 4 | ARIMA Rolling One-Step | 96.545355 |
-| 5 | Persistence-Enhanced Log-Return LSTM | 93.647766 |
-| 6 | Chronos-Bolt-Tiny | 91.312313 |
-| 7 | TimesFM | 90.521931 |
-| 8 | 7-Day Moving Average | 70.724359 |
-| 9 | Persistence-Enhanced Log-Return Transformer | 70.412635 |
-| 10 | Prophet 30-Day Periodic Refit | 26.617624 |
+The final date, 2026-07-07, contains data only through 01:57 UTC and is retained
+as a documented partial daily observation to preserve `bitcoin-v1`.
 
 ## Key Electricity Results
 
@@ -153,18 +133,20 @@ TimeSeriesFoundationModels/
 
 | Notebook | Status | Purpose |
 |---|---|---|
-| `Bitcoin_Master.ipynb` | MASTER / RECOMMENDED ENTRY POINT | Safe Bitcoin orchestration, validation, and artifact-based analysis |
+| `Bitcoin_Master.ipynb` | MASTER / RECOMMENDED ENTRY POINT | Safe ten-model artifact-driven synthesis |
 | `Electricity_Master.ipynb` | MASTER / RECOMMENDED ENTRY POINT | Safe Electricity orchestration, validation, and artifact-based analysis |
-| `01_EDA.ipynb` | AUTHORITATIVE | Bitcoin data audit and daily preparation |
-| `02_Classical_Models.ipynb` | AUTHORITATIVE FAIR RESULTS + HISTORICAL STATIC-PROTOCOL CONTEXT | Single source of truth for ARIMA, Simple Exponential Smoothing, and Holt-Winters: retained static multi-step history plus verified rolling one-step results |
-| `03_Deep_Learning_LSTM.ipynb` | AUTHORITATIVE PE LOG-RETURN LSTM GENERATION + SUPERSEDED DEVELOPMENT HISTORY | Deterministic Persistence-Enhanced Log-Return LSTM generation plus preserved negative-result provenance |
-| `04_Transformers.ipynb` | HISTORICAL FAILURE CASE STUDY + AUTHORITATIVE FAIR RESULT | Preserved collapsed/raw-price history plus deterministic Persistence-Enhanced Log-Return Transformer and frozen ranking artifact |
-| `05_Advanced_Forecasting_Models.ipynb` | AUTHORITATIVE GENERATION — PROPHET + DEFERRED NEURALFORECAST SCOPE | Periodic-refit Prophet generation and deferred PatchTST/iTransformer environment status; classical models now live in Notebook 02 |
-| `05_Foundation_Models.ipynb` | AUTHORITATIVE GENERATION | Bitcoin foundation-model evidence |
-| `06_Trustworthiness.ipynb` | AUTHORITATIVE ANALYSIS | Bitcoin multidimensional trust evaluation |
-| `07_Model_Validation_Audit.ipynb` | AUTHORITATIVE ARTIFACT-ONLY AUDIT | Saved-vector schema, alignment, scaling, protocol, leakage, and failure-diagnostic checks without model training |
-| `08_Naive_Forecast_Audit.ipynb` | AUTHORITATIVE AUDIT | Persistence verification |
-| `09_Statistical_Significance_Test.ipynb` | AUTHORITATIVE ANALYSIS | Bitcoin DM tests |
+| `01_Bitcoin_Data_EDA.ipynb` | AUTHORITATIVE DATA | Canonical UTC aggregation, checks, and split |
+| `02_Bitcoin_Classical_Baselines.ipynb` | AUTHORITATIVE ANALYSIS | Final past-only classical comparison |
+| `03_Bitcoin_PE_LSTM.ipynb` | AUTHORITATIVE ANALYSIS | Frozen PE Log-Return LSTM evidence |
+| `04_Bitcoin_PE_Transformer.ipynb` | AUTHORITATIVE ANALYSIS | Frozen PE Log-Return Transformer evidence |
+| `05_Bitcoin_Prophet_and_Deferred_Models.ipynb` | SUPPORTING COMPARATOR | Periodic-refit Prophet and model-status table |
+| `06_Bitcoin_Foundation_Models.ipynb` | AUTHORITATIVE ANALYSIS | Zero-shot Chronos and TimesFM evidence |
+| `07_Bitcoin_Forecast_Freeze_and_Validation.ipynb` | AUTHORITATIVE GATE | Forecast-freeze boundary and validation |
+| `08_Bitcoin_Naive_Audit.ipynb` | AUTHORITATIVE AUDIT | Persistence and leakage proof |
+| `09_Bitcoin_Robustness_and_Temporal_Stability.ipynb` | AUTHORITATIVE ANALYSIS | Training-defined regimes and temporal segments |
+| `10_Bitcoin_Uncertainty.ipynb` | AUTHORITATIVE ANALYSIS | Method-separated uncertainty evidence |
+| `11_Bitcoin_Statistical_Inference.ipynb` | AUTHORITATIVE ANALYSIS | HAC DM tests and Holm adjustment |
+| `12_Bitcoin_Trustworthiness_Synthesis.ipynb` | AUTHORITATIVE SYNTHESIS | Component-first evidence and secondary composite |
 | `electricity/10_Electricity_EDA.ipynb` | AUTHORITATIVE | Dataset selection and audit |
 | `electricity/11_Electricity_Baselines.ipynb` | AUTHORITATIVE GENERATION | Protocol-specific deterministic baselines |
 | `electricity/11b_Electricity_Statistical_Model.ipynb` | AUTHORITATIVE GENERATION | DHR-ARIMA |
@@ -185,27 +167,27 @@ Use the master notebooks for routine inspection and artifact-based analysis. Use
 - Bitcoin: `results/validated_forecasts.csv`
 - Electricity A: `results/electricity/protocol_a_validated_forecasts.csv`
 - Electricity B: `results/electricity/protocol_b_validated_forecasts.csv`
-- Bitcoin trust evidence: `bitcoin_trust_scores_penalised.csv` and `bitcoin_trust_scores_evidence_available.csv`
-- Statistical evidence: `bitcoin_dm_pairwise_results.csv` plus electricity protocol-specific DM and effect-size CSVs
+- Rebuilt Bitcoin trust evidence: `bitcoin_trustworthiness_components_v2.csv` and `bitcoin_trust_score_sensitivity_v2.csv`
+- Corrected Bitcoin inference: `bitcoin_dm_pairwise_results_hac_holm.csv`; historical DM evidence is retained for provenance
 - Cross-domain: the four `results/cross_domain_*.csv` files
 
 The complete protected set and SHA-256 values are in [`results/authoritative_artifact_hashes.md`](results/authoritative_artifact_hashes.md). See [`results/README.md`](results/README.md) for artifact classification.
 
 ## Reproducibility
 
-Do not overwrite frozen artifacts during routine notebook execution. Downstream audit, trustworthiness, significance, and synthesis work loads saved forecast vectors. Several audit/analysis notebooks are intentionally saved without execution outputs; their authoritative evidence is the frozen CSV set, not a claimed executed notebook state. Protocols use chronological splits, past-only information, validation-only selection, deterministic LSTM controls, and exact timestamp alignment. Run `python src/verify_research_artifacts.py` for lightweight artifact-level verification.
-
-Start with:
-
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements-research.txt
-```
+Routine Bitcoin Run All is artifact-only. Generation must write to staging and
+requires explicit promotion. Run `python src/verify_research_artifacts.py` for
+artifact verification. See [`docs/bitcoin_reproducibility.md`](docs/bitcoin_reproducibility.md)
+for the separation between artifact-level reproduction and full model regeneration.
 
 ## Environment
 
-The audited completed environment is CPU-only Windows 11 build 26100 with Python 3.13.2. [`requirements-research.txt`](requirements-research.txt) is authoritative for direct research dependencies. Notebook tooling must be installed explicitly because the audited workstation resolves some Jupyter components outside `.venv`. Chronos-Bolt-Tiny and TimesFM inference completed on CPU. Moirai / Uni2TS was unavailable in the completed Python 3.13 workflow; PatchTST and iTransformer require an isolated Python 3.12 environment and have no authoritative forecasts. Artifact-only verification does not require model checkpoints.
+The lightweight Bitcoin artifact environment is Python 3.12 on Windows and is
+pinned in [`requirements-bitcoin-artifact.txt`](requirements-bitcoin-artifact.txt).
+The historical full-generation record used CPU-only Python 3.13.2, TensorFlow
+2.21.0, Torch 2.12.1, Chronos Forecasting 2.3.1, and TimesFM 2.0.2. The original
+`.venv` references a removed Python installation; full regeneration was not
+rerun or claimed during this rebuild.
 
 ## Limitations
 

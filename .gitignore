@@ -5,6 +5,7 @@ __pycache__/
 .ipynb_checkpoints/
 .venv/
 .venv-*/
+.artifact-venv/
 venv/
 env/
 *.ckpt

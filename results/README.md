@@ -2,7 +2,7 @@
 
 ## Authoritative forecasts
 
-- `validated_forecasts.csv`: aligned Bitcoin final-test vectors for Naive, Persistence-Enhanced LSTM, Chronos-Bolt-Tiny, and TimesFM.
+- `validated_forecasts.csv`: the `bitcoin-v1` aligned Bitcoin freeze with 1,061 rows and 11 columns: `Timestamp`, `Actual`, and nine saved model vectors—`Naive`, `Persistence_Enhanced_LSTM`, `Chronos_Bolt_Tiny`, `TimesFM`, `ARIMA_Rolling`, `Prophet_Periodic_Refit`, `Simple_Exp_Smoothing`, `Holt_Winters`, and `Persistence_Enhanced_Transformer`. The 7-Day Moving Average is reconstructed deterministically downstream from the seven strictly prior prices.
 - `electricity/protocol_a_validated_forecasts.csv`: aligned rolling one-step electricity vectors.
 - `electricity/protocol_b_validated_forecasts.csv`: aligned true 48-step day-ahead electricity vectors.
 - `electricity/protocol_b_validated_horizon_metrics.csv`: audited horizon-specific Protocol B metrics.
@@ -11,7 +11,7 @@ These files must not be overwritten by exploratory runs. Their hashes are record
 
 ## Supporting evidence
 
-Bitcoin model-specific CSVs preserve source vectors used to assemble the validated artifact. Electricity forecast files preserve baseline, DHR-ARIMA, LSTM, Chronos, and TimesFM evidence for each protocol. Regime-conditional robustness, temporal-stability (historical CSV label: `generalisation`), uncertainty, exploratory composite, effect-size, and DM tables are authoritative downstream evidence.
+Bitcoin model-specific CSVs preserve source vectors used to assemble the validated artifact. Corrected Bitcoin downstream evidence uses training-defined regimes, Temporal Stability, method-labelled uncertainty, HAC Diebold–Mariano tests, Holm adjustment, and component-first trustworthiness synthesis. The `*_v2.csv`, `*_training_defined.csv`, and `*_hac_holm.csv` files preserve this rebuilt evidence without silently replacing historical artifacts. Electricity forecast files preserve baseline, DHR-ARIMA, LSTM, Chronos, and TimesFM evidence for each protocol.
 
 ## Protocol separation
 
