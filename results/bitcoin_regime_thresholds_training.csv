@@ -1,0 +1,5 @@
+Threshold,Value,Source,Training_Start,Training_End
+volatility_low_33,0.024310195813659143,Training data only,2012-01-01 00:00:00+00:00,2023-08-11 00:00:00+00:00
+volatility_high_67,0.03753211462313674,Training data only,2012-01-01 00:00:00+00:00,2023-08-11 00:00:00+00:00
+return_major_up_80,0.025094821893954226,Training data only,2012-01-01 00:00:00+00:00,2023-08-11 00:00:00+00:00
+return_major_down_20,-0.0184764007508575,Training data only,2012-01-01 00:00:00+00:00,2023-08-11 00:00:00+00:00

@@ -1,0 +1,19 @@
+Model,Uncertainty Evidence Type,Native,Calibrated,Calibration Source,Nominal Level,Coverage,Average Width,Coverage Error,Evidence Status
+Naive,Validation-Residual Empirical Interval,False,True,"Final 1,061 training dates",0.8,0.6569274269557022,2766.5799999999945,0.14307257304429788,Available
+Naive,Validation-Residual Empirical Interval,False,True,"Final 1,061 training dates",0.95,0.9038642789820923,5985.979999999996,0.04613572101790764,Available
+7-Day Moving Average,Validation-Residual Empirical Interval,False,True,"Final 1,061 training dates",0.8,0.6672950047125353,5119.605714285717,0.1327049952874647,Available
+7-Day Moving Average,Validation-Residual Empirical Interval,False,True,"Final 1,061 training dates",0.95,0.9095193213949104,10181.151428571437,0.040480678605089526,Available
+ARIMA Rolling One-Step,Validation-Residual Empirical Interval,False,True,"Final 1,061 training dates",0.8,0.6625824693685203,2804.023415374526,0.13741753063147977,Available
+ARIMA Rolling One-Step,Validation-Residual Empirical Interval,False,True,"Final 1,061 training dates",0.95,0.8991517436380773,6024.447788937876,0.050848256361922695,Available
+Simple Exponential Smoothing — Rolling One-Step,Validation-Residual Empirical Interval,False,True,"Final 1,061 training dates",0.8,0.6691800188501413,2841.1200810071896,0.1308199811498587,Available
+Simple Exponential Smoothing — Rolling One-Step,Validation-Residual Empirical Interval,False,True,"Final 1,061 training dates",0.95,0.8982092365692743,5900.360002503992,0.05179076343072564,Available
+Additive-Trend Exponential Smoothing,Validation-Residual Empirical Interval,False,True,"Final 1,061 training dates",0.8,0.6625824693685203,2803.8063686505484,0.13741753063147977,Available
+Additive-Trend Exponential Smoothing,Validation-Residual Empirical Interval,False,True,"Final 1,061 training dates",0.95,0.9029217719132894,5957.3249529110035,0.04707822808671058,Available
+Persistence-Enhanced Log-Return Transformer,Validation-Residual Empirical Interval,False,True,"Final 1,061 training dates",0.8,0.41470311027332707,2773.157898600104,0.385296889726673,Available
+Persistence-Enhanced Log-Return Transformer,Validation-Residual Empirical Interval,False,True,"Final 1,061 training dates",0.95,0.7898209236569275,6055.731029462811,0.1601790763430725,Available
+Chronos-Bolt-Tiny,Native Foundation Quantiles,True,False,None,0.8,0.8454288407163054,5151.959880861215,0.045428840716305374,Available
+Chronos-Bolt-Tiny,Training-Only CQR-Adjusted Foundation Quantiles,False,True,180 training rows ending 2023-08-11 00:00:00+00:00,0.8,0.8152686145146089,4878.131755861215,0.015268614514608814,Available
+TimesFM,Native Foundation Quantiles,True,False,None,0.8,0.3308199811498586,1436.6274519910462,0.46918001885014143,Available
+TimesFM,Training-Only CQR-Adjusted Foundation Quantiles,False,True,180 training rows ending 2023-08-11 00:00:00+00:00,0.8,0.5560791705937794,2518.760264491046,0.24392082940622062,Available
+Persistence-Enhanced Log-Return LSTM,Unavailable,False,False,None,0.8,,,,Unavailable
+Prophet — 30-Day Periodic Refit,Unavailable,False,False,None,0.8,,,,Unavailable

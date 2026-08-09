@@ -1,0 +1,31 @@
+Scenario,Model,Rank,Score
+Base,Naive,1,97.05189067630815
+Base,Simple Exponential Smoothing — Rolling One-Step,2,96.97084552326204
+Base,ARIMA Rolling One-Step,3,96.26669683176576
+Base,Additive-Trend Exponential Smoothing,4,96.1798274406965
+Base,Chronos-Bolt-Tiny,5,92.13686090596343
+Base,TimesFM,6,89.41904071418762
+Base,Persistence-Enhanced Log-Return LSTM,7,81.34254658529106
+Base,7-Day Moving Average,8,71.8841830758549
+Base,Persistence-Enhanced Log-Return Transformer,9,70.62357459437268
+Base,Prophet — 30-Day Periodic Refit,10,23.219745706729704
+Lower transparency,Simple Exponential Smoothing — Rolling One-Step,1,97.13183612407096
+Lower transparency,Naive,2,97.05189067630815
+Lower transparency,ARIMA Rolling One-Step,3,96.59106438794895
+Lower transparency,Additive-Trend Exponential Smoothing,4,96.36486940653784
+Lower transparency,Chronos-Bolt-Tiny,5,93.3515150483331
+Lower transparency,TimesFM,6,90.96065388440356
+Lower transparency,Persistence-Enhanced Log-Return LSTM,7,82.39453998029302
+Lower transparency,Persistence-Enhanced Log-Return Transformer,8,70.36928933469322
+Lower transparency,7-Day Moving Average,9,70.02396444469065
+Lower transparency,Prophet — 30-Day Periodic Refit,10,19.754404722877386
+Higher transparency,Naive,1,97.05189067630815
+Higher transparency,Simple Exponential Smoothing — Rolling One-Step,2,96.8098549224531
+Higher transparency,Additive-Trend Exponential Smoothing,3,95.99478547485518
+Higher transparency,ARIMA Rolling One-Step,4,95.94232927558257
+Higher transparency,Chronos-Bolt-Tiny,5,90.92220676359379
+Higher transparency,TimesFM,6,87.87742754397169
+Higher transparency,Persistence-Enhanced Log-Return LSTM,7,80.29055319028913
+Higher transparency,7-Day Moving Average,8,73.74440170701915
+Higher transparency,Persistence-Enhanced Log-Return Transformer,9,70.87785985405215
+Higher transparency,Prophet — 30-Day Periodic Refit,10,26.68508669058203

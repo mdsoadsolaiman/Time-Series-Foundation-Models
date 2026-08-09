@@ -77,7 +77,7 @@ def metrics(actual: pd.Series, predicted: pd.Series) -> dict[str, float]:
 def verify_hashes(v: Verification) -> None:
     text = LEDGER.read_text(encoding="utf-8")
     entries = re.findall(r"\| `(?P<path>results/[^`]+)` \| `(?P<hash>[A-F0-9]{64})` \|", text)
-    v.check(len(entries) == 39, "ledger contains 39 protected artifacts")
+    v.check(len(entries) == 48, "ledger contains 48 protected artifacts")
     for relative, expected in entries:
         path = ROOT / relative
         v.check(path.is_file(), f"exists: {relative}")
@@ -153,6 +153,35 @@ def verify_smoothing_validation(path: Path, model_column: str, v: Verification) 
     v.check(np.isfinite(frame[model_column]).all(), f"finite forecasts: {relative}")
 
 
+def verify_rebuilt_bitcoin_evidence(v: Verification) -> None:
+    """Verify final artifact-only Bitcoin methodology outputs."""
+    metrics = pd.read_csv(ROOT / "results" / "bitcoin_point_forecast_metrics_v2.csv")
+    v.check(metrics["Model"].nunique() == 10, "rebuilt Bitcoin metrics contain 10 models")
+    v.check(metrics["N"].eq(1061).all(), "rebuilt Bitcoin metrics use 1,061 targets")
+    thresholds = pd.read_csv(ROOT / "results" / "bitcoin_regime_thresholds_training.csv")
+    v.check(len(thresholds) == 4 and thresholds["Source"].eq("Training data only").all(),
+            "Bitcoin regime thresholds are training-defined")
+    v.check(pd.to_datetime(thresholds["Training_End"], utc=True).max() == pd.Timestamp("2023-08-11", tz="UTC"),
+            "Bitcoin regime thresholds end before test")
+    robustness = pd.read_csv(ROOT / "results" / "bitcoin_regime_robustness_training_defined.csv")
+    v.check(robustness.shape[0] == 40 and robustness["Model"].nunique() == 10,
+            "Bitcoin robustness covers 4 regimes x 10 models")
+    stability = pd.read_csv(ROOT / "results" / "bitcoin_temporal_stability.csv")
+    v.check(stability.shape[0] == 30 and sorted(stability.groupby("Segment")["N"].first()) == [353, 354, 354],
+            "Bitcoin Temporal Stability covers balanced segments")
+    uncertainty = pd.read_csv(ROOT / "results" / "bitcoin_uncertainty_evidence_v2.csv")
+    v.check(uncertainty["Model"].nunique() == 10 and "Uncertainty Evidence Type" in uncertainty,
+            "Bitcoin uncertainty separates evidence type for 10 models")
+    dm = pd.read_csv(ROOT / "results" / "bitcoin_dm_pairwise_results_hac_holm.csv")
+    v.check(len(dm) == 45 and len(set(dm["Model A"]) | set(dm["Model B"])) == 10,
+            "Bitcoin corrected DM covers 45 pairs among 10 models")
+    v.check(dm["HAC Lag"].eq(6).all() and "Holm-adjusted p-value" in dm,
+            "Bitcoin DM uses HAC lag 6 and Holm adjustment")
+    trust = pd.read_csv(ROOT / "results" / "bitcoin_trustworthiness_components_v2.csv")
+    v.check(trust["Model"].nunique() == 10 and "Uncertainty Evidence Type" in trust,
+            "Bitcoin trustworthiness covers 10 models with evidence types")
+
+
 def main() -> int:
     v = Verification()
     verify_hashes(v)
@@ -183,6 +212,7 @@ def main() -> int:
     verify_smoothing_validation(ROOT / "results" / "simple_exp_smoothing_validation_forecast.csv", "Simple_Exp_Smoothing_Validation", v)
     verify_smoothing_validation(ROOT / "results" / "holt_winters_validation_forecast.csv", "Holt_Winters_Validation", v)
     verify_smoothing_validation(ROOT / "results" / "persistence_enhanced_transformer_validation_forecast.csv", "Persistence_Enhanced_Transformer", v)
+    verify_rebuilt_bitcoin_evidence(v)
     verify_forecast(
         ROOT / "results" / "electricity" / "protocol_a_validated_forecasts.csv", 46176,
         ["Timestamp", "Actual", "Naive", "Daily_Seasonal_Naive", "Weekly_Seasonal_Naive", "Moving_Average", "DHR_ARIMA", "LSTM", "Chronos_Bolt_Tiny", "TimesFM"],

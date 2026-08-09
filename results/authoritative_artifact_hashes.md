@@ -23,6 +23,15 @@ These SHA-256 hashes freeze the authoritative and supporting evidence before the
 | `results/bitcoin_trust_scores_penalised.csv` | `43334D4695AE3DC6E805C9265C1A204E41DD94FD3B492311B525793DDBDEEF3F` | Bitcoin missing-evidence-penalised Trust Scores | Authoritative evidence |
 | `results/bitcoin_trust_scores_evidence_available.csv` | `50B17AAE7B67FC67583745D44487C9AF57D5B909E6FB4C0575B09744FC661DD6` | Bitcoin evidence-available Trust Scores | Authoritative evidence |
 | `results/bitcoin_dm_pairwise_results.csv` | `DE48D5DC77E591ADE6FBB67D08AE16F8A6961393C23C72801B447B90D3D61B96` | Bitcoin full pairwise Diebold-Mariano results | Authoritative evidence |
+| `results/bitcoin_point_forecast_metrics_v2.csv` | `C848334EB888A9C318744D2DF414FDA2D763A849A6D9276E6C56DDB911E706AD` | Bitcoin-v1 artifact-derived metrics | Authoritative rebuilt evidence |
+| `results/bitcoin_regime_thresholds_training.csv` | `411E0F1181696FE08C79D8462420710F98971F9059C540571352BFAD956AE31A` | Training-only Bitcoin regime thresholds | Authoritative rebuilt evidence |
+| `results/bitcoin_regime_robustness_training_defined.csv` | `5DE17BA988DE4FFA80A83ADA1A27672DB5E27948EE59B460DFFA82807087868E` | Training-defined regime evaluation | Authoritative rebuilt evidence |
+| `results/bitcoin_temporal_stability.csv` | `482CFB116D9E3C67AE258B473BB3B98F08876D8ED2AFCAF22E8C7463B4EBFE5E` | Earlier/Middle/Later stability evidence | Authoritative rebuilt evidence |
+| `results/bitcoin_uncertainty_evidence_v2.csv` | `847871A6C64ADFB746C2A3EDB936E2D65C01F20E5020D686CA2FC80F8FD262FC` | Method-separated Bitcoin uncertainty evidence | Authoritative rebuilt evidence |
+| `results/bitcoin_dm_pairwise_results_hac_holm.csv` | `3C8211FA6E5A35F164A8F7727E078DECBA0ADFF259E904323D6ADD6392783EEB` | HAC DM tests with Holm correction | Authoritative corrected inference |
+| `results/bitcoin_transparency_auditability_rubric.csv` | `7161C4F15696187015F37F76FCB6A1B3FCD0A1B6D438643040C2E99CA332312B` | Documented transparency/auditability rubric | Authoritative rebuilt evidence |
+| `results/bitcoin_trustworthiness_components_v2.csv` | `43F3D1C769D50EBD9D83C74B0E1257FCDE0AA3077C689C841478F5D08471065B` | Component-first Bitcoin synthesis | Authoritative rebuilt evidence |
+| `results/bitcoin_trust_score_sensitivity_v2.csv` | `593E62A809157E8C973A64E57F5E57C7E366420AE926F0812AD125D0CE0F16C5` | Exploratory composite sensitivity | Authoritative rebuilt evidence |
 | `results/electricity/protocol_a_validated_forecasts.csv` | `E48D3E53BE01F2365E782CEB192B000044A4964BF7FA7EAAA104C8F640732C95` | Electricity rolling one-step forecasts | Authoritative |
 | `results/electricity/protocol_b_validated_forecasts.csv` | `064D0D63688126B53033C18DE94B9232173E94CC595920DF9C45AB3442DCB19E` | Electricity 48-step day-ahead forecasts | Authoritative |
 | `results/electricity/protocol_b_validated_horizon_metrics.csv` | `868E03ACEDBB444B25B4F43E4670CBDE2A7A8BE9E93C5447ECF79F56E32CA8E3` | Validated horizon metrics | Authoritative |

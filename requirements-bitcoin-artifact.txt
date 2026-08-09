@@ -1,0 +1,11 @@
+# Bitcoin artifact-analysis environment (Python 3.12, Windows x86-64).
+# This environment verifies frozen forecasts and rebuilds downstream evidence;
+# it does not regenerate TensorFlow, Torch, Chronos, or TimesFM forecasts.
+numpy==2.4.6
+pandas==3.0.3
+scipy==1.18.0
+matplotlib==3.11.0
+nbformat==5.10.4
+nbclient==0.10.2
+ipykernel==7.3.0
+pytest==8.4.2

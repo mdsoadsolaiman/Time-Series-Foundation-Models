@@ -1,0 +1,11 @@
+Model,Mechanism Transparency,Artifact Reproducibility,Deterministic Behaviour,Implementation Simplicity,Failure Detectability,External Independence,Transparency and Auditability Score
+Naive,100,100,100,100,100,100,100.0
+Simple Exponential Smoothing — Rolling One-Step,95,100,100,90,95,100,96.66666666666667
+Additive-Trend Exponential Smoothing,92,100,100,88,92,100,95.33333333333333
+ARIMA Rolling One-Step,85,100,100,82,90,100,92.83333333333333
+7-Day Moving Average,98,100,100,98,98,100,99.0
+Prophet — 30-Day Periodic Refit,75,100,90,72,82,100,86.5
+Persistence-Enhanced Log-Return LSTM,50,100,90,55,70,100,77.5
+Persistence-Enhanced Log-Return Transformer,45,100,100,45,75,100,77.5
+Chronos-Bolt-Tiny,35,100,90,60,82,45,68.66666666666667
+TimesFM,30,100,90,50,78,45,65.5
