@@ -285,10 +285,16 @@ The principal vector is `results/validated_forecasts.csv`. Supporting point vect
 
 Original raw-price LSTM:
 
-- Implemented and executed as an exploratory supervised neural model.
+- Its original implementation and archived RMSE near 20,600 remain in Notebook 03 as an exploratory supervised-neural failure case.
 - Underperformed the Naive baseline.
 - Diagnostics indicated non-stationarity, range issues, lag, and over-smoothing.
 - Not included as an authoritative saved-vector model unless an exact validated vector is available.
+
+Persistence-Enhanced LSTM:
+
+- Authoritative deterministic generation now lives in Notebook 03 directly below the historical raw-price experiment.
+- Its log-return formulation, thread pinning, global seed, and deterministic TensorFlow operations reproduced the frozen forecast vector exactly across three fresh-kernel runs.
+- Notebook 07 now reads and audits the saved vector without retraining it.
 
 Improved experimental LSTM:
 
@@ -307,6 +313,9 @@ Corrected but over-smoothed Transformer:
 - A corrected Transformer projected the 1D input into a higher model dimension before attention and normalization.
 - It avoided the exact original collapse but still showed severe range compression and poor accuracy.
 - Excluded from the authoritative comparison and exploratory composite summary.
+- Notebook 04 now also contains the more rigorous positional corrected implementation formerly trained in Notebook 07. Its forecast vector was bit-identical across three fresh-kernel regression runs, but no authoritative Transformer CSV exists and it remains excluded from the frozen ranking.
+
+Notebook 07 is now artifact-only. It retains the sequence/target alignment, scaling and inverse-scaling, Protocol A versus Protocol B, leakage, collapse, smoothing, range-compression, and final diagnosis audits without importing or fitting TensorFlow models.
 
 ARIMA/SARIMA:
 
