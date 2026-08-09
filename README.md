@@ -40,7 +40,7 @@ The central question is whether zero-shot foundation models are consistently tru
 
 - **Baselines:** Naive persistence, daily and weekly seasonal naive, moving average.
 - **Statistical:** Bitcoin rolling ARIMA, Simple Exponential Smoothing, additive-trend non-seasonal Holt-Winters, and periodic-refit Prophet; electricity DHR-ARIMA.
-- **Deep learning:** Bitcoin Persistence-Enhanced Log-Return LSTM and protocol-specific electricity LSTMs.
+- **Deep learning:** Bitcoin Persistence-Enhanced Log-Return LSTM, Persistence-Enhanced Log-Return Transformer, and protocol-specific electricity LSTMs.
 - **Foundation models:** zero-shot Chronos-Bolt-Tiny and TimesFM.
 - **Unavailable/optional:** Moirai/Uni2TS, PatchTST, and iTransformer have no authoritative results.
 
@@ -66,11 +66,12 @@ Dimension-level evidence is primary. The secondary **Exploratory Composite Trust
 | 5 | Persistence-Enhanced Log-Return LSTM | 1321.365311 | 1881.091190 | 1.783956 | 1.791645 |
 | 6 | TimesFM | 1349.946786 | 1924.199337 | 1.823179 | 1.823895 |
 | 7 | Chronos-Bolt-Tiny | 1424.025828 | 1994.007926 | 1.934509 | 1.928782 |
-| 8 | Prophet 30-Day Periodic Refit | 8195.262862 | 10781.162873 | 11.199767 | 11.287185 |
+| 8 | Persistence-Enhanced Log-Return Transformer | 2019.366342 | 2559.749810 | 2.710936 | 2.759271 |
+| 9 | Prophet 30-Day Periodic Refit | 8195.262862 | 10781.162873 | 11.199767 | 11.287185 |
 
 Naive remains the lowest-RMSE model. Its differences from Simple Exponential Smoothing (`p = 0.666843`), Holt-Winters (`p = 0.067710`), and rolling ARIMA (`p = 0.308442`) are not significant. Both smoothing models significantly outperform TimesFM, Chronos, and Prophet. Training-only conformal calibration changed Chronos 80% test coverage from 84.54% to 81.53% and TimesFM from 33.08% to 55.61%; TimesFM remains materially under-covered.
 
-The significance analysis covers all 36 pairs among the nine Trust Score models. Eight vectors come from the validated artifact; the 7-Day Moving Average is reconstructed deterministically from seven strictly prior observations, matching Notebook 06.
+The significance analysis covers all 45 pairs among the ten Trust Score models. Nine vectors come from the validated artifact; the 7-Day Moving Average is reconstructed deterministically from seven strictly prior observations, matching Notebook 06.
 
 After applying the same validation-residual empirical uncertainty method to ARIMA and both smoothing models, Naive leads both Trust Score variants at `97.803780`; Simple Exponential Smoothing ranks second at `97.466671`, followed by Holt-Winters at `96.579302` and ARIMA at `96.545355`.
 
@@ -86,7 +87,8 @@ The variants are ranked independently because missing uncertainty evidence chang
 | 6 | TimesFM | 90.521931 |
 | 7 | Persistence-Enhanced Log-Return LSTM | 79.600601 |
 | 8 | 7-Day Moving Average | 70.724359 |
-| 9 | Prophet 30-Day Periodic Refit | 22.624980 |
+| 9 | Persistence-Enhanced Log-Return Transformer | 70.412635 |
+| 10 | Prophet 30-Day Periodic Refit | 22.624980 |
 
 | Evidence-Available Rank | Model | Evidence-Available Score |
 |---:|---|---:|
@@ -98,7 +100,8 @@ The variants are ranked independently because missing uncertainty evidence chang
 | 6 | Chronos-Bolt-Tiny | 91.312313 |
 | 7 | TimesFM | 90.521931 |
 | 8 | 7-Day Moving Average | 70.724359 |
-| 9 | Prophet 30-Day Periodic Refit | 26.617624 |
+| 9 | Persistence-Enhanced Log-Return Transformer | 70.412635 |
+| 10 | Prophet 30-Day Periodic Refit | 26.617624 |
 
 ## Key Electricity Results
 
@@ -155,7 +158,7 @@ TimeSeriesFoundationModels/
 | `01_EDA.ipynb` | AUTHORITATIVE | Bitcoin data audit and daily preparation |
 | `02_Classical_Models.ipynb` | AUTHORITATIVE FAIR RESULTS + HISTORICAL STATIC-PROTOCOL CONTEXT | Single source of truth for ARIMA, Simple Exponential Smoothing, and Holt-Winters: retained static multi-step history plus verified rolling one-step results |
 | `03_Deep_Learning_LSTM.ipynb` | AUTHORITATIVE PE LOG-RETURN LSTM GENERATION + SUPERSEDED DEVELOPMENT HISTORY | Deterministic Persistence-Enhanced Log-Return LSTM generation plus preserved negative-result provenance |
-| `04_Transformers.ipynb` | EXPLORATORY FAILURE CASE STUDY + AUDITED CORRECTION | Collapsed and over-smoothed Transformer history plus deterministic positional corrected implementation; no frozen ranking artifact |
+| `04_Transformers.ipynb` | HISTORICAL FAILURE CASE STUDY + AUTHORITATIVE FAIR RESULT | Preserved collapsed/raw-price history plus deterministic Persistence-Enhanced Log-Return Transformer and frozen ranking artifact |
 | `05_Advanced_Forecasting_Models.ipynb` | AUTHORITATIVE GENERATION — PROPHET + DEFERRED NEURALFORECAST SCOPE | Periodic-refit Prophet generation and deferred PatchTST/iTransformer environment status; classical models now live in Notebook 02 |
 | `05_Foundation_Models.ipynb` | AUTHORITATIVE GENERATION | Bitcoin foundation-model evidence |
 | `06_Trustworthiness.ipynb` | AUTHORITATIVE ANALYSIS | Bitcoin multidimensional trust evaluation |

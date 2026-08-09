@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 LEDGER = ROOT / "results" / "authoritative_artifact_hashes.md"
 MODEL_NAMES = {
     "Persistence_Enhanced_LSTM": "Persistence-Enhanced Log-Return LSTM",
+    "Persistence_Enhanced_Transformer": "Persistence-Enhanced Log-Return Transformer",
     "Chronos_Bolt_Tiny": "Chronos-Bolt-Tiny",
     "Daily_Seasonal_Naive": "Daily Seasonal Naive",
     "Weekly_Seasonal_Naive": "Weekly Seasonal Naive",
@@ -35,6 +36,7 @@ BITCOIN_METRICS = {
     "Prophet 30-Day Periodic Refit": (8195.262861996911, 10781.162873031499, 11.199767058617569, 11.287185079510287),
     "Simple Exponential Smoothing Rolling One-Step": (1290.3586838554463, 1855.731424427488, 1.742684503138682, 1.7438706638415447),
     "Holt-Winters Rolling One-Step": (1308.5413137114867, 1871.7021852846603, 1.7636397847762826, 1.7634242845198493),
+    "Persistence-Enhanced Log-Return Transformer": (2019.3663419779375, 2559.7498099332847, 2.710935954361162, 2.75927148965043),
 }
 
 
@@ -75,7 +77,7 @@ def metrics(actual: pd.Series, predicted: pd.Series) -> dict[str, float]:
 def verify_hashes(v: Verification) -> None:
     text = LEDGER.read_text(encoding="utf-8")
     entries = re.findall(r"\| `(?P<path>results/[^`]+)` \| `(?P<hash>[A-F0-9]{64})` \|", text)
-    v.check(len(entries) == 37, "ledger contains 37 protected artifacts")
+    v.check(len(entries) == 39, "ledger contains 39 protected artifacts")
     for relative, expected in entries:
         path = ROOT / relative
         v.check(path.is_file(), f"exists: {relative}")
@@ -168,7 +170,7 @@ def main() -> int:
     )
     verify_forecast(
         ROOT / "results" / "validated_forecasts.csv", 1061,
-        ["Timestamp", "Actual", "Naive", "Persistence_Enhanced_LSTM", "Chronos_Bolt_Tiny", "TimesFM", "ARIMA_Rolling", "Prophet_Periodic_Refit", "Simple_Exp_Smoothing", "Holt_Winters"],
+        ["Timestamp", "Actual", "Naive", "Persistence_Enhanced_LSTM", "Chronos_Bolt_Tiny", "TimesFM", "ARIMA_Rolling", "Prophet_Periodic_Refit", "Simple_Exp_Smoothing", "Holt_Winters", "Persistence_Enhanced_Transformer"],
         "Rolling one-step daily", comparison, v,
     )
     validated = pd.read_csv(ROOT / "results" / "validated_forecasts.csv")
@@ -176,9 +178,11 @@ def main() -> int:
     verify_point_vector(ROOT / "results" / "prophet_rolling_forecast.csv", "Prophet_Periodic_Refit", validated["Timestamp"], v)
     verify_point_vector(ROOT / "results" / "simple_exp_smoothing_forecast.csv", "Simple_Exp_Smoothing", validated["Timestamp"], v)
     verify_point_vector(ROOT / "results" / "holt_winters_forecast.csv", "Holt_Winters", validated["Timestamp"], v)
+    verify_point_vector(ROOT / "results" / "persistence_enhanced_transformer_forecast.csv", "Persistence_Enhanced_Transformer", validated["Timestamp"], v)
     verify_arima_validation(v)
     verify_smoothing_validation(ROOT / "results" / "simple_exp_smoothing_validation_forecast.csv", "Simple_Exp_Smoothing_Validation", v)
     verify_smoothing_validation(ROOT / "results" / "holt_winters_validation_forecast.csv", "Holt_Winters_Validation", v)
+    verify_smoothing_validation(ROOT / "results" / "persistence_enhanced_transformer_validation_forecast.csv", "Persistence_Enhanced_Transformer", v)
     verify_forecast(
         ROOT / "results" / "electricity" / "protocol_a_validated_forecasts.csv", 46176,
         ["Timestamp", "Actual", "Naive", "Daily_Seasonal_Naive", "Weekly_Seasonal_Naive", "Moving_Average", "DHR_ARIMA", "LSTM", "Chronos_Bolt_Tiny", "TimesFM"],

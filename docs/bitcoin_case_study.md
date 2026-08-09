@@ -140,6 +140,7 @@ Metrics reproduced directly from `results/validated_forecasts.csv`:
 | Persistence-Enhanced Log-Return LSTM | 1321.365311 | 1881.091190 | 1.783956 | 1.791645 |
 | TimesFM | 1349.946786 | 1924.199337 | 1.823179 | 1.823895 |
 | Chronos-Bolt-Tiny | 1424.025828 | 1994.007926 | 1.934509 | 1.928782 |
+| Persistence-Enhanced Log-Return Transformer | 2019.366342 | 2559.749810 | 2.710936 | 2.759271 |
 | Prophet 30-Day Periodic Refit | 8195.262862 | 10781.162873 | 11.199767 | 11.287185 |
 
 The Naive baseline retains the strongest point accuracy, but both smoothing models are close to Naive and ARIMA under the fair protocol. Their former static-protocol RMSE values were 52,421.33 for Simple Exponential Smoothing and 48,571.10 for Holt-Winters, compared with fair rolling values of 1,855.73 and 1,871.70 respectively.
@@ -211,7 +212,7 @@ Executed results:
 | Persistence-Enhanced Log-Return LSTM vs TimesFM | -1.909856 | 0.056421 | Persistence-Enhanced Log-Return LSTM by RMSE | False |
 | Chronos-Bolt-Tiny vs TimesFM | 2.760989 | 0.005862 | TimesFM | True |
 
-Notebook 09 now evaluates all 36 pairs among the same nine models used by the Trust Score analysis. The previously missing model was the 7-Day Moving Average: unlike the other eight models, it is not a column in `validated_forecasts.csv`, and the earlier significance workflow was restricted to saved vectors. This was an integration oversight, not a methodological exclusion. The benchmark is now reconstructed exactly as in Notebook 06 from the seven observations strictly before each forecast date, audited for leakage and alignment, and compared against every other model. Naive is not significantly different from Simple Exponential Smoothing (`p = 0.666843`) or Holt-Winters (`p = 0.067710`); both smoothing models significantly outperform TimesFM, Chronos, and Prophet.
+Notebook 09 now evaluates all 45 pairs among the same ten models used by the Trust Score analysis. Nine vectors are saved in `validated_forecasts.csv`; the 7-Day Moving Average is reconstructed exactly as in Notebook 06 from the seven observations strictly before each forecast date. The Persistence-Enhanced Log-Return Transformer is included and is significantly worse than Naive (`p = 1.17e-40`), ARIMA (`p = 1.06e-36`), and the Persistence-Enhanced LSTM (`p = 1.78e-50`), while significantly outperforming Prophet. Naive is not significantly different from Simple Exponential Smoothing (`p = 0.666843`) or Holt-Winters (`p = 0.067710`).
 
 Practical effect sizes were recorded as small relative to the average Bitcoin price.
 
@@ -241,7 +242,7 @@ Important interpretation note:
 
 A score of 100 is relative to the best model in the comparison set and does not represent perfect forecast accuracy. A missing uncertainty artifact is not evidence of poor calibration. The two composite scores are exploratory sensitivity summaries: their weights are researcher-defined, components overlap, and normalisation depends on the comparison set. Component evidence remains primary.
 
-ARIMA and both smoothing models use the same validation-residual empirical interval method as the deterministic baselines, based on the final 1,061 training dates. No test residuals are used for calibration.
+ARIMA, both smoothing models, and the Persistence-Enhanced Log-Return Transformer use validation-residual empirical intervals based on the final 1,061 training dates. No test residuals are used for calibration.
 
 The two variants are ranked independently; no shared rank is implied.
 
@@ -255,7 +256,8 @@ The two variants are ranked independently; no shared rank is implied.
 | 6 | TimesFM | 90.521931 |
 | 7 | Persistence-Enhanced Log-Return LSTM | 79.600601 |
 | 8 | 7-Day Moving Average | 70.724359 |
-| 9 | Prophet 30-Day Periodic Refit | 22.624980 |
+| 9 | Persistence-Enhanced Log-Return Transformer | 70.412635 |
+| 10 | Prophet 30-Day Periodic Refit | 22.624980 |
 
 | Evidence-Available Rank | Model | Evidence-Available Score |
 |---:|---|---:|
@@ -267,7 +269,8 @@ The two variants are ranked independently; no shared rank is implied.
 | 6 | Chronos-Bolt-Tiny | 91.312313 |
 | 7 | TimesFM | 90.521931 |
 | 8 | 7-Day Moving Average | 70.724359 |
-| 9 | Prophet 30-Day Periodic Refit | 26.617624 |
+| 9 | Persistence-Enhanced Log-Return Transformer | 70.412635 |
+| 10 | Prophet 30-Day Periodic Refit | 26.617624 |
 
 Naive leads both variants. PE Log-Return LSTM is seventh when missing uncertainty evidence is penalised and fifth when only available evidence is scored.
 
@@ -300,7 +303,14 @@ Corrected but over-smoothed Transformer:
 - A corrected Transformer projected the 1D input into a higher model dimension before attention and normalization.
 - It avoided the exact original collapse but still showed severe range compression and poor accuracy.
 - Excluded from the authoritative comparison and exploratory composite summary.
-- Notebook 04 now also contains the more rigorous positional corrected implementation formerly trained in Notebook 07. Its forecast vector was bit-identical across three fresh-kernel regression runs, but no authoritative Transformer CSV exists and it remains excluded from the frozen ranking.
+- A matched deterministic ablation found that the historical positional regression was not reproducible as a structural penalty: the positional raw-price variant improved test RMSE but showed a much larger train/validation gap, indicating overfitting and run/configuration sensitivity.
+
+Persistence-Enhanced Log-Return Transformer:
+
+- The corrected non-positional encoder predicts log returns from 128 observed historical returns and reconstructs each price from the previous actual close.
+- Three fresh processes produced byte-identical 1,061-row vectors and loss histories; RMSE is 2,559.749810.
+- It is competitive enough for the ten-model Trust Score and 45-pair DM analyses, but remains significantly behind Naive, ARIMA, and the Persistence-Enhanced LSTM.
+- Its empirical uncertainty intervals use a separately saved training-only validation forecast; no test residual is used for calibration.
 
 Notebook 07 is now artifact-only. It retains the sequence/target alignment, scaling and inverse-scaling, Protocol A versus Protocol B, leakage, collapse, smoothing, range-compression, and final diagnosis audits without importing or fitting TensorFlow models.
 

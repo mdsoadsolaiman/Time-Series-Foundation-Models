@@ -3,8 +3,9 @@ Naive,97.80377958571472,"Relative Accuracy Score, Relative Robustness Score, Rel
 Simple Exponential Smoothing Rolling One-Step,97.46667093897341,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
 Holt-Winters Rolling One-Step,96.57930249563839,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
 ARIMA Rolling One-Step,96.54535478054653,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
-Persistence-Enhanced LSTM,93.64776557768936,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Explainability Score",Uncertainty Score,1.0
+Persistence-Enhanced Log-Return LSTM,93.64776557768936,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Explainability Score",Uncertainty Score,1.0
 Chronos-Bolt-Tiny,91.31231250482429,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
 TimesFM,90.52193073196767,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
 7-Day Moving Average,70.72435941415849,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
+Persistence-Enhanced Log-Return Transformer,70.41263545849765,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Uncertainty Score, Explainability Score",None,1.0
 Prophet 30-Day Periodic Refit,26.617623569955636,"Relative Accuracy Score, Relative Robustness Score, Relative Generalisation Score, Explainability Score",Uncertainty Score,1.0
