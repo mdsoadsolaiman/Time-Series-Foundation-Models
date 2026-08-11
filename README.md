@@ -100,13 +100,35 @@ TimesFM leads both protocols and beats their strongest baselines by about 38%. C
 
 ## Cross-Domain Findings
 
-- TimesFM ranks third and trails Naive by about 4.6% in Bitcoin, but ranks first in both electricity protocols.
-- Chronos has substantially lower absolute error from nominal 80% marginal coverage than TimesFM in every completed task; width and sharpness still matter.
-- Strong baselines remain essential: persistence dominates Bitcoin, DHR-ARIMA is strong one-step, and Daily Seasonal Naive is strong day-ahead.
-- In the completed tasks, rankings vary across dataset, domain, frequency, and forecasting protocol; one dataset per domain prevents isolation of a pure domain effect.
-- Model complexity and point accuracy do not imply calibrated uncertainty or universal trustworthiness.
+Both domains have grown since the original 4-common-model comparison (Bitcoin now has 10 models, Electricity 13
+per protocol); the comparison below covers 8 genuinely comparable model families, each labelled where a domain
+uses a best-in-family or model-class representative rather than an identical model (see
+`notebooks/18_Cross_Domain_Comparison.ipynb`, Section 3).
+
+- Foundation models are not consistently dominant, and the fuller roster sharpens this: TimesFM now ranks 6th of 10
+  in Bitcoin (behind Naive, Simple Exponential Smoothing, ARIMA, additive-trend smoothing, and PE-LSTM) and Chronos
+  ranks 7th of 10. In Electricity, TimesFM leads both protocols by MAE/MASE-48, but SARIMA has significantly lower
+  squared-error loss than TimesFM in Protocol A (Benjamini-Hochberg-corrected p ≈ 9.6e-05) despite TimesFM's lower
+  MAE — so even the electricity lead is metric-dependent, not absolute.
+- Chronos remains consistently closer to nominal 80% marginal coverage than TimesFM in every completed task; width
+  and sharpness still matter. Bitcoin's post-hoc calibration moves TimesFM from 33.1% toward 55.6% coverage (still
+  well below nominal) and moves Chronos from 84.5% to 81.5% (closer to nominal either way).
+- Strong classical baselines remain essential, and are now the most cross-domain-*consistent* family: the best
+  ARIMA-family model (Bitcoin's plain ARIMA; Electricity's SARIMA) has the lowest mean rank (2.33) and lowest rank
+  variability (std 0.58) of the 8 comparable families across Bitcoin and both electricity protocols — more stable
+  than TimesFM (mean rank 2.67, std 2.89), whose strong mean is driven entirely by its electricity wins offsetting
+  a weak Bitcoin rank.
+- Horizon materially changes ranks within a family: Electricity's DHR-ARIMA (harmonic-regression, tuned for
+  one-step) falls from rank 3/13 at one-step to rank 12/13 at day-ahead, while SARIMA (sequential state extension)
+  stays strong at rank 2/13 under both horizons.
+- Model complexity and point accuracy do not imply calibrated uncertainty or universal trustworthiness: in Bitcoin,
+  four simple/classical models (Naive, SES, ARIMA, additive-trend smoothing) all score above 96 in the
+  missing-evidence-penalised Trust Score, versus 90.5 (TimesFM) and 91.3 (Chronos).
 
 Raw Bitcoin and electricity MAE/RMSE values are never compared directly because their units and scales differ.
+Bitcoin's significance tests use Holm correction (family-wise error control); Electricity's use Benjamini-Hochberg
+(false discovery rate control) — both are domain-appropriate for their respective family sizes, but "significant"
+is not pooled or treated as equivalent between the two domains (see the notebook's Section 10).
 
 ## Repository Structure
 
@@ -169,7 +191,9 @@ Use the master notebooks for routine inspection and artifact-based analysis. Use
 - Electricity B: `results/electricity/protocol_b_validated_forecasts.csv`
 - Rebuilt Bitcoin trust evidence: `bitcoin_trustworthiness_components_v2.csv` and `bitcoin_trust_score_sensitivity_v2.csv`
 - Corrected Bitcoin inference: `bitcoin_dm_pairwise_results_hac_holm.csv`; historical DM evidence is retained for provenance
-- Cross-domain: the four `results/cross_domain_*.csv` files
+- Cross-domain: the eight `results/cross_domain_*.csv` files (model comparison, foundation-model comparison,
+  uncertainty comparison, significance summary, rank stability, trust comparison, comparable-families map, and
+  non-comparable items)
 
 The complete protected set and SHA-256 values are in [`results/authoritative_artifact_hashes.md`](results/authoritative_artifact_hashes.md). See [`results/README.md`](results/README.md) for artifact classification.
 
