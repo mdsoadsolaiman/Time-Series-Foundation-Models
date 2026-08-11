@@ -1,0 +1,5 @@
+Item,Reason
+Electricity Daily/Weekly Seasonal Naive,"No Bitcoin equivalent: Bitcoin's own seasonality testing (notebook 01) found no exploitable daily/weekly seasonality in price returns, so no seasonal-naive baseline was built for Bitcoin."
+Electricity DHR-ARIMA,"No Bitcoin equivalent: this harmonic-regression ARIMA variant exists only because Electricity has strong daily+weekly seasonality to model; it is folded into the ARIMA-family comparison as Electricity's non-representative alternative, not compared 1:1 with any Bitcoin model."
+Bitcoin 7-Day Moving Average vs Electricity Moving_Average,"Different wall-clock windows: Bitcoin's is a 7-observation (1-week) trailing average of daily prices; Electricity's is a 48-observation (1-day) trailing average of half-hourly demand. Both are ""moving average"" in name only -- not treated as a comparable family."
+Bitcoin Persistence-Enhanced Log-Return Transformer,No Electricity equivalent: Electricity has no transformer-architecture comparator in its current model set.

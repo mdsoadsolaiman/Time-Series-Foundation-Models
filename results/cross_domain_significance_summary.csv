@@ -1,11 +1,13 @@
-Domain,Protocol,Comparison,Lower_Loss_Model,p_value,P_Value_Type,Significant,Practical_Interpretation
-Bitcoin,Rolling one-step daily,Naive vs TimesFM,Naive,2.1e-05,Raw,True,TimesFM does not beat persistence; Naive has lower squared loss.
-Bitcoin,Rolling one-step daily,Naive vs Chronos-Bolt-Tiny,Naive,0.0,Raw,True,Naive has lower squared loss.
-Bitcoin,Rolling one-step daily,TimesFM vs Chronos-Bolt-Tiny,TimesFM,0.005862,Raw,True,TimesFM improves on Chronos but not Naive.
-Bitcoin,Rolling one-step daily,Persistence-Enhanced LSTM vs TimesFM,Persistence-Enhanced LSTM,0.123495,Raw,False,No statistically significant difference was detected.
-Electricity,Protocol A: rolling one-step 30-minute,TimesFM vs DHR ARIMA,TimesFM,0.0,Benjamini-Hochberg adjusted,True,TimesFM significantly beats the strongest one-step benchmark.
-Electricity,Protocol A: rolling one-step 30-minute,TimesFM vs Chronos Bolt Tiny,TimesFM,1.731906374321298e-207,Benjamini-Hochberg adjusted,True,TimesFM significantly beats Chronos.
-Electricity,Protocol A: rolling one-step 30-minute,Chronos Bolt Tiny vs Naive,Chronos Bolt Tiny,1.0215188953032624e-151,Benjamini-Hochberg adjusted,True,Chronos significantly beats Naive on squared loss.
-Electricity,Protocol B: 48-step day-ahead,TimesFM vs Chronos Bolt Tiny,TimesFM,4.563701968933735e-18,Benjamini-Hochberg adjusted,True,TimesFM significantly beats Chronos.
-Electricity,Protocol B: 48-step day-ahead,TimesFM vs Daily Seasonal Naive,TimesFM,2.3189851453181102e-26,Benjamini-Hochberg adjusted,True,TimesFM significantly beats the strongest day-ahead baseline.
-Electricity,Protocol B: 48-step day-ahead,Chronos Bolt Tiny vs Daily Seasonal Naive,Chronos Bolt Tiny,0.0022313434877118,Benjamini-Hochberg adjusted,True,Chronos has significantly lower daily squared loss; absolute-loss sensitivity was nonsignificant.
+Domain,Protocol,Comparison,Lower_Loss_Model,p_value,Correction_Method,Significant,Practical_Interpretation
+Bitcoin,Rolling one-step daily,Naive vs TimesFM,Naive,0.0004441425168202,Holm (family-wise error control),True,TimesFM does not beat persistence; Naive has lower squared loss.
+Bitcoin,Rolling one-step daily,Naive vs Chronos-Bolt-Tiny,Naive,2.632568323955121e-06,Holm (family-wise error control),True,Naive has lower squared loss.
+Bitcoin,Rolling one-step daily,TimesFM vs Chronos-Bolt-Tiny,TimesFM,0.121222459237949,Holm (family-wise error control),False,TimesFM improves on Chronos but not on Naive.
+Bitcoin,Rolling one-step daily,Persistence-Enhanced Log-Return LSTM vs TimesFM,Persistence-Enhanced Log-Return LSTM,0.2934752967550596,Holm (family-wise error control),False,No statistically significant difference was detected.
+Bitcoin,Rolling one-step daily,ARIMA Rolling One-Step vs TimesFM,ARIMA Rolling One-Step,0.0221355408898353,Holm (family-wise error control),True,ARIMA-family comparison: TimesFM vs Bitcoin's only ARIMA-family model.
+Electricity,Protocol A: rolling one-step 30-minute,TimesFM vs SARIMA,SARIMA,9.56209577590908e-05,Benjamini-Hochberg (false discovery rate control),True,ARIMA-family comparison: TimesFM vs Electricity's strongest ARIMA-family model.
+Electricity,Protocol A: rolling one-step 30-minute,TimesFM vs Chronos-Bolt-Tiny,TimesFM,2.0676841407710834e-207,Benjamini-Hochberg (false discovery rate control),True,TimesFM significantly beats Chronos.
+Electricity,Protocol A: rolling one-step 30-minute,Chronos-Bolt-Tiny vs Naive,Chronos-Bolt-Tiny,1.2851366747361587e-151,Benjamini-Hochberg (false discovery rate control),True,Chronos significantly beats Naive on squared loss.
+Electricity,Protocol B: 48-step day-ahead,TimesFM vs SARIMA,TimesFM,2.411914615986544e-32,Benjamini-Hochberg (false discovery rate control),True,ARIMA-family comparison: TimesFM vs Electricity's strongest ARIMA-family model (Protocol B).
+Electricity,Protocol B: 48-step day-ahead,TimesFM vs Chronos-Bolt-Tiny,TimesFM,4.9440104663447874e-18,Benjamini-Hochberg (false discovery rate control),True,TimesFM significantly beats Chronos.
+Electricity,Protocol B: 48-step day-ahead,TimesFM vs Daily Seasonal Naive,TimesFM,2.399439731992388e-26,Benjamini-Hochberg (false discovery rate control),True,TimesFM significantly beats the strongest day-ahead seasonal-naive baseline.
+Electricity,Protocol B: 48-step day-ahead,Chronos-Bolt-Tiny vs Daily Seasonal Naive,Chronos-Bolt-Tiny,0.0023679563543064,Benjamini-Hochberg (false discovery rate control),True,Chronos has significantly lower daily squared loss.

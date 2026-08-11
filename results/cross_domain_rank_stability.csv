@@ -1,0 +1,9 @@
+Model_Family,Bitcoin_Representative,Electricity_A_Representative,Electricity_B_Representative,Bitcoin_Rank,Electricity_Protocol_A_Rank,Electricity_Protocol_B_Rank,Mean_Rank,Rank_Std,Best_Rank,Worst_Rank
+ARIMA-family (best),ARIMA Rolling One-Step,SARIMA,SARIMA,3,2,2,2.3333333333333335,0.5773502691896258,2,3
+TimesFM,TimesFM,TimesFM,TimesFM,6,1,1,2.6666666666666665,2.886751345948129,1,6
+Chronos-Bolt-Tiny,Chronos-Bolt-Tiny,Chronos_Bolt_Tiny,Chronos_Bolt_Tiny,7,5,3,5.0,2.0,3,7
+LSTM-family,Persistence-Enhanced Log-Return LSTM,LSTM,LSTM,5,7,5,5.666666666666667,1.1547005383792517,5,7
+Naive,Naive,Naive,Naive,1,6,11,6.0,5.0,1,11
+Holt-Winters,Additive-Trend Exponential Smoothing,Holt_Winters,Holt_Winters,4,12,8,8.0,4.0,4,12
+Simple Exponential Smoothing,Simple Exponential Smoothing — Rolling One-Step,Simple_Exponential_Smoothing,Simple_Exponential_Smoothing,2,13,10,8.333333333333334,5.686240703077327,2,13
+Prophet,Prophet — 30-Day Periodic Refit,Prophet,Prophet,10,10,7,9.0,1.7320508075688772,7,10

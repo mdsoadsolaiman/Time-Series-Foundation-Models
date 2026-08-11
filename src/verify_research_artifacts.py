@@ -77,7 +77,7 @@ def metrics(actual: pd.Series, predicted: pd.Series) -> dict[str, float]:
 def verify_hashes(v: Verification) -> None:
     text = LEDGER.read_text(encoding="utf-8")
     entries = re.findall(r"\| `(?P<path>results/[^`]+)` \| `(?P<hash>[A-F0-9]{64})` \|", text)
-    v.check(len(entries) == 48, "ledger contains 48 protected artifacts")
+    v.check(len(entries) == 52, "ledger contains 52 protected artifacts")
     for relative, expected in entries:
         path = ROOT / relative
         v.check(path.is_file(), f"exists: {relative}")
