@@ -1,0 +1,116 @@
+{
+  "Training_Seasonality": {
+    "Lag_48_ACF": 0.8116841186196931,
+    "Lag_336_ACF": 0.7195018944350784
+  },
+  "Models": {
+    "ARIMA": {
+      "Update": "Sequential fixed-parameter statsmodels state update (extend; append-equivalent without history copy)",
+      "Specification": "(2, 1, 0)",
+      "Selection": [
+        {
+          "Model": "ARIMA",
+          "Specification": "(2, 1, 0)",
+          "Validation_MASE_48": 0.31343029393557276
+        },
+        {
+          "Model": "ARIMA",
+          "Specification": "(1, 1, 1)",
+          "Validation_MASE_48": 0.31489075499255903
+        },
+        {
+          "Model": "ARIMA",
+          "Specification": "(1, 1, 0)",
+          "Validation_MASE_48": 0.3166760700014266
+        }
+      ]
+    },
+    "SARIMA": {
+      "Update": "Sequential fixed-parameter statsmodels state update (extend; append-equivalent without history copy)",
+      "Specification": "(0, 1, 0, 48)",
+      "Selection": [
+        {
+          "Model": "SARIMA",
+          "Specification": "(0, 1, 0, 48)",
+          "Validation_MASE_48": 0.1314384882651619
+        },
+        {
+          "Model": "SARIMA",
+          "Specification": "(1, 0, 0, 48)",
+          "Validation_MASE_48": 0.1630656324607961
+        }
+      ]
+    },
+    "Prophet": {
+      "Update": "Validation-selected periodic refit",
+      "Cadence_Half_Hours": 672,
+      "Cadence_Days": 14.0,
+      "Selection": [
+        {
+          "Model": "Prophet",
+          "Cadence": 672,
+          "Validation_MASE_48": 1.1571893775460098
+        },
+        {
+          "Model": "Prophet",
+          "Cadence": 1344,
+          "Validation_MASE_48": 1.2511760148054596
+        },
+        {
+          "Model": "Prophet",
+          "Cadence": 2688,
+          "Validation_MASE_48": 1.7712015094583013
+        }
+      ]
+    },
+    "Simple_Exponential_Smoothing": {
+      "Update": "Validation-selected periodic refit",
+      "Cadence_Half_Hours": 48,
+      "Cadence_Days": 1.0,
+      "Selection": [
+        {
+          "Model": "Simple_Exponential_Smoothing",
+          "Cadence": 48,
+          "Validation_MASE_48": 2.0738308955687113
+        },
+        {
+          "Model": "Simple_Exponential_Smoothing",
+          "Cadence": 96,
+          "Validation_MASE_48": 2.094257393276109
+        },
+        {
+          "Model": "Simple_Exponential_Smoothing",
+          "Cadence": 168,
+          "Validation_MASE_48": 2.166279708712676
+        },
+        {
+          "Model": "Simple_Exponential_Smoothing",
+          "Cadence": 336,
+          "Validation_MASE_48": 2.2225285300568784
+        }
+      ]
+    },
+    "Holt_Winters": {
+      "Update": "Validation-selected periodic refit",
+      "Cadence_Half_Hours": 672,
+      "Cadence_Days": 14.0,
+      "Selection": [
+        {
+          "Model": "Holt_Winters",
+          "Cadence": 672,
+          "Validation_MASE_48": 14.716184128583135
+        },
+        {
+          "Model": "Holt_Winters",
+          "Cadence": 1344,
+          "Validation_MASE_48": 50.923682149473336
+        },
+        {
+          "Model": "Holt_Winters",
+          "Cadence": 2688,
+          "Validation_MASE_48": 201.23654281132372
+        }
+      ]
+    }
+  }
+}

@@ -213,14 +213,17 @@ def main() -> int:
     verify_smoothing_validation(ROOT / "results" / "holt_winters_validation_forecast.csv", "Holt_Winters_Validation", v)
     verify_smoothing_validation(ROOT / "results" / "persistence_enhanced_transformer_validation_forecast.csv", "Persistence_Enhanced_Transformer", v)
     verify_rebuilt_bitcoin_evidence(v)
+    electricity_models = ["Naive", "Daily_Seasonal_Naive", "Weekly_Seasonal_Naive", "Moving_Average",
+                          "ARIMA", "SARIMA", "Prophet", "Simple_Exponential_Smoothing", "Holt_Winters",
+                          "DHR_ARIMA", "LSTM", "Chronos_Bolt_Tiny", "TimesFM"]
     verify_forecast(
         ROOT / "results" / "electricity" / "protocol_a_validated_forecasts.csv", 46176,
-        ["Timestamp", "Actual", "Naive", "Daily_Seasonal_Naive", "Weekly_Seasonal_Naive", "Moving_Average", "DHR_ARIMA", "LSTM", "Chronos_Bolt_Tiny", "TimesFM"],
+        ["Timestamp", "Actual", *electricity_models],
         "Protocol A: rolling one-step 30-minute", comparison, v,
     )
     verify_forecast(
         ROOT / "results" / "electricity" / "protocol_b_validated_forecasts.csv", 46176,
-        ["Origin", "Timestamp", "Horizon", "Actual", "Naive", "Daily_Seasonal_Naive", "Weekly_Seasonal_Naive", "Moving_Average", "DHR_ARIMA", "LSTM", "Chronos_Bolt_Tiny", "TimesFM"],
+        ["Origin", "Timestamp", "Horizon", "Actual", *electricity_models],
         "Protocol B: 48-step day-ahead", comparison, v,
     )
     for name in ["cross_domain_foundation_model_comparison.csv", "cross_domain_uncertainty_comparison.csv", "cross_domain_significance_summary.csv"]:
