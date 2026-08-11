@@ -15,3 +15,13 @@ B,DHR_ARIMA,Unavailable,,,,Unavailable,False,No sufficient saved pre-test valida
 B,LSTM,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
 B,Chronos_Bolt_Tiny,80%,0.8,0.676239,283.997589,Native probabilistic,True,Exact aggregate Phase 5 result; horizon-specific vectors not saved. 95% unavailable.
 B,TimesFM,80%,0.8,0.245604,75.642609,Native probabilistic,True,Exact aggregate Phase 5 result; horizon-specific vectors not saved. 95% unavailable.
+A,ARIMA,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+A,SARIMA,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+A,Prophet,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+A,Simple_Exponential_Smoothing,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+A,Holt_Winters,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+B,ARIMA,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+B,SARIMA,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+B,Prophet,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+B,Simple_Exponential_Smoothing,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.
+B,Holt_Winters,Unavailable,,,,Unavailable,False,No sufficient saved pre-test validation residual evidence; final-test residuals not used.

@@ -98,17 +98,17 @@
         {
           "Model": "Holt_Winters",
           "Cadence": 672,
-          "Validation_MASE_48": 14.716184128583135
+          "Validation_MASE_48": 1.1213182190846687
         },
         {
           "Model": "Holt_Winters",
           "Cadence": 1344,
-          "Validation_MASE_48": 50.923682149473336
+          "Validation_MASE_48": 1.265904334570908
         },
         {
           "Model": "Holt_Winters",
           "Cadence": 2688,
-          "Validation_MASE_48": 201.23654281132372
+          "Validation_MASE_48": 1.9093885407813072
         }
       ]
     }

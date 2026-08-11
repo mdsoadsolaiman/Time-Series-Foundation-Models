@@ -1,129 +1,209 @@
 Protocol,Weight_Scheme,Score_Type,Model,Trust_Score,Rank
-A,Primary,Missing Evidence Penalised,Naive,38.59988843347658,4
-A,Primary,Missing Evidence Penalised,Daily_Seasonal_Naive,18.209447358164518,6
-A,Primary,Missing Evidence Penalised,Weekly_Seasonal_Naive,16.109815414011287,7
-A,Primary,Missing Evidence Penalised,Moving_Average,15.499583290793744,8
-A,Primary,Missing Evidence Penalised,DHR_ARIMA,53.52839240034254,2
-A,Primary,Missing Evidence Penalised,LSTM,32.19371619532979,5
-A,Primary,Missing Evidence Penalised,Chronos_Bolt_Tiny,51.04310465380233,3
+A,Primary,Missing Evidence Penalised,Naive,38.59988843347658,6
+A,Primary,Missing Evidence Penalised,Daily_Seasonal_Naive,18.209447358164518,8
+A,Primary,Missing Evidence Penalised,Weekly_Seasonal_Naive,16.109815414011287,9
+A,Primary,Missing Evidence Penalised,Moving_Average,15.499583290793746,10
+A,Primary,Missing Evidence Penalised,ARIMA,51.33184005844234,4
+A,Primary,Missing Evidence Penalised,SARIMA,77.21802845115623,2
+A,Primary,Missing Evidence Penalised,Prophet,12.938732070361207,13
+A,Primary,Missing Evidence Penalised,Simple_Exponential_Smoothing,13.759625864856147,12
+A,Primary,Missing Evidence Penalised,Holt_Winters,13.894615600176202,11
+A,Primary,Missing Evidence Penalised,DHR_ARIMA,53.52839240034254,3
+A,Primary,Missing Evidence Penalised,LSTM,32.19371619532979,7
+A,Primary,Missing Evidence Penalised,Chronos_Bolt_Tiny,51.04310465380233,5
 A,Primary,Missing Evidence Penalised,TimesFM,92.0331975,1
-A,Primary,Evidence Available,Naive,45.411633451148916,4
-A,Primary,Evidence Available,Daily_Seasonal_Naive,21.422879244899434,6
-A,Primary,Evidence Available,Weekly_Seasonal_Naive,18.952724016483867,7
-A,Primary,Evidence Available,Moving_Average,18.234803871522054,8
-A,Primary,Evidence Available,DHR_ARIMA,62.97457929452064,2
-A,Primary,Evidence Available,LSTM,37.874960229799754,5
-A,Primary,Evidence Available,Chronos_Bolt_Tiny,51.04310465380233,3
+A,Primary,Evidence Available,Naive,45.411633451148916,6
+A,Primary,Evidence Available,Daily_Seasonal_Naive,21.422879244899434,8
+A,Primary,Evidence Available,Weekly_Seasonal_Naive,18.952724016483867,9
+A,Primary,Evidence Available,Moving_Average,18.234803871522054,10
+A,Primary,Evidence Available,ARIMA,60.390400068755696,4
+A,Primary,Evidence Available,SARIMA,90.84473935430145,2
+A,Primary,Evidence Available,Prophet,15.222037729836714,13
+A,Primary,Evidence Available,Simple_Exponential_Smoothing,16.18779513512488,12
+A,Primary,Evidence Available,Holt_Winters,16.34660658844259,11
+A,Primary,Evidence Available,DHR_ARIMA,62.97457929452064,3
+A,Primary,Evidence Available,LSTM,37.874960229799754,7
+A,Primary,Evidence Available,Chronos_Bolt_Tiny,51.04310465380233,5
 A,Primary,Evidence Available,TimesFM,92.0331975,1
-A,Accuracy-heavy,Missing Evidence Penalised,Naive,38.69407822647349,4
-A,Accuracy-heavy,Missing Evidence Penalised,Daily_Seasonal_Naive,18.506444485253,6
-A,Accuracy-heavy,Missing Evidence Penalised,Weekly_Seasonal_Naive,16.562967754895734,7
-A,Accuracy-heavy,Missing Evidence Penalised,Moving_Average,15.740166746963533,8
-A,Accuracy-heavy,Missing Evidence Penalised,DHR_ARIMA,53.65297060664302,2
-A,Accuracy-heavy,Missing Evidence Penalised,LSTM,32.105518045064294,5
-A,Accuracy-heavy,Missing Evidence Penalised,Chronos_Bolt_Tiny,51.8343143939547,3
+A,Accuracy-heavy,Missing Evidence Penalised,Naive,38.69407822647349,6
+A,Accuracy-heavy,Missing Evidence Penalised,Daily_Seasonal_Naive,18.506444485253,8
+A,Accuracy-heavy,Missing Evidence Penalised,Weekly_Seasonal_Naive,16.562967754895734,9
+A,Accuracy-heavy,Missing Evidence Penalised,Moving_Average,15.740166746963533,10
+A,Accuracy-heavy,Missing Evidence Penalised,ARIMA,51.21829404665668,5
+A,Accuracy-heavy,Missing Evidence Penalised,SARIMA,77.76547781724949,2
+A,Accuracy-heavy,Missing Evidence Penalised,Prophet,13.28902595267136,13
+A,Accuracy-heavy,Missing Evidence Penalised,Simple_Exponential_Smoothing,13.929901337290532,12
+A,Accuracy-heavy,Missing Evidence Penalised,Holt_Winters,14.256658923387057,11
+A,Accuracy-heavy,Missing Evidence Penalised,DHR_ARIMA,53.652970606643024,3
+A,Accuracy-heavy,Missing Evidence Penalised,LSTM,32.10551804506429,7
+A,Accuracy-heavy,Missing Evidence Penalised,Chronos_Bolt_Tiny,51.834314393954706,4
 A,Accuracy-heavy,Missing Evidence Penalised,TimesFM,92.0331975,1
-A,Accuracy-heavy,Evidence Available,Naive,45.52244497232176,4
-A,Accuracy-heavy,Evidence Available,Daily_Seasonal_Naive,21.77228762970941,6
-A,Accuracy-heavy,Evidence Available,Weekly_Seasonal_Naive,19.485844417524394,7
-A,Accuracy-heavy,Evidence Available,Moving_Average,18.517843231721805,8
-A,Accuracy-heavy,Evidence Available,DHR_ARIMA,63.12114189016827,2
-A,Accuracy-heavy,Evidence Available,LSTM,37.77119770007563,5
-A,Accuracy-heavy,Evidence Available,Chronos_Bolt_Tiny,51.834314393954706,3
+A,Accuracy-heavy,Evidence Available,Naive,45.52244497232176,6
+A,Accuracy-heavy,Evidence Available,Daily_Seasonal_Naive,21.77228762970941,8
+A,Accuracy-heavy,Evidence Available,Weekly_Seasonal_Naive,19.485844417524394,9
+A,Accuracy-heavy,Evidence Available,Moving_Average,18.517843231721805,10
+A,Accuracy-heavy,Evidence Available,ARIMA,60.25681652547845,4
+A,Accuracy-heavy,Evidence Available,SARIMA,91.48879743205822,2
+A,Accuracy-heavy,Evidence Available,Prophet,15.634148179613364,13
+A,Accuracy-heavy,Evidence Available,Simple_Exponential_Smoothing,16.388119220341803,12
+A,Accuracy-heavy,Evidence Available,Holt_Winters,16.772539909867128,11
+A,Accuracy-heavy,Evidence Available,DHR_ARIMA,63.12114189016827,3
+A,Accuracy-heavy,Evidence Available,LSTM,37.77119770007563,7
+A,Accuracy-heavy,Evidence Available,Chronos_Bolt_Tiny,51.834314393954706,5
 A,Accuracy-heavy,Evidence Available,TimesFM,92.0331975,1
-A,Trust-balance,Missing Evidence Penalised,Naive,36.571306374297706,4
-A,Trust-balance,Missing Evidence Penalised,Daily_Seasonal_Naive,17.288003386114703,6
-A,Trust-balance,Missing Evidence Penalised,Weekly_Seasonal_Naive,15.164374353992374,7
-A,Trust-balance,Missing Evidence Penalised,Moving_Average,14.789553104852425,8
-A,Trust-balance,Missing Evidence Penalised,DHR_ARIMA,50.34002802832216,3
-A,Trust-balance,Missing Evidence Penalised,LSTM,30.51770626942159,5
-A,Trust-balance,Missing Evidence Penalised,Chronos_Bolt_Tiny,50.94822329467473,2
+A,Trust-balance,Missing Evidence Penalised,Naive,36.571306374297706,6
+A,Trust-balance,Missing Evidence Penalised,Daily_Seasonal_Naive,17.288003386114703,8
+A,Trust-balance,Missing Evidence Penalised,Weekly_Seasonal_Naive,15.164374353992374,9
+A,Trust-balance,Missing Evidence Penalised,Moving_Average,14.789553104852425,10
+A,Trust-balance,Missing Evidence Penalised,ARIMA,48.60368031341402,5
+A,Trust-balance,Missing Evidence Penalised,SARIMA,71.8355187237664,2
+A,Trust-balance,Missing Evidence Penalised,Prophet,12.143666149019653,13
+A,Trust-balance,Missing Evidence Penalised,Simple_Exponential_Smoothing,13.25374628748141,11
+A,Trust-balance,Missing Evidence Penalised,Holt_Winters,13.093483011349615,12
+A,Trust-balance,Missing Evidence Penalised,DHR_ARIMA,50.340028028322166,4
+A,Trust-balance,Missing Evidence Penalised,LSTM,30.51770626942159,7
+A,Trust-balance,Missing Evidence Penalised,Chronos_Bolt_Tiny,50.94822329467473,3
 A,Trust-balance,Missing Evidence Penalised,TimesFM,90.41093000000001,1
-A,Trust-balance,Evidence Available,Naive,45.71413296787213,4
-A,Trust-balance,Evidence Available,Daily_Seasonal_Naive,21.610004232643377,6
-A,Trust-balance,Evidence Available,Weekly_Seasonal_Naive,18.955467942490465,7
-A,Trust-balance,Evidence Available,Moving_Average,18.48694138106553,8
-A,Trust-balance,Evidence Available,DHR_ARIMA,62.92503503540271,2
-A,Trust-balance,Evidence Available,LSTM,38.14713283677699,5
-A,Trust-balance,Evidence Available,Chronos_Bolt_Tiny,50.94822329467473,3
+A,Trust-balance,Evidence Available,Naive,45.71413296787213,6
+A,Trust-balance,Evidence Available,Daily_Seasonal_Naive,21.610004232643377,8
+A,Trust-balance,Evidence Available,Weekly_Seasonal_Naive,18.955467942490465,9
+A,Trust-balance,Evidence Available,Moving_Average,18.48694138106553,10
+A,Trust-balance,Evidence Available,ARIMA,60.75460039176752,4
+A,Trust-balance,Evidence Available,SARIMA,89.79439840470799,2
+A,Trust-balance,Evidence Available,Prophet,15.179582686274566,13
+A,Trust-balance,Evidence Available,Simple_Exponential_Smoothing,16.567182859351764,11
+A,Trust-balance,Evidence Available,Holt_Winters,16.366853764187017,12
+A,Trust-balance,Evidence Available,DHR_ARIMA,62.92503503540271,3
+A,Trust-balance,Evidence Available,LSTM,38.14713283677699,7
+A,Trust-balance,Evidence Available,Chronos_Bolt_Tiny,50.94822329467473,5
 A,Trust-balance,Evidence Available,TimesFM,90.41093000000001,1
-A,Uncertainty-heavy,Missing Evidence Penalised,Naive,30.94030553168303,4
-A,Uncertainty-heavy,Missing Evidence Penalised,Daily_Seasonal_Naive,15.973794920848079,6
-A,Uncertainty-heavy,Missing Evidence Penalised,Weekly_Seasonal_Naive,14.423654480882647,7
-A,Uncertainty-heavy,Missing Evidence Penalised,Moving_Average,13.910322182837428,8
-A,Uncertainty-heavy,Missing Evidence Penalised,DHR_ARIMA,41.35251587983116,3
-A,Uncertainty-heavy,Missing Evidence Penalised,LSTM,25.13460508659288,5
-A,Uncertainty-heavy,Missing Evidence Penalised,Chronos_Bolt_Tiny,54.88656082311887,2
+A,Uncertainty-heavy,Missing Evidence Penalised,Naive,30.940305531683027,6
+A,Uncertainty-heavy,Missing Evidence Penalised,Daily_Seasonal_Naive,15.973794920848079,8
+A,Uncertainty-heavy,Missing Evidence Penalised,Weekly_Seasonal_Naive,14.423654480882647,9
+A,Uncertainty-heavy,Missing Evidence Penalised,Moving_Average,13.910322182837428,10
+A,Uncertainty-heavy,Missing Evidence Penalised,ARIMA,39.869585776976756,5
+A,Uncertainty-heavy,Missing Evidence Penalised,SARIMA,58.632724239775015,2
+A,Uncertainty-heavy,Missing Evidence Penalised,Prophet,11.438383926110873,13
+A,Uncertainty-heavy,Missing Evidence Penalised,Simple_Exponential_Smoothing,12.585707269398881,11
+A,Uncertainty-heavy,Missing Evidence Penalised,Holt_Winters,12.431915218581823,12
+A,Uncertainty-heavy,Missing Evidence Penalised,DHR_ARIMA,41.35251587983116,4
+A,Uncertainty-heavy,Missing Evidence Penalised,LSTM,25.134605086592877,7
+A,Uncertainty-heavy,Missing Evidence Penalised,Chronos_Bolt_Tiny,54.88656082311888,3
 A,Uncertainty-heavy,Missing Evidence Penalised,TimesFM,85.5441275,1
-A,Uncertainty-heavy,Evidence Available,Naive,47.60047004874312,4
-A,Uncertainty-heavy,Evidence Available,Daily_Seasonal_Naive,24.57506910899704,6
-A,Uncertainty-heavy,Evidence Available,Weekly_Seasonal_Naive,22.19023766289638,7
-A,Uncertainty-heavy,Evidence Available,Moving_Average,21.400495665903733,8
-A,Uncertainty-heavy,Evidence Available,DHR_ARIMA,63.619255199740245,2
-A,Uncertainty-heavy,Evidence Available,LSTM,38.66862321014289,5
-A,Uncertainty-heavy,Evidence Available,Chronos_Bolt_Tiny,54.88656082311888,3
-A,Uncertainty-heavy,Evidence Available,TimesFM,85.5441275,1
-B,Primary,Missing Evidence Penalised,Naive,37.233852636138614,7
-B,Primary,Missing Evidence Penalised,Daily_Seasonal_Naive,59.08133837732623,3
-B,Primary,Missing Evidence Penalised,Weekly_Seasonal_Naive,44.609875901919736,5
-B,Primary,Missing Evidence Penalised,Moving_Average,41.407619691665744,6
-B,Primary,Missing Evidence Penalised,DHR_ARIMA,32.30203105388961,8
-B,Primary,Missing Evidence Penalised,LSTM,48.045835896917666,4
+A,Uncertainty-heavy,Evidence Available,Naive,47.60047004874312,6
+A,Uncertainty-heavy,Evidence Available,Daily_Seasonal_Naive,24.57506910899704,8
+A,Uncertainty-heavy,Evidence Available,Weekly_Seasonal_Naive,22.19023766289638,9
+A,Uncertainty-heavy,Evidence Available,Moving_Average,21.400495665903733,10
+A,Uncertainty-heavy,Evidence Available,ARIMA,61.33782427227193,4
+A,Uncertainty-heavy,Evidence Available,SARIMA,90.2041911381154,1
+A,Uncertainty-heavy,Evidence Available,Prophet,17.597513732478266,13
+A,Uncertainty-heavy,Evidence Available,Simple_Exponential_Smoothing,19.36262656830597,11
+A,Uncertainty-heavy,Evidence Available,Holt_Winters,19.126023413202805,12
+A,Uncertainty-heavy,Evidence Available,DHR_ARIMA,63.619255199740245,3
+A,Uncertainty-heavy,Evidence Available,LSTM,38.66862321014289,7
+A,Uncertainty-heavy,Evidence Available,Chronos_Bolt_Tiny,54.88656082311888,5
+A,Uncertainty-heavy,Evidence Available,TimesFM,85.5441275,2
+B,Primary,Missing Evidence Penalised,Naive,37.23385263613862,10
+B,Primary,Missing Evidence Penalised,Daily_Seasonal_Naive,59.08133837732623,4
+B,Primary,Missing Evidence Penalised,Weekly_Seasonal_Naive,44.609875901919736,6
+B,Primary,Missing Evidence Penalised,Moving_Average,41.407619691665744,7
+B,Primary,Missing Evidence Penalised,ARIMA,23.307907130531515,13
+B,Primary,Missing Evidence Penalised,SARIMA,62.89422287656233,3
+B,Primary,Missing Evidence Penalised,Prophet,39.35430412740002,8
+B,Primary,Missing Evidence Penalised,Simple_Exponential_Smoothing,36.73385275671179,11
+B,Primary,Missing Evidence Penalised,Holt_Winters,38.75836996896533,9
+B,Primary,Missing Evidence Penalised,DHR_ARIMA,32.30203105388961,12
+B,Primary,Missing Evidence Penalised,LSTM,48.04583589691766,5
 B,Primary,Missing Evidence Penalised,Chronos_Bolt_Tiny,66.31149135536495,2
-B,Primary,Missing Evidence Penalised,TimesFM,91.07884200000001,1
-B,Primary,Evidence Available,Naive,43.80453251310426,7
-B,Primary,Evidence Available,Daily_Seasonal_Naive,69.50745691450145,2
-B,Primary,Evidence Available,Weekly_Seasonal_Naive,52.48220694343498,5
-B,Primary,Evidence Available,Moving_Average,48.714846696077345,6
-B,Primary,Evidence Available,DHR_ARIMA,38.00238947516424,8
-B,Primary,Evidence Available,LSTM,56.52451281990313,4
-B,Primary,Evidence Available,Chronos_Bolt_Tiny,66.31149135536495,3
+B,Primary,Missing Evidence Penalised,TimesFM,91.078842,1
+B,Primary,Evidence Available,Naive,43.80453251310426,10
+B,Primary,Evidence Available,Daily_Seasonal_Naive,69.50745691450145,3
+B,Primary,Evidence Available,Weekly_Seasonal_Naive,52.48220694343498,6
+B,Primary,Evidence Available,Moving_Average,48.714846696077345,7
+B,Primary,Evidence Available,ARIMA,27.421067212390017,13
+B,Primary,Evidence Available,SARIMA,73.99320338419098,2
+B,Primary,Evidence Available,Prophet,46.299181326352965,8
+B,Primary,Evidence Available,Simple_Exponential_Smoothing,43.2162973608374,11
+B,Primary,Evidence Available,Holt_Winters,45.5980823164298,9
+B,Primary,Evidence Available,DHR_ARIMA,38.00238947516424,12
+B,Primary,Evidence Available,LSTM,56.52451281990313,5
+B,Primary,Evidence Available,Chronos_Bolt_Tiny,66.31149135536495,4
 B,Primary,Evidence Available,TimesFM,91.078842,1
-B,Accuracy-heavy,Missing Evidence Penalised,Naive,36.603944051246046,7
-B,Accuracy-heavy,Missing Evidence Penalised,Daily_Seasonal_Naive,58.47436804368329,3
-B,Accuracy-heavy,Missing Evidence Penalised,Weekly_Seasonal_Naive,45.80549523910047,5
-B,Accuracy-heavy,Missing Evidence Penalised,Moving_Average,40.899951155752035,6
-B,Accuracy-heavy,Missing Evidence Penalised,DHR_ARIMA,31.46376338804226,8
-B,Accuracy-heavy,Missing Evidence Penalised,LSTM,47.350797429197684,4
+B,Accuracy-heavy,Missing Evidence Penalised,Naive,36.603944051246046,10
+B,Accuracy-heavy,Missing Evidence Penalised,Daily_Seasonal_Naive,58.47436804368329,4
+B,Accuracy-heavy,Missing Evidence Penalised,Weekly_Seasonal_Naive,45.80549523910048,6
+B,Accuracy-heavy,Missing Evidence Penalised,Moving_Average,40.89995115575203,7
+B,Accuracy-heavy,Missing Evidence Penalised,ARIMA,22.458916782876248,13
+B,Accuracy-heavy,Missing Evidence Penalised,SARIMA,61.405553567700544,3
+B,Accuracy-heavy,Missing Evidence Penalised,Prophet,39.906577341568955,8
+B,Accuracy-heavy,Missing Evidence Penalised,Simple_Exponential_Smoothing,36.10394418613977,11
+B,Accuracy-heavy,Missing Evidence Penalised,Holt_Winters,39.61510406051981,9
+B,Accuracy-heavy,Missing Evidence Penalised,DHR_ARIMA,31.463763388042256,12
+B,Accuracy-heavy,Missing Evidence Penalised,LSTM,47.350797429197684,5
 B,Accuracy-heavy,Missing Evidence Penalised,Chronos_Bolt_Tiny,65.90227617480036,2
-B,Accuracy-heavy,Missing Evidence Penalised,TimesFM,91.07884200000001,1
-B,Accuracy-heavy,Evidence Available,Naive,43.06346358970123,7
-B,Accuracy-heavy,Evidence Available,Daily_Seasonal_Naive,68.79337416903917,2
-B,Accuracy-heavy,Evidence Available,Weekly_Seasonal_Naive,53.88881792835351,5
-B,Accuracy-heavy,Evidence Available,Moving_Average,48.117589595002386,6
-B,Accuracy-heavy,Evidence Available,DHR_ARIMA,37.016192221226184,8
-B,Accuracy-heavy,Evidence Available,LSTM,55.706820504938456,4
-B,Accuracy-heavy,Evidence Available,Chronos_Bolt_Tiny,65.90227617480036,3
+B,Accuracy-heavy,Missing Evidence Penalised,TimesFM,91.078842,1
+B,Accuracy-heavy,Evidence Available,Naive,43.06346358970123,10
+B,Accuracy-heavy,Evidence Available,Daily_Seasonal_Naive,68.79337416903917,3
+B,Accuracy-heavy,Evidence Available,Weekly_Seasonal_Naive,53.88881792835351,6
+B,Accuracy-heavy,Evidence Available,Moving_Average,48.117589595002386,7
+B,Accuracy-heavy,Evidence Available,ARIMA,26.42225503867794,13
+B,Accuracy-heavy,Evidence Available,SARIMA,72.24182772670652,2
+B,Accuracy-heavy,Evidence Available,Prophet,46.94891451949289,8
+B,Accuracy-heavy,Evidence Available,Simple_Exponential_Smoothing,42.47522845428208,11
+B,Accuracy-heavy,Evidence Available,Holt_Winters,46.606004777082134,9
+B,Accuracy-heavy,Evidence Available,DHR_ARIMA,37.016192221226184,12
+B,Accuracy-heavy,Evidence Available,LSTM,55.706820504938456,5
+B,Accuracy-heavy,Evidence Available,Chronos_Bolt_Tiny,65.90227617480036,4
 B,Accuracy-heavy,Evidence Available,TimesFM,91.078842,1
-B,Trust-balance,Missing Evidence Penalised,Naive,36.233969325075535,7
-B,Trust-balance,Missing Evidence Penalised,Daily_Seasonal_Naive,56.65581178833277,3
-B,Trust-balance,Missing Evidence Penalised,Weekly_Seasonal_Naive,41.02355824050242,5
-B,Trust-balance,Missing Evidence Penalised,Moving_Average,39.93453590004004,6
-B,Trust-balance,Missing Evidence Penalised,DHR_ARIMA,31.788662111053178,8
-B,Trust-balance,Missing Evidence Penalised,LSTM,46.16249168148913,4
+B,Trust-balance,Missing Evidence Penalised,Naive,36.23396932507554,9
+B,Trust-balance,Missing Evidence Penalised,Daily_Seasonal_Naive,56.65581178833277,4
+B,Trust-balance,Missing Evidence Penalised,Weekly_Seasonal_Naive,41.02355824050242,6
+B,Trust-balance,Missing Evidence Penalised,Moving_Average,39.934535900040046,7
+B,Trust-balance,Missing Evidence Penalised,ARIMA,23.411305875869704,13
+B,Trust-balance,Missing Evidence Penalised,SARIMA,61.16215042160227,3
+B,Trust-balance,Missing Evidence Penalised,Prophet,36.64208751609381,8
+B,Trust-balance,Missing Evidence Penalised,Simple_Exponential_Smoothing,35.73396941838438,11
+B,Trust-balance,Missing Evidence Penalised,Holt_Winters,35.76928969376597,10
+B,Trust-balance,Missing Evidence Penalised,DHR_ARIMA,31.788662111053178,12
+B,Trust-balance,Missing Evidence Penalised,LSTM,46.16249168148912,5
 B,Trust-balance,Missing Evidence Penalised,Chronos_Bolt_Tiny,67.03131904093725,2
-B,Trust-balance,Missing Evidence Penalised,TimesFM,89.138456,1
-B,Trust-balance,Evidence Available,Naive,45.29246165634442,7
-B,Trust-balance,Evidence Available,Daily_Seasonal_Naive,70.81976473541596,2
-B,Trust-balance,Evidence Available,Weekly_Seasonal_Naive,51.27944780062802,5
-B,Trust-balance,Evidence Available,Moving_Average,49.918169875050054,6
-B,Trust-balance,Evidence Available,DHR_ARIMA,39.73582763881647,8
-B,Trust-balance,Evidence Available,LSTM,57.7031146018614,4
-B,Trust-balance,Evidence Available,Chronos_Bolt_Tiny,67.03131904093725,3
+B,Trust-balance,Missing Evidence Penalised,TimesFM,89.13845599999999,1
+B,Trust-balance,Evidence Available,Naive,45.29246165634442,9
+B,Trust-balance,Evidence Available,Daily_Seasonal_Naive,70.81976473541596,3
+B,Trust-balance,Evidence Available,Weekly_Seasonal_Naive,51.27944780062802,6
+B,Trust-balance,Evidence Available,Moving_Average,49.918169875050054,7
+B,Trust-balance,Evidence Available,ARIMA,29.26413234483713,13
+B,Trust-balance,Evidence Available,SARIMA,76.45268802700284,2
+B,Trust-balance,Evidence Available,Prophet,45.80260939511726,8
+B,Trust-balance,Evidence Available,Simple_Exponential_Smoothing,44.667461772980474,11
+B,Trust-balance,Evidence Available,Holt_Winters,44.71161211720746,10
+B,Trust-balance,Evidence Available,DHR_ARIMA,39.73582763881647,12
+B,Trust-balance,Evidence Available,LSTM,57.7031146018614,5
+B,Trust-balance,Evidence Available,Chronos_Bolt_Tiny,67.03131904093725,4
 B,Trust-balance,Evidence Available,TimesFM,89.13845599999999,1
-B,Uncertainty-heavy,Missing Evidence Penalised,Naive,29.986819172161155,7
-B,Uncertainty-heavy,Missing Evidence Penalised,Daily_Seasonal_Naive,46.00677949894877,3
-B,Uncertainty-heavy,Missing Evidence Penalised,Weekly_Seasonal_Naive,35.27420103892909,5
-B,Uncertainty-heavy,Missing Evidence Penalised,Moving_Average,32.95943234294913,6
-B,Uncertainty-heavy,Missing Evidence Penalised,DHR_ARIMA,25.850707283908868,8
-B,Uncertainty-heavy,Missing Evidence Penalised,LSTM,36.79994888892095,4
+B,Uncertainty-heavy,Missing Evidence Penalised,Naive,29.98681917216116,10
+B,Uncertainty-heavy,Missing Evidence Penalised,Daily_Seasonal_Naive,46.00677949894877,4
+B,Uncertainty-heavy,Missing Evidence Penalised,Weekly_Seasonal_Naive,35.27420103892909,6
+B,Uncertainty-heavy,Missing Evidence Penalised,Moving_Average,32.95943234294913,7
+B,Uncertainty-heavy,Missing Evidence Penalised,ARIMA,19.36773125223346,13
+B,Uncertainty-heavy,Missing Evidence Penalised,SARIMA,48.26434139673649,3
+B,Uncertainty-heavy,Missing Evidence Penalised,Prophet,30.79633814581542,8
+B,Uncertainty-heavy,Missing Evidence Penalised,Simple_Exponential_Smoothing,29.48681925962678,11
+B,Uncertainty-heavy,Missing Evidence Penalised,Holt_Winters,30.632355704470942,9
+B,Uncertainty-heavy,Missing Evidence Penalised,DHR_ARIMA,25.850707283908868,12
+B,Uncertainty-heavy,Missing Evidence Penalised,LSTM,36.799948888920945,5
 B,Uncertainty-heavy,Missing Evidence Penalised,Chronos_Bolt_Tiny,66.97423943278116,2
 B,Uncertainty-heavy,Missing Evidence Penalised,TimesFM,83.317298,1
-B,Uncertainty-heavy,Evidence Available,Naive,46.13356795717101,7
-B,Uncertainty-heavy,Evidence Available,Daily_Seasonal_Naive,70.77966076761348,2
-B,Uncertainty-heavy,Evidence Available,Weekly_Seasonal_Naive,54.26800159835245,5
-B,Uncertainty-heavy,Evidence Available,Moving_Average,50.7068189891525,6
-B,Uncertainty-heavy,Evidence Available,DHR_ARIMA,39.770318898321335,8
-B,Uncertainty-heavy,Evidence Available,LSTM,56.6153059829553,4
-B,Uncertainty-heavy,Evidence Available,Chronos_Bolt_Tiny,66.97423943278116,3
+B,Uncertainty-heavy,Evidence Available,Naive,46.13356795717101,10
+B,Uncertainty-heavy,Evidence Available,Daily_Seasonal_Naive,70.77966076761348,3
+B,Uncertainty-heavy,Evidence Available,Weekly_Seasonal_Naive,54.26800159835245,6
+B,Uncertainty-heavy,Evidence Available,Moving_Average,50.7068189891525,7
+B,Uncertainty-heavy,Evidence Available,ARIMA,29.79650961882071,13
+B,Uncertainty-heavy,Evidence Available,SARIMA,74.25283291805614,2
+B,Uncertainty-heavy,Evidence Available,Prophet,47.378981762792954,8
+B,Uncertainty-heavy,Evidence Available,Simple_Exponential_Smoothing,45.36433732250274,11
+B,Uncertainty-heavy,Evidence Available,Holt_Winters,47.12670108380145,9
+B,Uncertainty-heavy,Evidence Available,DHR_ARIMA,39.770318898321335,12
+B,Uncertainty-heavy,Evidence Available,LSTM,56.6153059829553,5
+B,Uncertainty-heavy,Evidence Available,Chronos_Bolt_Tiny,66.97423943278116,4
 B,Uncertainty-heavy,Evidence Available,TimesFM,83.317298,1
