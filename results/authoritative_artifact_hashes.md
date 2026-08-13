@@ -4,58 +4,58 @@ These SHA-256 hashes freeze the authoritative and supporting evidence before the
 
 | Artifact | SHA-256 | Role | Authoritative status |
 |---|---|---|---|
-| `results/validated_forecasts.csv` | `AF8252F0D8965251A9CAEA654D10E6FCDB511CDB547D828A36DAB5DAC0ED0725` | Bitcoin aligned final forecasts | Authoritative |
-| `results/baseline_forecasts.csv` | `C25F705512C22A22EBC9B56190A47F651436B3B1A9891997DE598F0BB855D0D5` | Bitcoin baseline evidence | Supporting authoritative evidence |
-| `results/persistence_enhanced_lstm_forecast.csv` | `1B198292F339C20E6C0AF611E50205754829ED758653150C90F1704A710B18CF` | Bitcoin PE-LSTM forecasts | Supporting authoritative evidence |
-| `results/chronos_bolt_tiny_forecast.csv` | `0057334E226D9CD11439F55F004902AB4EFE88222434732A2E7D908A30BF4DD9` | Bitcoin Chronos forecasts | Supporting authoritative evidence |
-| `results/timesfm_forecast.csv` | `3960962297E7296C3ACB31946C47AB1E019A36C6611960EB2091071892695C10` | Bitcoin TimesFM forecasts | Supporting authoritative evidence |
-| `results/arima_rolling_forecast.csv` | `ACA63F0202B1B990D80ADA0BC000A67484108F3C6341F0C4C1D8E5D055D79A78` | Bitcoin rolling one-step ARIMA forecasts | Authoritative evidence |
-| `results/arima_validation_forecast.csv` | `F3BCCC94BF786549D3DA4A4873A57A8FD4962AF3956F225113ACCCCAC4C3AF5C` | Bitcoin training-only ARIMA validation forecasts | Authoritative evidence |
-| `results/prophet_rolling_forecast.csv` | `6F0B505E7290A475B6170B93782D8E9A41CAD3791D50A81517E3E847706FB9B2` | Bitcoin periodic-refit Prophet forecasts | Authoritative evidence |
-| `results/simple_exp_smoothing_forecast.csv` | `D11D0FBC368E9F7635E0745D42E325D73EE8D662E14AC82437C5535BDF8F8927` | Bitcoin rolling one-step Simple Exponential Smoothing forecasts | Authoritative evidence |
-| `results/holt_winters_forecast.csv` | `C126C6C6BBF4BE1925881B540A53C997B40C61D204954680EF2242E91634016B` | Bitcoin rolling one-step Holt-Winters forecasts | Authoritative evidence |
-| `results/simple_exp_smoothing_validation_forecast.csv` | `6AA9D1A9E58D6D4E5A67D16B981C270F4671758DC4859A3805529333373545D0` | Bitcoin training-only Simple Exponential Smoothing validation forecasts | Authoritative evidence |
-| `results/holt_winters_validation_forecast.csv` | `91237410D97DC4F9ED9D65121F5DA699091768CFE132B0D8674B52F9E14A970E` | Bitcoin training-only Holt-Winters validation forecasts | Authoritative evidence |
-| `results/persistence_enhanced_transformer_forecast.csv` | `7C1A50F53872CA1DB11C520C844340BB25736B58050FEAF4F9079D6AC151F0DE` | Bitcoin deterministic PE-Transformer forecasts | Supporting authoritative evidence |
-| `results/persistence_enhanced_transformer_validation_forecast.csv` | `72D32C3F588B79B18C261A2AAC3CBF7E36D41C35CC9998162D99DD51F6A80616` | Bitcoin training-only PE-Transformer validation forecasts | Authoritative evidence |
-| `results/foundation_uncertainty_calibration.csv` | `9503CC926176B8BD64B5B785A9AC39A455E9D6D642230BAB5C7173EC0F41CA12` | Bitcoin native and training-calibrated intervals | Authoritative evidence |
-| `results/foundation_uncertainty_summary.csv` | `9DA734CB9265E07FE8AE47122F674E098E5395C7CD7EBD74E9E253DFFF8FD654` | Bitcoin uncertainty calibration summary | Authoritative evidence |
-| `results/bitcoin_trust_scores_penalised.csv` | `43334D4695AE3DC6E805C9265C1A204E41DD94FD3B492311B525793DDBDEEF3F` | Bitcoin missing-evidence-penalised Trust Scores | Authoritative evidence |
-| `results/bitcoin_trust_scores_evidence_available.csv` | `50B17AAE7B67FC67583745D44487C9AF57D5B909E6FB4C0575B09744FC661DD6` | Bitcoin evidence-available Trust Scores | Authoritative evidence |
-| `results/bitcoin_dm_pairwise_results.csv` | `DE48D5DC77E591ADE6FBB67D08AE16F8A6961393C23C72801B447B90D3D61B96` | Bitcoin full pairwise Diebold-Mariano results | Authoritative evidence |
-| `results/bitcoin_point_forecast_metrics_v2.csv` | `C848334EB888A9C318744D2DF414FDA2D763A849A6D9276E6C56DDB911E706AD` | Bitcoin-v1 artifact-derived metrics | Authoritative rebuilt evidence |
-| `results/bitcoin_regime_thresholds_training.csv` | `411E0F1181696FE08C79D8462420710F98971F9059C540571352BFAD956AE31A` | Training-only Bitcoin regime thresholds | Authoritative rebuilt evidence |
-| `results/bitcoin_regime_robustness_training_defined.csv` | `5DE17BA988DE4FFA80A83ADA1A27672DB5E27948EE59B460DFFA82807087868E` | Training-defined regime evaluation | Authoritative rebuilt evidence |
-| `results/bitcoin_temporal_stability.csv` | `482CFB116D9E3C67AE258B473BB3B98F08876D8ED2AFCAF22E8C7463B4EBFE5E` | Earlier/Middle/Later stability evidence | Authoritative rebuilt evidence |
-| `results/bitcoin_uncertainty_evidence_v2.csv` | `847871A6C64ADFB746C2A3EDB936E2D65C01F20E5020D686CA2FC80F8FD262FC` | Method-separated Bitcoin uncertainty evidence | Authoritative rebuilt evidence |
-| `results/bitcoin_dm_pairwise_results_hac_holm.csv` | `3C8211FA6E5A35F164A8F7727E078DECBA0ADFF259E904323D6ADD6392783EEB` | HAC DM tests with Holm correction | Authoritative corrected inference |
-| `results/bitcoin_transparency_auditability_rubric.csv` | `7161C4F15696187015F37F76FCB6A1B3FCD0A1B6D438643040C2E99CA332312B` | Documented transparency/auditability rubric | Authoritative rebuilt evidence |
-| `results/bitcoin_trustworthiness_components_v2.csv` | `43F3D1C769D50EBD9D83C74B0E1257FCDE0AA3077C689C841478F5D08471065B` | Component-first Bitcoin synthesis | Authoritative rebuilt evidence |
-| `results/bitcoin_trust_score_sensitivity_v2.csv` | `593E62A809157E8C973A64E57F5E57C7E366420AE926F0812AD125D0CE0F16C5` | Exploratory composite sensitivity | Authoritative rebuilt evidence |
-| `results/electricity/protocol_a_validated_forecasts.csv` | `91EFF0A09293B2FC668BCD62CE92A9BCF13C84FC9458B5F60F2F2E08E36A9020` | Electricity rolling one-step forecasts | Authoritative |
-| `results/electricity/protocol_b_validated_forecasts.csv` | `F520CBE70763F343F5FB53DBBE2F786A35E5719175330987031877EE7A4970D5` | Electricity 48-step day-ahead forecasts | Authoritative |
-| `results/electricity/protocol_b_validated_horizon_metrics.csv` | `22D12E1FBE84EFE55BB3BF15C9136C3BB7CBF1E9A6E524F1F663BA5EB156993C` | Validated horizon metrics | Authoritative |
-| `results/electricity/protocol_a_robustness.csv` | `F062D10ECA7B89F37A3CC5BFAFE51FB2DA592BA939B8C0B8A8648ED0F6E2B082` | Protocol A robustness | Authoritative evidence |
-| `results/electricity/protocol_b_robustness.csv` | `1CAB0B0F966D5EF93C6BA6548F18597545CD35998720A0B2B627BFD3D5970727` | Protocol B robustness | Authoritative evidence |
-| `results/electricity/protocol_a_generalisation.csv` | `6C03D15AF90512BAF1E87B09542F5DC5C70ACF9C57F335A5029E37D346FFF351` | Protocol A temporal generalisation | Authoritative evidence |
-| `results/electricity/protocol_b_generalisation.csv` | `5CCDD97774D3041DF6E1DAB8DA05AB29E82B02C5E7B08EF12F8385FE5F5E52F4` | Protocol B temporal generalisation | Authoritative evidence |
-| `results/electricity/uncertainty_summary.csv` | `814CC34DF9137DF6C2F33891C1278B0A4AE8746079D9EC0C1B07A4212496A668` | Electricity interval evidence | Authoritative evidence |
-| `results/electricity/protocol_a_trust_scores.csv` | `4A9C3D36BB1C96AE82E0B25C92DF3F08FABBA610122592CF191BD9F899D18A6B` | Protocol A Trust Scores | Authoritative evidence |
-| `results/electricity/protocol_b_trust_scores.csv` | `C73CA588CF1A8BAAC211D950A6D24E4E49DBCEFEAF1BF30487310D6B4AC0C2F0` | Protocol B Trust Scores | Authoritative evidence |
-| `results/electricity/trust_score_sensitivity.csv` | `06277B13923BDA48B1E10BC2F363598223C83F86D7A9EC2E0570768D8B8C6BE6` | Trust-weight sensitivity | Authoritative evidence |
-| `results/electricity/protocol_a_dm_tests.csv` | `E457E08B3F5FFE07B8181B3359C6DBA601821AF14D603974021DCF6622A9C57F` | Protocol A DM tests | Authoritative evidence |
-| `results/electricity/protocol_b_dm_tests.csv` | `238AC1673B49C7A085E8EE5F8D52A92597FB41CC773D77EEFA0F30FB4970433F` | Protocol B DM tests | Authoritative evidence |
-| `results/electricity/protocol_a_effect_sizes.csv` | `50BDEBE26643BF03857C06B16703DF973FA9418982DA3D40950D608E2355062A` | Protocol A effect sizes | Authoritative evidence |
-| `results/electricity/protocol_b_effect_sizes.csv` | `7712C38B5BE3AD20A43EB57D6184BD0A665E4219D91D761CA5A8A75523109E72` | Protocol B effect sizes | Authoritative evidence |
-| `results/electricity/protocol_b_horizon_significance.csv` | `DF5F71D1E66A8B67E4E95709599A5CE344767E7E0821E1353D118EFF4D86CD16` | Horizon-level significance | Authoritative evidence |
-| `results/cross_domain_model_comparison.csv` | `3DE7D10CB9662E63ABF07FD19374D12A371DCBCCB469E142FD5238CB8E1B2D79` | Cross-domain ranks and metrics | Authoritative synthesis |
-| `results/cross_domain_foundation_model_comparison.csv` | `EA3C90B5AB7701368EDE6E88EC60453E07D85586749C3704E74A87D49AC5C7B3` | Foundation-model comparison | Authoritative synthesis |
-| `results/cross_domain_uncertainty_comparison.csv` | `7487BCFCC87D222BA2F243B0248B0C3DB24D38C9FD14C6DD321BA852888189DB` | Cross-domain calibration comparison | Authoritative synthesis |
-| `results/cross_domain_significance_summary.csv` | `61BF9251092246E9B6E69D7FA5FF79E9AF0BED2441F9B60D7B59A006909C179D` | Cross-domain significance summary | Authoritative synthesis |
-| `results/cross_domain_rank_stability.csv` | `2A7BDE59F1A501EA048B2CEC45CF656B35013432A82ABFCFB54EFA9BF5A6F069` | Cross-domain model-family rank stability | Authoritative synthesis |
-| `results/cross_domain_trust_comparison.csv` | `B54564546C95D47F86B7A3A683D4F891EB55617AD2AD195B479472DD9B496275` | Cross-domain trust-component comparison, 8 comparable families | Authoritative synthesis |
-| `results/cross_domain_comparable_families.csv` | `36114632236F71B4AB5DC42F0CF54B2EC46742F1207D8746D24DFBCEB1792723` | Cross-domain model-family comparability map | Authoritative synthesis |
-| `results/cross_domain_not_comparable.csv` | `813062D4F4E19B49AE4E6A5E6E13315BB402507B3D08FCA7C51FBDA68ABEB12C` | Cross-domain explicitly non-comparable items | Authoritative synthesis |
+| `results/validated_forecasts.csv` | `A84D09F24CE9549EF30D84E958738DB9C2FC68B37342267978697009493820A0` | Bitcoin aligned final forecasts | Authoritative |
+| `results/baseline_forecasts.csv` | `D3140C5B0278D9A2D3A12FC812B72A4487DEFA622B915C6465BBD0610210BAF9` | Bitcoin baseline evidence | Supporting authoritative evidence |
+| `results/persistence_enhanced_lstm_forecast.csv` | `3D3EE249A63560CF8C7E0BE7375F23F783DB670C857FCE4FC7AF663123405BE2` | Bitcoin PE-LSTM forecasts | Supporting authoritative evidence |
+| `results/chronos_bolt_tiny_forecast.csv` | `AD075664AA9F1330086016B118E8164298A2135D50191725336AE02C3BAAE802` | Bitcoin Chronos forecasts | Supporting authoritative evidence |
+| `results/timesfm_forecast.csv` | `6FB06E487BDB7DA7410651AD418F4B1F8D02B72E5380D471A1984765395F9CC3` | Bitcoin TimesFM forecasts | Supporting authoritative evidence |
+| `results/arima_rolling_forecast.csv` | `74E3B7BE81552A8FBB4E24FD8479E9FD35C84C2F3DA28F7776452768DAFFC856` | Bitcoin rolling one-step ARIMA forecasts | Authoritative evidence |
+| `results/arima_validation_forecast.csv` | `610BDFE07039C581CE9971E2E277F405F0412AB8ACF0637AFEB9FB31143B378D` | Bitcoin training-only ARIMA validation forecasts | Authoritative evidence |
+| `results/prophet_rolling_forecast.csv` | `16B4CC848D0A34A8BA5BA5C235720DC31F2C41A5EAA99EDC0DD00DD001470616` | Bitcoin periodic-refit Prophet forecasts | Authoritative evidence |
+| `results/simple_exp_smoothing_forecast.csv` | `12D79C344528BB3DBC97698B7A519436DDDD8ED4D7984E218AD61FC887DA0B03` | Bitcoin rolling one-step Simple Exponential Smoothing forecasts | Authoritative evidence |
+| `results/holt_winters_forecast.csv` | `8D2A1AA275E67BF87FE90298D24B0961F2D3BE759FF4FC1A795B638C43BAB4BF` | Bitcoin rolling one-step Holt-Winters forecasts | Authoritative evidence |
+| `results/simple_exp_smoothing_validation_forecast.csv` | `0B682C0AEB929E048875AEEDD18EFDACE312CD3B6776406BA1B556C3BD04579D` | Bitcoin training-only Simple Exponential Smoothing validation forecasts | Authoritative evidence |
+| `results/holt_winters_validation_forecast.csv` | `6D524D6705F7F8765F36ED5457FC05025911A4F7D36D3D2252BA48C4BA799AA8` | Bitcoin training-only Holt-Winters validation forecasts | Authoritative evidence |
+| `results/persistence_enhanced_transformer_forecast.csv` | `8F7DADAB20DFFA7DDB51362675F4C2E6E4A4FCEA3AD6412C94EC911B4E96CAEF` | Bitcoin deterministic PE-Transformer forecasts | Supporting authoritative evidence |
+| `results/persistence_enhanced_transformer_validation_forecast.csv` | `B4382E20696C4F7D675324085EFBDBA6A8E5DD0EBBA6984E1DF0AF539C7653A9` | Bitcoin training-only PE-Transformer validation forecasts | Authoritative evidence |
+| `results/foundation_uncertainty_calibration.csv` | `F4054321A7C56177E7452ECBCC9F08A262F5FACAAF0DC39DD8E1E8E0A1832AAA` | Bitcoin native and training-calibrated intervals | Authoritative evidence |
+| `results/foundation_uncertainty_summary.csv` | `F83D7C6E73CBAB24936470712900269EBEBC90F418177303218E10BD03CFE0F0` | Bitcoin uncertainty calibration summary | Authoritative evidence |
+| `results/bitcoin_trust_scores_penalised.csv` | `F803AF494C1E9C9BA165AF64B8EDD5126E8CF3476BD1DEE801E5A32AA51B2155` | Bitcoin missing-evidence-penalised Trust Scores | Authoritative evidence |
+| `results/bitcoin_trust_scores_evidence_available.csv` | `030D6BBA1CF4ACDC09CD4B8266471002F9C1154ED53A96AFEA75478EE76C3FD5` | Bitcoin evidence-available Trust Scores | Authoritative evidence |
+| `results/bitcoin_dm_pairwise_results.csv` | `294B74D2E4282C9D3FF55665BBDCEAD5BFA2E1188D11EBABE53F56D0B90653C0` | Bitcoin full pairwise Diebold-Mariano results | Authoritative evidence |
+| `results/bitcoin_point_forecast_metrics_v2.csv` | `DF01DC83C1C1BAD16610C5ADAA8F3B8513D88E440FA1CCFF67A03048DA30B3D8` | Bitcoin-v1 artifact-derived metrics | Authoritative rebuilt evidence |
+| `results/bitcoin_regime_thresholds_training.csv` | `40A3276296ED9C40A92D64F736E3FDE93BC3C3AD9FFEA48585473A168E265F15` | Training-only Bitcoin regime thresholds | Authoritative rebuilt evidence |
+| `results/bitcoin_regime_robustness_training_defined.csv` | `B5F60B0A1AF1D46364743E882F2EED2AF08CBB83B5390DB299A9AC45F0B743D7` | Training-defined regime evaluation | Authoritative rebuilt evidence |
+| `results/bitcoin_temporal_stability.csv` | `19C21B51B2B10EAD05FC9B0EF11DBD192F34088E7D2085CEF3FBBDBA50FD1E76` | Earlier/Middle/Later stability evidence | Authoritative rebuilt evidence |
+| `results/bitcoin_uncertainty_evidence_v2.csv` | `FE082169F2F9A865CDA66A4A7E03309D187C0C7E1D14046476BA06063BBD7441` | Method-separated Bitcoin uncertainty evidence | Authoritative rebuilt evidence |
+| `results/bitcoin_dm_pairwise_results_hac_holm.csv` | `5ABE3500960BD89BB5EB580B7A82F62319E6167B9304AC4AF84EE03494BD9F47` | HAC DM tests with Holm correction | Authoritative corrected inference |
+| `results/bitcoin_transparency_auditability_rubric.csv` | `320B40E4621CD75EC807640F689F7CD914A8F17C0188F5774B66C5E0EEFF4B6D` | Documented transparency/auditability rubric | Authoritative rebuilt evidence |
+| `results/bitcoin_trustworthiness_components_v2.csv` | `77877D13EDF53F18BB101CD79369325967980EA92E5C6454048EDB6E87DA0E53` | Component-first Bitcoin synthesis | Authoritative rebuilt evidence |
+| `results/bitcoin_trust_score_sensitivity_v2.csv` | `71FAC64AB5A03D2156CEB33DCB98FBAE229632537FEC86B52BC44C6A093D4EEE` | Exploratory composite sensitivity | Authoritative rebuilt evidence |
+| `results/electricity/protocol_a_validated_forecasts.csv` | `CC362BACCBB7B612C7499832792C07769FF2D098222116C13B8D9BF3E46A601C` | Electricity rolling one-step forecasts | Authoritative |
+| `results/electricity/protocol_b_validated_forecasts.csv` | `AEA1D57D987BBC89CC8C9D6AEFE95AFEF2A46AAB77FEBA6649EE85B78B0533CE` | Electricity 48-step day-ahead forecasts | Authoritative |
+| `results/electricity/protocol_b_validated_horizon_metrics.csv` | `58DBEBD52C62AF3C90B7656DC487863A510A78AE01661DB6777F709C475658E3` | Validated horizon metrics | Authoritative |
+| `results/electricity/protocol_a_robustness.csv` | `C412142321D0A55AB8B59EA24BEB9EA6B907B9FDFB8CE48ADA1C69B633A5216D` | Protocol A robustness | Authoritative evidence |
+| `results/electricity/protocol_b_robustness.csv` | `174ECFF8CD873524B747AB57E76337ADB9525B9D9C582C4D4D16CFCB7F2C019E` | Protocol B robustness | Authoritative evidence |
+| `results/electricity/protocol_a_generalisation.csv` | `0083D0F64C26B539292561CF6CBAF6E58A5242E66F95A405E95AFD4A5274E483` | Protocol A temporal generalisation | Authoritative evidence |
+| `results/electricity/protocol_b_generalisation.csv` | `CBEF19FB6CB5FB3EE00F6989EA3018E528310A4CB59D6C035154FBF2971B0302` | Protocol B temporal generalisation | Authoritative evidence |
+| `results/electricity/uncertainty_summary.csv` | `2CC86B36F102052936C4894C8B86279048E1F946AA394D10849AC26E19E46D97` | Electricity interval evidence | Authoritative evidence |
+| `results/electricity/protocol_a_trust_scores.csv` | `A2CDCEECD39457AE4C90C912D6AC35540231F2E9F2300C666076EF35042309E7` | Protocol A Trust Scores | Authoritative evidence |
+| `results/electricity/protocol_b_trust_scores.csv` | `E5705845BF6CAF3F1BF3A7CE79E365265A16F5BB58C7319984351D1247DA0B23` | Protocol B Trust Scores | Authoritative evidence |
+| `results/electricity/trust_score_sensitivity.csv` | `D0A2EBF81380ED60A8BB0124CB5F291E5A8D5D7E6CC44B54EC31D517148988D1` | Trust-weight sensitivity | Authoritative evidence |
+| `results/electricity/protocol_a_dm_tests.csv` | `B41FBEB7D7C6E1E6E3966A47E9187CD901DC697916BEC7FBD0E5DD2372475D76` | Protocol A DM tests | Authoritative evidence |
+| `results/electricity/protocol_b_dm_tests.csv` | `68885BCA93E9D25194230EE39D856F98BCBB9D022DCAEA78A3688C1A8DAF4550` | Protocol B DM tests | Authoritative evidence |
+| `results/electricity/protocol_a_effect_sizes.csv` | `97F5BF1F0A6CD3851D07676C8649D7F0744C5DD18E2472E9E785B8F6947C535A` | Protocol A effect sizes | Authoritative evidence |
+| `results/electricity/protocol_b_effect_sizes.csv` | `3AEFB912598BB60AFFDF59EDECA8F42F208AE01C853D08A1BDEBBC155C8BADB3` | Protocol B effect sizes | Authoritative evidence |
+| `results/electricity/protocol_b_horizon_significance.csv` | `9E109EC114CCB61C54D26BF0C1EA958DCAE145DD795282A0F6A2AAF42BDA42A5` | Horizon-level significance | Authoritative evidence |
+| `results/cross_domain_model_comparison.csv` | `E521C4F93A605FD11241622C7F479205D067044FDB3D89CB19941E050393601C` | Cross-domain ranks and metrics | Authoritative synthesis |
+| `results/cross_domain_foundation_model_comparison.csv` | `7453C25FD6F014934C4240BD2598C9FD990CACBB576418D669FC418DB5D0DEC2` | Foundation-model comparison | Authoritative synthesis |
+| `results/cross_domain_uncertainty_comparison.csv` | `32FECE2416050BDEEB2A8965C701B34D8BB5747869693B2D062854F87AD4FA9F` | Cross-domain calibration comparison | Authoritative synthesis |
+| `results/cross_domain_significance_summary.csv` | `5109E88D0C4D1F538539691404CD36AB9FEA9B55EDCD6A04C5E68DB9FF937BB0` | Cross-domain significance summary | Authoritative synthesis |
+| `results/cross_domain_rank_stability.csv` | `785B22B6B6D3B833D8EB2B2103C615E45622A62C174FAD834331E6CFF7FA316C` | Cross-domain model-family rank stability | Authoritative synthesis |
+| `results/cross_domain_trust_comparison.csv` | `C2CE17DA6277C3B3F8C4FC940606DF6F5431A15BD4D4E69005B5462871330C9A` | Cross-domain trust-component comparison, 8 comparable families | Authoritative synthesis |
+| `results/cross_domain_comparable_families.csv` | `00732C7B2891BCF355A46DA297615B72E677F4246AA9ADEC73FAFA9491FEBDC1` | Cross-domain model-family comparability map | Authoritative synthesis |
+| `results/cross_domain_not_comparable.csv` | `0C08B30C451466F55977C5DB4A22F0375821D4C184C74EE33E4239B67A93E13E` | Cross-domain explicitly non-comparable items | Authoritative synthesis |
 
 Hash equality establishes byte-level preservation; it does not replace methodological validation documented in the case studies.
 
