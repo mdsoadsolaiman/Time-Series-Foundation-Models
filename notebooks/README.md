@@ -124,7 +124,7 @@ model fitting / zero-shot inference
 
 Bitcoin Notebook 07 and Electricity Notebook 14 enforce the central boundary between forecast creation and scientific interpretation. After forecasts are frozen, downstream notebooks should derive evidence from the preserved vectors rather than silently rerunning models or changing the comparison set.
 
-Authoritative status depends on validation, schema/protocol integrity, and the protected hash ledger—not simply on location or filename. See the [result artifact guide](../results/README.md) and [`authoritative_artifact_hashes.md`](../results/authoritative_artifact_hashes.md).
+Authoritative status depends on validation, schema/protocol integrity, and the protected hash ledger-not simply on location or filename. See the [result artifact guide](../results/README.md) and [`authoritative_artifact_hashes.md`](../results/authoritative_artifact_hashes.md).
 
 # Protocol Interpretation
 

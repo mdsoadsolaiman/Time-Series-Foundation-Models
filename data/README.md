@@ -13,7 +13,7 @@ The data files are research inputs. Forecasts, metrics, calibration summaries, s
 
 Weather and Transport are planned domain extensions. They are not included in this completed-dataset table because no final dataset, frozen protocol, or authoritative empirical evidence exists for either domain.
 
-# Bitcoin — Financial Time Series
+# Bitcoin - Financial Time Series
 
 ## Dataset Role
 
@@ -118,7 +118,7 @@ Scalers and fitted statistics must use training/pre-test observations only. A mo
 - Minute-level cadence gaps were not reported as a separate raw-grid count, although the reconstructed daily target has no missing calendar dates.
 - Possible foundation-model pretraining overlap is a later model-evaluation limitation, not a defect in the raw Bitcoin observations.
 
-# South Australia Electricity Demand — Energy Time Series
+# South Australia Electricity Demand - Energy Time Series
 
 ## Dataset Role
 
@@ -208,8 +208,8 @@ All boundaries are aligned to complete days and loaded from the shared Electrici
 
 Protocol A and Protocol B are different uses of the **same frozen test dataset**, not separate datasets.
 
-- **Protocol A — rolling one-step:** predict the next 30-minute target; release the actual only after its forecast is recorded; permit that actual to update the next origin.
-- **Protocol B — fixed-origin day-ahead:** at each of 962 midnight origins, generate all 48 half-hour predictions for the next 24 hours; reveal no actual within the target block.
+- **Protocol A - rolling one-step:** predict the next 30-minute target; release the actual only after its forecast is recorded; permit that actual to update the next origin.
+- **Protocol B - fixed-origin day-ahead:** at each of 962 midnight origins, generate all 48 half-hour predictions for the next 24 hours; reveal no actual within the target block.
 
 The shared target and dates allow protocol comparisons while preserving distinct information sets.
 
@@ -296,8 +296,8 @@ Bitcoin local analysis is reproducible from the present CSV, but exact independe
 
 | Domain | Proposed research role | Status |
 |---|---|---|
-| Weather | Extend evaluation to meteorological structure and domain-specific horizons | **PLANNED — NOT PART OF CURRENT FINAL EMPIRICAL EVIDENCE** |
-| Transport | Extend evaluation to mobility/traffic demand and operational forecasting | **PLANNED — NOT PART OF CURRENT FINAL EMPIRICAL EVIDENCE** |
+| Weather | Extend evaluation to meteorological structure and domain-specific horizons | **PLANNED - NOT PART OF CURRENT FINAL EMPIRICAL EVIDENCE** |
+| Transport | Extend evaluation to mobility/traffic demand and operational forecasting | **PLANNED - NOT PART OF CURRENT FINAL EMPIRICAL EVIDENCE** |
 
 No Weather or Transport dataset file currently exists under `data/`. A directory or future local file alone would not establish a completed evaluation; completion requires a frozen protocol, validated forecasts, and authoritative evidence.
 
