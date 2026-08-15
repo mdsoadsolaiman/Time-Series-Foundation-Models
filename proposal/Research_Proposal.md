@@ -1,184 +1,153 @@
 # Trustworthy Foundation Models for Time-Series Forecasting: Evaluating Accuracy, Robustness, Temporal Stability, Uncertainty, and Auditability Across Domains
 
-## Abstract
+## 1. Background and Motivation
 
-Time-series foundation models (TSFMs) are developing rapidly, offering broad zero-shot forecasting capability without conventional task-specific training. Chronos, TimesFM, and Moirai exemplify this shift towards large pretrained forecasters across heterogeneous datasets. Recent research, however, also identifies dataset-dependent performance, benchmark-integrity risks, horizon sensitivity, calibration variation, efficiency trade-offs, and limited interpretability. These concerns expose the central research problem: strong point accuracy does not by itself establish that a forecast is trustworthy.
+Time-series forecasts inform decisions in finance, energy, environmental management, and transport. Conventional systems are usually developed for a particular dataset and horizon; foundation models instead aim to forecast unseen series without task-specific training. Chronos and TimesFM are prominent examples of this zero-shot approach (Ansari et al., 2024; Das et al., 2024).
 
-This research asks when, and under what conditions, zero-shot TSFMs can be trusted. A completed study evaluates Bitcoin prices and South Australian electricity demand using chronological partitions, strong simple and statistical baselines, domain-adapted LSTMs, Chronos-Bolt-Tiny, and TimesFM. TimesFM changes from third place on Bitcoin to first place under both rolling one-step and true day-ahead electricity protocols. Chronos is generally less point-accurate but exhibits substantially lower absolute error from nominal 80% marginal coverage. Naive persistence is the strongest Bitcoin forecaster, while statistical and seasonal baselines remain competitive in electricity. These task-bounded results demonstrate why accuracy, horizon, calibration, interval width, and baseline choice must be evaluated together.
+Reusable forecasting is attractive, but favorable average error does not establish trustworthiness. A model can deteriorate in extreme regimes, change rank with horizon or update rules, or issue poorly calibrated intervals. External checkpoints also complicate exact reproduction. Strong baselines remain necessary because architectural complexity does not guarantee improvement (Zeng et al., 2023; Hewamalage et al., 2023).
 
-Future research will extend the same frozen, artifact-based protocol to planned Weather and Transport studies, whose environmental dynamics, periodic behaviour, and regime effects provide contrasting temporal structures. The primary contribution is protocol-aware, component-level evidence: baseline-relative accuracy, regime-conditional robustness, temporal stability, uncertainty calibration, transparency/auditability, and dependence-aware statistical comparison. An exploratory composite is secondary. The intended contribution is empirical and methodological rather than a claim of universal or theoretical novelty.
+Recent research has raised concerns about calibration, benchmark integrity, and pretraining overlap (Aksu et al., 2024; Meyer et al., 2025; Adler et al., 2026). The gap is a coherent, protocol-aware assessment combining accuracy, Regime-Conditional Robustness, Temporal Stability, uncertainty calibration, Auditability / Transparency, and dependence-aware inference.
 
-## 1. Background
+This proposal develops that assessment across four contrasting domains. Finance and Energy studies are complete and provide preliminary evidence. Scholarship-stage work will extend the framework to Weather and Traffic / Transport before producing a four-domain synthesis.
 
-Modern time-series forecasting has progressed from task-specific statistical and neural models towards reusable pretrained systems. In 2022–2023, reversible normalisation addressed a specific form of distribution shift, while PatchTST demonstrated the value of channel-independent temporal patches and self-supervised transfer (Kim et al., 2022; Nie et al., 2023). Simple linear models also remained difficult to dismiss, outperforming several contemporary Transformer baselines in a widely used long-horizon benchmark (Zeng et al., 2023). These results helped establish longer contexts, representation learning, and rigorous baseline selection as important parts of modern forecasting.
+## 2. Research Aim and Questions
 
-PatchTST and iTransformer are influential modern supervised forecasting architectures. PatchTST supports supervised forecasting and self-supervised transfer; iTransformer represents whole variate histories as tokens to model cross-variate relationships (Liu et al., 2024). Their primary papers do not establish the same general-purpose zero-shot claim as TSFMs, so they should not automatically be described as foundation models.
+The aim is to determine the conditions under which zero-shot time-series foundation models provide reliable and practically meaningful forecasting evidence relative to strong conventional alternatives.
 
-In 2024, large pretrained forecasters became prominent. Chronos casts scaled observations as tokens and learns probabilistic trajectories using T5-family models (Ansari et al., 2024). TimesFM uses a patched decoder-only architecture and reports strong zero-shot performance across frequencies and horizons (Das et al., 2024). Moirai uses a masked encoder, multi-patch projections, any-variate attention, and distributional outputs trained on the multi-domain LOTSA corpus (Woo et al., 2024). GIFT-Eval subsequently emphasised heterogeneous tasks and pretraining-overlap controls (Aksu et al., 2024).
+**Primary research question**
 
-Research in 2025–2026 increasingly examines what accuracy leaderboards omit. Studies report failures against simple baselines on cloud telemetry, benchmark leakage and representativeness risks, realistic multi-domain evaluation, inference-time adaptation, internal representations, calibration, regime-balanced benchmarking, and accuracy–energy trade-offs (Toner et al., 2025; Meyer et al., 2025; Shchur et al., 2025; Das et al., 2025; Wiliński et al., 2025; Adler et al., 2026; Guibert et al., 2026; Xue et al., 2026). Collectively, this literature supports a multidimensional and protocol-aware research programme.
+> Under what domain, forecasting horizon, regime, and information-update conditions can zero-shot time-series foundation models be considered trustworthy relative to strong conventional forecasting methods?
 
-## 2. Research Problem and Gap
+**Secondary research questions**
 
-The central question is: **when and under what conditions can zero-shot time-series foundation models be trusted?** Performance can depend on the domain, persistence and seasonality, volatility or other regimes, forecast horizon, permissible information updates, and probabilistic calibration. A system can achieve favourable average error while failing during extremes, changing rank under a different operational horizon, or issuing intervals that substantially undercover realised outcomes.
+1. When do Chronos and TimesFM improve aggregate point accuracy over protocol-appropriate deterministic, statistical, and supervised neural baselines?
+2. How stable is relative performance across difficult domain-specific regimes and across chronological portions of the evaluation period?
+3. How closely do supported predictive intervals achieve nominal coverage, and what coverage–width trade-offs arise?
+4. How strongly do forecast horizon and the release of new actual observations affect model rankings and failure modes?
+5. To what extent can model configuration, forecast vectors, evidence lineage, and downstream analyses be independently audited and reproduced?
 
-Recent work already establishes broad zero-shot and cross-domain evaluation; calibration, adaptation, interpretability, efficiency, and benchmark quality are also active topics. It would therefore be inaccurate to claim that these areas are absent. The defensible gap is a protocol-aware synthesis of strong-baseline-relative accuracy, regime-conditional robustness, temporal stability, native uncertainty calibration, transparency/auditability, forecast-horizon effects, efficiency, and dependence-aware statistical comparison (Meyer et al., 2025; Shchur et al., 2025; Adler et al., 2026; Guibert et al., 2026; Xue et al., 2026). This is an evaluation gap, not a claim that cross-domain benchmarking is absent.
+## 3. Preliminary Research
 
-This project addresses that synthesis gap through frozen forecast protocols and exact saved vectors. It is not merely a model-ranking exercise: its purpose is to determine when different dimensions support the same operational choice and when they conflict.
+### 3.1 Finance — Bitcoin
 
-## 3. Research Questions
+The completed Finance study evaluates ten models on 1,061 daily Bitcoin Close targets using rolling one-step forecasting. The comparison spans deterministic, statistical, supervised neural, and foundation systems.
 
-1. **Cross-domain rank stability:** How stable are TSFM ranks and baseline-relative gains across heterogeneous domains under explicitly comparable evaluation rules?
-2. **Temporal-structure effects:** How do persistence, seasonality, trend, volatility, and regime structure affect relative performance among foundation, statistical, deep-learning, and simple models?
-3. **Baseline-relative superiority:** In which domain–horizon settings do zero-shot TSFMs significantly and materially outperform strong protocol-appropriate baselines?
-4. **Calibration quality:** How do empirical coverage, sharpness, interval width, and proper interval scores of available TSFM forecasts vary across domains, regimes, and horizons?
-5. **Complexity versus trustworthiness:** When do accuracy gains justify computational complexity after robustness, calibration, reproducibility, transparency, failure detectability, and efficiency are reported separately?
-6. **Forecast-horizon dependence:** How do forecast horizon and allowable information updates change model ranking, robustness, and uncertainty calibration?
+Naive persistence ranks first, followed by rolling Simple Exponential Smoothing and rolling ARIMA. TimesFM ranks sixth and Chronos seventh. Large-scale pretraining therefore does not automatically improve this highly persistent series, reinforcing the need for strong protocol-correct baselines.
 
-## 4. Preliminary Research
+At nominal 80% coverage, native Chronos intervals cover approximately 84.5% of outcomes, compared with 33.1% for TimesFM. Chronos is closer to nominal marginal coverage, although width and conditional calibration also matter. The leading point forecast and better-calibrated foundation forecast are not the same system.
 
-Two domains are complete. All statements below are preliminary findings from this repository rather than results attributed to the published literature.
+### 3.2 Energy — South Australian Electricity Demand
 
-### 4.1 Finance — Bitcoin
+The completed Energy study evaluates 13 models on half-hourly South Australian demand. **Protocol A** releases each actual after its 30-minute forecast. **Protocol B** generates all 48 day-ahead values at midnight without within-day updates. Both use the same frozen test series but different information sets.
 
-The Bitcoin study evaluates 1,061 daily test observations using rolling one-step forecasts. Naive persistence achieves the best point accuracy (MAE 1290.35), followed by the Persistence-Enhanced Log-Return LSTM, TimesFM, and Chronos-Bolt-Tiny. Naive significantly outperforms both foundation models under the primary loss comparison, while TimesFM significantly outperforms Chronos. The Persistence-Enhanced Log-Return LSTM and TimesFM are not significantly different at the 5% level (`p = 0.056421`).
+TimesFM ranks first by MAE under both protocols. SARIMA ranks second under both; DHR-ARIMA changes from third in A to twelfth in B; Chronos ranks fifth and third. These reversals show that operational horizon and update discipline are substantive evaluation choices.
 
-Point ranking does not match marginal-coverage evidence. For nominal 80% intervals, Chronos attains approximately 84.5% empirical coverage, compared with 33.1% for TimesFM. Chronos therefore has lower absolute coverage error in this task. Coverage alone is not sufficient, because interval width and sharpness also matter.
+At nominal 80% coverage, Chronos and TimesFM attain approximately 91.1% and 33.6% in A, and 67.6% and 24.6% in B. Chronos is closer to nominal in both, while TimesFM is the stronger point forecaster. This is task-bounded evidence, not universal superiority.
 
-### 4.2 Energy — South Australian Electricity Demand
+### 3.3 Preliminary Cross-Domain Insight
 
-Electricity is evaluated under two distinct operational protocols. **Protocol A** is rolling one-step forecasting at a 30-minute horizon, allowing the latest actual to become available before the following forecast. **Protocol B** is true 48-step, 24-hour day-ahead forecasting: all values for a day are generated from the midnight origin with no within-horizon actual updates.
+The completed experiments indicate that foundation-model superiority is conditional rather than uniform. Persistence dominates Bitcoin; TimesFM leads Electricity by MAE; SARIMA remains highly competitive; and the Electricity ranking changes when observations cannot update a forecast within the horizon. Point accuracy and native calibration also disagree consistently for the two evaluated foundation models.
 
-TimesFM ranks first under both protocols, with MASE-48 of 0.1400 one-step and 0.6892 day-ahead. DHR-ARIMA is a strong one-step model (0.2276) but is highly horizon/protocol-sensitive, ranking last day-ahead (2.4557). Daily Seasonal Naive remains a strong operational day-ahead benchmark (1.1056), while Chronos ranks second (1.0774). TimesFM significantly outperforms its strongest protocol-specific baselines and Chronos under the primary squared-loss tests. For native nominal 80% intervals, Chronos coverage is approximately 91.1% and 67.6% under Protocols A and B, compared with 33.6% and 24.6% for TimesFM. This establishes lower absolute marginal-coverage error for Chronos in the completed tasks, not universal calibration superiority.
+Two datasets cannot isolate a pure domain effect from frequency, target, historical period, horizon, or protocol. The findings should therefore be read as preliminary evidence that motivates a broader test. Weather and Traffic add substantially different physical, seasonal, and behavioral structures and will show whether the observed trade-offs persist beyond Finance and Energy.
 
-### 4.3 Cross-domain implication
+## 4. Proposed Research Extension
 
-TimesFM changes from third on Bitcoin to first under both electricity protocols. DHR-ARIMA’s reversal between electricity horizons further shows that model performance depends on the information set as well as the domain. This is **convergent preliminary evidence** of domain- and horizon-dependent superiority, not proof of a universal ranking phenomenon. It motivates the proposed broader evaluation.
+### 4.1 Weather — Planned
 
-## 5. Connection Between Literature and Preliminary Evidence
+A public Weather benchmark will be selected using predefined chronological, quality, provenance, and forecasting criteria. Environmental measurements add seasonal, event-driven, and physical dynamics distinct from Finance and Energy.
 
-| Recent literature theme | Project preliminary observation | Research motivation |
-|---|---|---|
-| Dataset- and regime-dependent performance (Toner et al., 2025; Xue et al., 2026) | TimesFM changes from third on Bitcoin to first on electricity | Test rank stability across more temporal structures without inferring causality |
-| Calibration varies across TSFMs, prediction heads, and horizons (Adler et al., 2026) | Chronos is consistently closer to nominal coverage than TimesFM | Audit model version, interval construction, domain, and horizon jointly |
-| Simple baselines can remain competitive (Zeng et al., 2023; Toner et al., 2025) | Bitcoin Naive wins; Daily Seasonal Naive remains strong day-ahead | Make strong protocol-appropriate baselines mandatory |
-| Context and horizon influence outcomes (Aksu et al., 2024; Xue et al., 2026) | DHR-ARIMA is strong one-step but poor day-ahead | Treat horizon and permissible updates as first-class variables |
-| Benchmark integrity requires overlap and protocol controls (Meyer et al., 2025) | Forecast vectors, keys, information sets, and hashes are audited | Preserve artifact-based evaluation and disclose unknown pretraining overlap |
+Chronological partitions will precede comparison of strong baselines, a supervised neural model, Chronos, and TimesFM. Forecasts will be frozen before downstream analysis. Dataset, target, sample size, thresholds, and results remain undetermined.
 
-## 6. Methodology
+### 4.2 Traffic / Transport — Planned
 
-### 6.1 Domains and model families
+Traffic adds intraday and weekly periodicity, congestion peaks, behavioral variation, abrupt disruptions, and operational multi-step forecasting.
 
-The completed Finance and Energy studies will be extended to Weather and Transport. Weather provides environmental dynamics, seasonal and physical patterns; Transport provides strong periodicity, behavioural variation, congestion, and event-like regimes. Their purpose is not simply to enlarge the dataset count, but to test whether rankings and trustworthiness conclusions transfer to different temporal structures.
+A public dataset will follow the same provenance and chronological criteria. Model families and evidence freezing will remain consistent, while baselines, regimes, and horizons will be domain-appropriate. The purpose is to test, not assume, stability of earlier conclusions.
 
-Four model families will be compared:
+## 5. Methodology
 
-- **Baselines:** Naive, Seasonal Naive, and Moving Average.
-- **Statistical models:** ARIMA or DHR-ARIMA where appropriate to the domain and protocol.
-- **Deep learning:** domain-adapted LSTM models selected without final-test access.
-- **Foundation models:** zero-shot Chronos-Bolt-Tiny and TimesFM.
+### 5.1 Forecasting Models
 
-Moirai or another verified TSFM may be added if the software environment permits, but no optional model is necessary for project completion. Foundation models remain zero-shot so that the research question concerns general-purpose transfer rather than fine-tuned performance.
+Four families will be compared: domain-appropriate deterministic baselines; exponential-smoothing and ARIMA-family statistical systems; supervised neural comparators; and zero-shot Chronos-Bolt-Tiny and TimesFM. Optional models such as Moirai will be included only if a reproducible environment is established and will not block completion.
 
-### 6.2 Forecast protocols and evidence preservation
+### 5.2 Experimental Protocol
 
-Each task will declare either rolling one-step or true multi-step forecasting. Rolling evaluation may incorporate an actual only after its forecast is recorded. In true multi-step evaluation, no actual inside the forecast horizon may update the model. This distinction prevents an artificially easier rolling task from being labelled day-ahead.
+Partitions will remain chronological. Development/validation evidence will support selection, scaling, early stopping, and calibration; the final test will not. Rolling protocols reveal an actual only after prediction, while fixed-origin protocols prohibit within-horizon updates.
 
-All splits will be chronological. Model selection, early stopping, scaling, and any calibration decisions will use training or validation information only; random time-series splitting, target leakage, and final-test tuning are prohibited. Exact forecast vectors, timestamps, origins, horizons, versions, and validation checks will be saved before downstream analysis. These controls respond directly to contemporary benchmark-integrity concerns (Hewamalage et al., 2023; Meyer et al., 2025).
+Forecast vectors, timestamps, origins, horizons, and targets will be aligned and frozen before downstream analysis, preventing silent changes to forecasts or the comparison set.
 
-### 6.3 Evaluation
+### 5.3 Trustworthiness Evaluation
 
-Point performance will use MAE, RMSE, MAPE, sMAPE, and MASE where applicable. Cross-domain synthesis will use scale-independent metrics, relative improvement over the strongest eligible baseline, and within-domain ranks rather than comparing raw units.
+Five dimensions will be evaluated. **Accuracy** measures aggregate error. **Regime-Conditional Robustness** examines predefined difficult conditions. **Temporal Stability** compares chronological test segments. **Uncertainty Calibration** assesses coverage, width, and proper scores where available. **Auditability / Transparency** covers traceable artifacts, protocols, configurations, dependencies, and limitations—not feature-level explanation.
 
-Regime-Conditional Robustness will be assessed using predeclared domain-specific regimes, such as volatility and movement in Finance, demand level and variability in Energy, meteorological states in Weather, and congestion states in Transport. These are conditional-performance stress slices, not comprehensive adversarial robustness; they do not test adversarial perturbations, sensor corruption, missing-data attacks, synthetic distribution shift, or controlled covariate shift. Temporal Stability will compare earlier, middle, and later contiguous held-out segments while preserving complete multi-step origins. It does not by itself demonstrate geographic, cross-dataset, out-of-distribution, or structural-break generalisation.
+An exploratory composite may support sensitivity analysis, but component evidence will remain primary. Any composite will be identified as researcher-defined, comparison-set-relative, secondary, and not a validated universal trustworthiness instrument.
 
-Probabilistic evaluation will report nominal and empirical coverage, interval width, coverage error, and the calibration–sharpness trade-off. A proper interval score will be added where saved quantiles support it. Missing native intervals will remain missing rather than being fabricated. Leakage-free conformal calibration is a proposed extension grounded in established time-series conformal methodology (Stankevičiūtė et al., 2021).
+### 5.4 Statistical Analysis
 
-Transparency and Auditability evidence will cover model transparency, ease of interpretation, reproducibility, computational complexity, and failure detectability. These properties are not direct XAI: the completed study does not test feature-attribution faithfulness, counterfactual explanations, representation probes, saliency validation, or user-centred explanation quality. Direct, validated XAI is a future methodological extension informed by recent TSFM intervention research (Wiliński et al., 2025).
+Pairwise forecast-loss comparisons will account for serial dependence using protocol-appropriate long-run variance estimation. Multiple-comparison correction and practical effect sizes will accompany significance tests. Statistical and practical importance will be interpreted separately, and non-significance will not be treated as equivalence.
 
-Statistical comparison will use Diebold–Mariano tests as foundational methodology (Diebold & Mariano, 1995), with HAC/Newey–West variance adjustment for serial dependence. Multi-step electricity losses are aggregated by daily origin before testing; Benjamini–Hochberg correction controls the reported comparison family; effect sizes accompany p-values. Dimension-level results remain primary evidence.
+### 5.5 Reproducibility and Auditability
 
-## 7. Trustworthiness Evidence and Exploratory Composite Synthesis
+Each domain will preserve a validated forecast matrix and evidence lineage. Schemas, keys, timestamps, finiteness, deterministic baselines, metrics, protocol constraints, and recorded hashes will be checked.
 
-Primary evidence is reported in this order: Point Forecast Accuracy; Regime-Conditional Robustness; Temporal Stability; Uncertainty Calibration; Transparency and Auditability; and Statistical Significance/Practical Effect.
+This enables artifact-level reproduction without rerunning expensive models. It does not imply independent fresh regeneration of every external checkpoint; relevant limitations will be disclosed.
 
-The secondary **Exploratory Composite Trustworthiness Summary** retains the frozen weights: Accuracy 35%, Robustness 20%, Temporal Stability 20%, Uncertainty 15%, and Transparency/Auditability 10%. The weights are researcher-defined, component scores are not statistically independent, and relative normalisation depends on the comparison set. The composite is intended for sensitivity-oriented synthesis, not as a universal trustworthiness metric.
+## 6. Expected Contributions
 
-Two exploratory summaries are retained without changing their numerical values. The **Overall Trust Score — Missing Evidence Penalised** assigns no contribution to an unavailable component and reflects evidence completeness. The **Evidence-Available Trust Score** renormalises across observed components. Neither replaces component-level evidence, and missing uncertainty is explicitly “not evaluated”, not interpreted as poor calibration.
+1. **Cross-domain empirical evidence** on zero-shot foundation forecasters relative to strong deterministic, statistical, and supervised neural systems.
+2. **A multidimensional evaluation framework** integrating accuracy, regime behavior, Temporal Stability, uncertainty, and auditability without reducing the research to one leaderboard.
+3. **Protocol-aware comparison** that treats forecast horizon and information-update discipline as first-class methodological choices.
+4. **Joint interpretation of performance and reliability**, including cases where point accuracy, conditional behavior, and calibration disagree.
+5. **A reproducible evidence architecture** based on frozen forecasts, explicit validation boundaries, and a clear distinction between artifact reproduction and full regeneration.
 
-## 8. Proposed Research Programme
+The contribution is primarily empirical and methodological. It does not depend on claiming a new model architecture or a universal Trust Score.
 
-The planned deliverables are Weather and Transport studies followed by a four-domain synthesis. Weather will freeze an operational horizon, appropriate seasonal/statistical baselines, meteorological regimes, and native uncertainty evidence. Transport will similarly declare horizon, sensor or aggregate structure, congestion regimes, and periodic baselines. Neither planned domain currently has an empirical result or selected dataset in this project.
+## 7. Expected Outcomes and Significance
 
-Secondary work, ordered by feasibility, will: evaluate rank stability across the four domains; add another electricity region where a comparable series is available; test validation-only conformal calibration; examine sensitivity to trustworthiness weights; strengthen model-specific explanation evidence; and measure inference time and memory, with energy measurement included where reliable instrumentation exists. Additional models are optional extensions.
+The intended outcome is a four-domain evidence base showing where zero-shot models help, where conventional systems remain preferable, and which trustworthiness dimensions qualify those choices.
 
-## 9. Expected Contributions and Significance
+Chronos or TimesFM need not win every task. Negative or mixed results identify boundaries of transferable forecasting and are scientifically informative.
 
-The expected contributions are:
+Scholarship support would enable the two planned domains, stronger calibration and sensitivity analysis, compatible additional models, and a coherent four-domain research output. It would extend an established programme rather than an untested starting concept.
 
-1. A protocol-aware cross-domain evaluation of zero-shot TSFMs against strong baselines.
-2. An integrated analysis of accuracy, regime-conditional robustness, temporal stability, calibration, transparency/auditability, reproducibility, and horizon sensitivity.
-3. Empirical evidence on foundation-model rank stability across domains and forecast horizons.
-4. Comparative calibration evidence for available native TSFM intervals and leakage-free recalibration experiments.
-5. A reproducible, artifact-based workflow with saved vectors, protocol audits, and dependence-aware statistical testing.
+## 8. Research Plan
 
-The significance is practical rather than theoretical. Financial, energy, weather, and transport forecasts support decisions with different costs, horizons, and tolerance for failure. A model with slightly lower MAE but poorly calibrated uncertainty may not be the more trustworthy operational choice. Conversely, wider calibrated intervals do not compensate automatically for poor point accuracy. Reporting these dimensions separately can improve uncertainty communication, model selection, and failure detection in operational decision support.
+| Stage | Activity | Status |
+|---:|---|---|
+| 1 | Multidimensional framework and artifact-validation architecture | Established |
+| 2 | Bitcoin / Finance study | Completed |
+| 3 | South Australian Electricity / Energy study | Completed |
+| 4 | Preliminary two-domain synthesis | Completed |
+| 5 | Weather dataset selection, protocol, forecasting, and trustworthiness analysis | Planned |
+| 6 | Traffic / Transport dataset selection, protocol, forecasting, and trustworthiness analysis | Planned |
+| 7 | Four-domain rank, calibration, robustness, protocol, and sensitivity synthesis | Planned |
+| 8 | Final research reporting and reproducibility release | Planned |
 
-## 10. Work Plan
+## 9. Feasibility
 
-| Stage | Semester-scale activity | Deliverable |
-|---|---|---|
-| 1 | Focused literature refinement and final protocol standardisation | Frozen Weather and Transport protocols, datasets, baselines, and audit templates |
-| 2 | Weather forecasting study | Validated forecasts and multidimensional Weather case study |
-| 3 | Transport forecasting study | Validated forecasts and multidimensional Transport case study |
-| 4 | Cross-domain synthesis | Rank-stability, regime-conditional robustness, temporal stability, horizon, and efficiency comparison |
-| 5 | Uncertainty refinement | Validation-only conformal experiments and trust-weight sensitivity analysis |
-| 6 | Final evaluation and communication | Final report, reproducible repository, research presentation, and limitations register |
+The project begins from a substantial foundation: two domains, four model families, chronological protocols, robustness, Temporal Stability, uncertainty, inference, artifact validation, and cross-domain comparison are implemented.
 
-## 11. Responsible AI
+Chronos and TimesFM inference is feasible in the available CPU environment. Expensive generation is separated from inexpensive artifact analysis, so Weather and Traffic extend a functioning framework.
 
-Responsible reporting will emphasise calibrated uncertainty, explicit information sets, reproducibility, domain-specific validation, and visible failure cases. Negative results—including failure to beat simple baselines or obtain reliable intervals—will be reported rather than filtered from the comparison. Forecasts will be presented as decision-support evidence, not autonomous advice, and deployment claims will remain bounded by the evaluated region, period, horizon, and model version.
+The scope is bounded to one public series or coherent benchmark per planned domain; optional models will not block a four-domain empirical synthesis.
 
-## 12. Limitations
+## 10. Limitations
 
-Only two domains are complete, with one dataset per domain and one electricity region. Dataset, frequency, target, horizon, and evaluation-period effects cannot be separated cleanly from domain effects. LSTM formulations differ and single deterministic runs do not quantify seed uncertainty. Composite weights and the transparency/auditability rubric are researcher-defined. Native uncertainty evidence is limited to supported quantiles and one primary nominal level; coverage alone is insufficient because width and sharpness matter. Conclusions apply specifically to Chronos-Bolt-Tiny and the TimesFM checkpoint used here. Moirai was excluded by environment/model-scope constraints; PatchTST and iTransformer were not authoritative final models and are not assumed to be zero-shot foundation models. Unknown pretraining overlap cannot be excluded (Meyer et al., 2025).
+Completed evidence covers two domains and one primary series per domain. The foundation roster is limited, pretraining overlap is unknown, and uncertainty capabilities differ. The exploratory composite is researcher-defined and comparison-relative. Conclusions remain conditional on datasets, periods, horizons, protocols, checkpoints, and losses; four domains will improve breadth without establishing universal generality.
+
+## 11. Conclusion
+
+The preliminary studies establish both the relevance and feasibility of the proposed research. Bitcoin shows that persistence and classical systems can outperform pretrained complexity. Electricity shows that TimesFM can provide strong zero-shot point forecasts while statistical models remain competitive and rankings respond to operational protocol. Across both domains, Chronos is closer to nominal native interval coverage than TimesFM, illustrating why accuracy and probabilistic reliability require separate evidence.
+
+Weather and Traffic will test whether these patterns persist under environmental dynamics and strongly periodic transport demand. The resulting four-domain synthesis will offer a bounded, reproducible account of where foundation forecasters help, where they do not, and which additional evidence is needed before their forecasts should guide decisions. The central question is therefore not simply whether foundation models can forecast, but under what conditions the available evidence is strong enough to trust their forecasts.
 
 ## References
 
-Aksu, T., Woo, G., Liu, J., Liu, X., Liu, C., Savarese, S., Xiong, C., & Sahoo, D. (2024). GIFT-Eval: A benchmark for general time series forecasting model evaluation. *NeurIPS Workshop / arXiv:2410.10393*. https://arxiv.org/abs/2410.10393
-
-Adler, C., Chang, Y., Draxler, F., Abdi, S., & Smyth, P. (2026). Beyond accuracy: Are time series foundation models well-calibrated? *International Conference on Learning Representations*. https://openreview.net/forum?id=nGBN7UjHcy
-
-Ansari, A. F., Stella, L., Turkmen, C., Zhang, X., Mercado, P., Shen, H., et al. (2024). Chronos: Learning the language of time series. *Transactions on Machine Learning Research*. https://openreview.net/forum?id=gerNCVqqtR
-
-Das, A., Faw, M., Sen, R., & Zhou, Y. (2025). In-context fine-tuning for time-series foundation models. *Proceedings of the 42nd International Conference on Machine Learning*. https://arxiv.org/abs/2410.24087
-
-Das, A., Kong, W., Sen, R., & Zhou, Y. (2024). A decoder-only foundation model for time-series forecasting. *Proceedings of the 41st International Conference on Machine Learning*. https://proceedings.mlr.press/v235/das24c.html
-
-Diebold, F. X., & Mariano, R. S. (1995). Comparing predictive accuracy. *Journal of Business & Economic Statistics, 13*(3), 253–263. https://doi.org/10.1080/07350015.1995.10524599
-
-Guibert, L., Pasquier, B., Montet, F., & Wolf, B. (2026). Benchmarking time series foundation models on their accuracy and energy consumption. *Proceedings of the Fourth Swiss AI Days* (PMLR 309). https://proceedings.mlr.press/v309/guibert26a.html
-
-Hewamalage, H., Ackermann, K., & Bergmeir, C. (2023). Forecast evaluation for data scientists: Common pitfalls and best practices. *Data Mining and Knowledge Discovery, 37*, 788–832. https://doi.org/10.1007/s10618-022-00894-5
-
-Kim, T., Kim, J., Tae, Y., Park, C., Choi, J.-H., & Choo, J. (2022). Reversible instance normalization for accurate time-series forecasting against distribution shift. *International Conference on Learning Representations*. https://openreview.net/forum?id=cGDAkQo1C0p
-
-Liu, Y., Hu, T., Zhang, H., Wu, H., Wang, S., Ma, L., & Long, M. (2024). iTransformer: Inverted transformers are effective for time series forecasting. *International Conference on Learning Representations*. https://openreview.net/forum?id=JePfAI8fah
-
-Meyer, M., Kaltenpoth, S., Zalipski, K., & Müller, O. (2025). Time series foundation models: Benchmarking challenges and requirements. *arXiv:2510.13654*. https://arxiv.org/abs/2510.13654
-
-Nie, Y., Nguyen, N. H., Sinthong, P., & Kalagnanam, J. (2023). A time series is worth 64 words: Long-term forecasting with transformers. *International Conference on Learning Representations*. https://openreview.net/forum?id=Jbdc0vTOcol
-
-Shchur, O., Ansari, A. F., Turkmen, C., Stella, L., Erickson, N., Guerron, P., Bohlke-Schneider, M., & Wang, Y. (2025). fev-bench: A realistic benchmark for time series forecasting. *arXiv:2509.26468*. https://arxiv.org/abs/2509.26468
-
-Stankevičiūtė, K., Alaa, A. M., & van der Schaar, M. (2021). Conformal time-series forecasting. *Advances in Neural Information Processing Systems, 34*, 6216–6228. https://papers.nips.cc/paper_files/paper/2021/hash/312f1ba2a72318edaaa995a67835fad5-Abstract.html
-
-Toner, W., Lee, T. L., Joosen, A., Singh, R., & Asenov, M. (2025). Performance of zero-shot time series foundation models on cloud data. *Proceedings of the First Workshop on Foundation Models for Science* (PMLR 296). https://proceedings.mlr.press/v296/toner25a.html
-
-Wiliński, M., Goswami, M., Potosnak, W., Żukowska, N., & Dubrawski, A. (2025). Exploring representations and interventions in time series foundation models. *Proceedings of the 42nd International Conference on Machine Learning*. https://arxiv.org/abs/2409.12915
-
-Woo, G., Liu, C., Kumar, A., Xiong, C., Savarese, S., & Sahoo, D. (2024). Unified training of universal time series forecasting transformers. *Proceedings of the 41st International Conference on Machine Learning*. https://icml.cc/virtual/2024/poster/33767
-
-Xue, S., Zhu, Z., Zhang, W., Cai, R., Wang, R., Mu, Y., Zhou, F., Li, J., Di, P., & Yu, H. (2026). QuitoBench: A high-quality open time series forecasting benchmark. *arXiv:2603.26017*. https://arxiv.org/abs/2603.26017
-
-Zeng, A., Chen, M., Zhang, L., & Xu, Q. (2023). Are transformers effective for time series forecasting? *Proceedings of the AAAI Conference on Artificial Intelligence, 37*(9), 11121–11128. https://doi.org/10.1609/aaai.v37i9.26317
+1. Adler, C., Chang, Y., Draxler, F., Abdi, S., & Smyth, P. (2026). Beyond accuracy: Are time series foundation models well-calibrated? *International Conference on Learning Representations*. https://openreview.net/forum?id=nGBN7UjHcy
+2. Meyer, M., Kaltenpoth, S., Zalipski, K., & Müller, O. (2025). Time series foundation models: Benchmarking challenges and requirements. *arXiv:2510.13654*. https://arxiv.org/abs/2510.13654
+3. Aksu, T., Woo, G., Liu, J., Liu, X., Liu, C., Savarese, S., Xiong, C., & Sahoo, D. (2024). GIFT-Eval: A benchmark for general time series forecasting model evaluation. *NeurIPS Workshop / arXiv:2410.10393*. https://arxiv.org/abs/2410.10393
+4. Ansari, A. F., Stella, L., Turkmen, C., Zhang, X., Mercado, P., Shen, H., et al. (2024). Chronos: Learning the language of time series. *Transactions on Machine Learning Research*. https://openreview.net/forum?id=gerNCVqqtR
+5. Das, A., Kong, W., Sen, R., & Zhou, Y. (2024). A decoder-only foundation model for time-series forecasting. In *Proceedings of the 41st International Conference on Machine Learning* (PMLR 235). https://proceedings.mlr.press/v235/das24c.html
+6. Hewamalage, H., Ackermann, K., & Bergmeir, C. (2023). Forecast evaluation for data scientists: Common pitfalls and best practices. *Data Mining and Knowledge Discovery, 37*, 788–832. https://doi.org/10.1007/s10618-022-00894-5
+7. Diebold, F. X., & Mariano, R. S. (1995). Comparing predictive accuracy. *Journal of Business & Economic Statistics, 13*(3), 253–263. https://doi.org/10.1080/07350015.1995.10524599
+8. Gneiting, T., Balabdaoui, F., & Raftery, A. E. (2007). Probabilistic forecasts, calibration and sharpness. *Journal of the Royal Statistical Society: Series B, 69*(2), 243–268. https://doi.org/10.1111/j.1467-9868.2007.00587.x
