@@ -1,4 +1,4 @@
-# Trustworthy Foundation Models for Time-Series Forecasting: Evaluating Accuracy, Robustness, Temporal Stability, Uncertainty, and Auditability Across Domains
+# Trustworthy Foundation Models for Time-Series Forecasting: Evaluating Accuracy, Robustness, and Uncertainty Across Domains
 
 ## 1. Background and Motivation
 
