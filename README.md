@@ -1,224 +1,267 @@
 # Trustworthy Foundation Models for Time-Series Forecasting
 
-This research project evaluates time-series foundation models as forecasting systems rather than point-metric contestants. Two completed case studies examine point accuracy, regime-conditional robustness, temporal stability, uncertainty calibration, transparency/auditability, and statistical significance under frozen, leakage-controlled protocols.
+## A Cross-Domain Study of Finance and Energy
 
-## Research Manuscript
+This repository is an empirical research evidence base for evaluating time-series foundation models as forecasting systems rather than point-metric contestants. Zero-shot Chronos-Bolt-Tiny and TimesFM are compared with deterministic baselines, classical/statistical methods, and supervised neural models in two completed domains: daily Bitcoin prices and half-hourly South Australian electricity demand.
 
-[`paper/research_manuscript.md`](paper/research_manuscript.md) is a manuscript-style report of the completed Finance and Energy experiments.
+The study examines point accuracy alongside Regime-Conditional Robustness, Temporal Stability, uncertainty calibration, transparency/auditability, and dependence-aware statistical inference. Forecast vectors are frozen before downstream analysis so that reported conclusions can be reconstructed without rerunning expensive models.
 
-## Key Figures
+## Research Questions
 
-![Cross-domain model ranks](figures/cross_domain/model_rank_across_domains.png)
+> Under what domain, horizon, and information-update conditions can zero-shot time-series foundation models be considered trustworthy relative to strong simple, statistical, and supervised neural benchmarks?
 
-![Electricity day-ahead example](figures/electricity/protocol_b_day_ahead_example.png)
+Secondary questions ask whether ranks remain stable across domains; how rolling updates differ from fixed-origin forecasting; whether aggregate accuracy agrees with conditional and temporal performance; whether prediction intervals attain nominal coverage; whether evidence is reproducible and auditable; and whether loss differences survive dependence-aware testing, multiplicity correction, and effect-size analysis.
 
-![Cross-domain uncertainty calibration](figures/cross_domain/uncertainty_calibration_across_domains.png)
+Only **Bitcoin / Finance** and **South Australian Electricity Demand / Energy** are completed. Weather and Transport are planned extensions with no reported results.
 
-## Research Objective
+## Trustworthiness Framework
 
-The central question is whether zero-shot foundation models are consistently trustworthy across domains and forecast horizons. Chronos-Bolt-Tiny and TimesFM are compared with strong simple baselines, statistical models, and deterministic LSTMs. Exact forecast vectors are frozen before downstream analysis.
+| Dimension | Meaning in this study | Does not establish |
+|---|---|---|
+| Accuracy | MAE, RMSE, MAPE, sMAPE, and task-specific MASE | Universal superiority under other losses or horizons |
+| Regime-Conditional Robustness | Error within predeclared market, demand, volatility, and peak-event regimes | Adversarial or universal robustness |
+| Temporal Stability | Error across contiguous Earlier, Middle, and Later test segments | Geographic, cross-dataset, causal, or broad OOD generalisation |
+| Uncertainty Calibration | Nominal versus empirical coverage, width, and proper scores where available | Complete probabilistic quality from coverage alone |
+| Transparency / Auditability | Mechanism clarity, implementation simplicity, reproducibility, determinism evidence, failure detectability, and checkpoint dependence | Explainable-AI attribution or faithfulness |
+| Statistical Inference | Dependence-aware pairwise loss tests, multiplicity correction, and effects | A component of the Trust Score |
 
-## Completed Domains
+Component evidence is primary. A secondary **Exploratory Composite Trustworthiness Summary** uses researcher-defined weights: Accuracy 35%, Robustness 20%, Temporal Stability 20%, Uncertainty 15%, and Transparency/Auditability 10%.
 
-### Domain 1 — Finance: Bitcoin
+`T = 0.35A + 0.20R + 0.20Ts + 0.15U + 0.10E`
 
-**Completed and rebuilt.** Daily Bitcoin Close is evaluated over 1,061 test days with ten analytical models. Nine vectors are frozen in `results/validated_forecasts.csv`; the 7-Day Moving Average is reconstructed deterministically. Corrected downstream analysis uses training-defined regimes, Temporal Stability, method-labelled uncertainty, HAC inference, and Holm correction.
+Scores are comparison-set-relative: 100 means best observed in the evaluated roster, not perfect quality. Components overlap, weights are not empirically validated, and the composite is not a universal measurement instrument.
 
-### Domain 2 — Energy: South Australian Electricity Demand
+## Empirical Domains and Datasets
 
-**Completed.** Half-hourly South Australian demand is evaluated over 46,176 observations under rolling one-step Protocol A and 962 non-overlapping 48-step day-ahead origins under Protocol B.
+| Domain | Dataset and target | Frequency | Final protocol(s) | Test size | Status |
+|---|---|---|---|---:|---|
+| Finance | Bitcoin BTC/USD daily Close, aggregated from local minute OHLCV | Daily | Rolling one-step | 1,061 targets | Completed |
+| Energy | Australian Electricity Demand, South Australia T4 | 30 minutes | A: rolling one-step; B: fixed-origin 48-step day-ahead | 46,176 targets; 962 origins | Completed |
+| Weather | Dataset and protocol not selected | — | — | — | Planned |
+| Transport | Dataset and protocol not selected | — | — | — | Planned |
 
-### Domain 3 — Weather
+Bitcoin covers 2012-01-01 through 2026-07-07. Its original provider, download URL, and redistribution licence are not verified locally and are not inferred here. The final date contains data only through 01:57 UTC and remains a documented partial daily observation in `bitcoin-v1`.
 
-**Planned.** This is the recommended next domain.
+Electricity T4 contains 230,784 contiguous half-hourly observations from 2002-01-01 through 2015-03-01. Development, validation, and test partitions contain 166,128, 18,480, and 46,176 observations. See [data/README.md](data/README.md) and [data/bitcoin/README.md](data/bitcoin/README.md).
 
-### Domain 4 — Transport
+## Evaluated Models
 
-**Planned.** Protocol and dataset selection have not begun.
+| Family | Models |
+|---|---|
+| Deterministic | Naive; 7-Day Moving Average; Electricity Daily/Weekly Seasonal Naive and Moving Average |
+| Statistical | SES; additive-trend smoothing/Holt-Winters artifact; ARIMA; SARIMA; DHR-ARIMA; Prophet |
+| Supervised neural | Bitcoin PE Log-Return LSTM and Transformer; protocol-specific Electricity LSTM |
+| Zero-shot foundation | Chronos-Bolt-Tiny; TimesFM |
 
-## Models Evaluated
+Bitcoin has **10 final analytical models**. Electricity has **13 models per protocol**. Moirai/Uni2TS is deferred; PatchTST and iTransformer are possible future supervised comparators, not current evidence.
 
-- **Baselines:** Naive persistence, daily and weekly seasonal naive, moving average.
-- **Statistical:** Bitcoin rolling ARIMA, Simple Exponential Smoothing, additive-trend non-seasonal Holt-Winters, and periodic-refit Prophet; electricity DHR-ARIMA.
-- **Deep learning:** Bitcoin Persistence-Enhanced Log-Return LSTM, Persistence-Enhanced Log-Return Transformer, and protocol-specific electricity LSTMs.
-- **Foundation models:** zero-shot Chronos-Bolt-Tiny and TimesFM.
-- **Unavailable/optional:** Moirai/Uni2TS, PatchTST, and iTransformer have no authoritative results.
+## Experimental Protocols
 
-## Evaluation Framework
+### Bitcoin
 
-- **Accuracy:** MAE, RMSE, MAPE, sMAPE, Bitcoin MASE-1, and electricity MASE-48.
-- **Regime-Conditional Robustness:** predeclared demand/volatility or market regimes; not comprehensive adversarial robustness.
-- **Temporal Stability:** contiguous chronological test segments; not broad cross-dataset or out-of-distribution transfer.
-- **Uncertainty:** supported native intervals, empirical coverage, and width.
-- **Transparency and Auditability:** interpretation, complexity, reproducibility, and failure detectability; not direct XAI.
-- **Statistical significance:** protocol-appropriate Diebold–Mariano tests; Bitcoin uses Newey–West HAC variance and Holm family-wise correction.
+Each model predicts day `t` from information strictly before `t`. Actual `t` is revealed only afterward and may inform the next origin. Models retain auditable but intentionally different state rules: deterministic formulas, per-origin fitting, sequential state updates, periodic refits, supervised training, or zero-shot inference. Chronos and TimesFM use the last 128 prices.
 
-Dimension-level evidence is primary. The secondary **Exploratory Composite Trustworthiness Summary** retains researcher-defined 35/20/20/15/10 weights. Components are not statistically independent, normalisation depends on the comparison set, and neither summary is a universal measurement instrument.
+### Electricity Protocol A
 
-## Key Bitcoin Results
+At every half-hour, a model predicts `t` using earlier observations. Actual `t` is released after prediction and may update the context for `t+1`. Each model supplies 46,176 forecasts.
+
+### Electricity Protocol B
+
+At each of 962 midnight origins, a model produces all 48 half-hour forecasts from one fixed information set. No actual inside that day is revealed before the vector is complete. Protocol B is not stitched from rolling one-step predictions. Separating A and B exposes the effect of information-update discipline and operational horizon.
+
+## Authoritative Accuracy Results
+
+Tables are reconstructed from frozen vectors. Rankings use MAE; MASE has the same within-task ordering.
+
+### Bitcoin — 10 models
+
+Source: [`bitcoin_point_forecast_metrics_v2.csv`](results/bitcoin_point_forecast_metrics_v2.csv).
 
 | Rank | Model | MAE | RMSE | MASE |
 |---:|---|---:|---:|---:|
-| 1 | Naive | 1290.353 | 1853.625 | 4.576 |
-| 2 | Simple Exponential Smoothing — Rolling One-Step | 1290.359 | 1855.731 | 4.576 |
-| 3 | ARIMA Rolling One-Step | 1299.875 | 1866.303 | 4.609 |
-| 4 | Additive-Trend Exponential Smoothing | 1308.541 | 1871.702 | 4.640 |
-| 5 | Persistence-Enhanced Log-Return LSTM | 1321.365 | 1881.091 | 4.686 |
-| 6 | TimesFM | 1349.947 | 1924.199 | 4.787 |
-| 7 | Chronos-Bolt-Tiny | 1424.026 | 1994.008 | 5.050 |
-| 8 | Persistence-Enhanced Log-Return Transformer | 2019.366 | 2559.750 | 7.161 |
-| 9 | Prophet — 30-Day Periodic Refit | 8195.263 | 10781.163 | 29.061 |
+| 1 | Naive | 1290.353242 | 1853.624774 | 4.575633 |
+| 2 | SES — Rolling One-Step | 1290.358684 | 1855.731424 | 4.575652 |
+| 3 | ARIMA Rolling One-Step | 1299.874638 | 1866.302859 | 4.609396 |
+| 4 | Additive-Trend Exponential Smoothing | 1308.541314 | 1871.702185 | 4.640128 |
+| 5 | PE Log-Return LSTM | 1321.365311 | 1881.091190 | 4.685603 |
+| 6 | TimesFM | 1349.946786 | 1924.199337 | 4.786953 |
+| 7 | Chronos-Bolt-Tiny | 1424.025828 | 1994.007926 | 5.049640 |
+| 8 | PE Log-Return Transformer | 2019.366342 | 2559.749810 | 7.160736 |
+| 9 | 7-Day Moving Average | 2209.776153 | 2999.605073 | 7.835935 |
+| 10 | Prophet — 30-Day Periodic Refit | 8195.262862 | 10781.162873 | 29.060658 |
 
-The 7-Day Moving Average is the tenth analytical model and is reconstructed
-downstream from seven strictly prior prices. The corrected inference artifact
-covers all 45 pairs with HAC lag 6: 39 pairs are raw-significant and 33 remain
-significant after Holm correction.
+Bitcoin strongly rewards persistence: neither foundation model beats the four leading simple/statistical systems or PE-LSTM.
 
-The exploratory composite is secondary. Naive leads the missing-evidence-
-penalised summary at `97.051891`, followed by SES at `96.970846`, ARIMA at
-`96.266697`, and additive-trend smoothing at `96.179827`. PE-LSTM scores
-`81.342547` with missing uncertainty penalised and `95.697114` on available
-dimensions. Full evidence is generated in the versioned Bitcoin CSVs.
+### Electricity Protocol A — 13 models
 
-The final date, 2026-07-07, contains data only through 01:57 UTC and is retained
-as a documented partial daily observation to preserve `bitcoin-v1`.
+Source: [`protocol_a_validated_forecasts.csv`](results/electricity/protocol_a_validated_forecasts.csv).
 
-## Key Electricity Results
+| Rank | Model | MAE | RMSE | MASE-48 |
+|---:|---|---:|---:|---:|
+| 1 | TimesFM | 16.388292 | 26.500200 | 0.140002 |
+| 2 | SARIMA | 17.131137 | 25.350360 | 0.146347 |
+| 3 | DHR-ARIMA | 26.646643 | 50.289317 | 0.227636 |
+| 4 | ARIMA | 28.881334 | 51.681366 | 0.246727 |
+| 5 | Chronos-Bolt-Tiny | 32.332012 | 44.879089 | 0.276205 |
+| 6 | Naive | 42.271787 | 58.272152 | 0.361118 |
+| 7 | LSTM | 47.019068 | 71.565540 | 0.401673 |
+| 8 | Daily Seasonal Naive | 129.416180 | 200.442098 | 1.105573 |
+| 9 | Weekly Seasonal Naive | 153.210769 | 267.161682 | 1.308845 |
+| 10 | Prophet | 177.109255 | 243.849558 | 1.513005 |
+| 11 | Moving Average | 179.122226 | 227.658772 | 1.530201 |
+| 12 | Holt-Winters | 179.622941 | 269.632642 | 1.534479 |
+| 13 | Simple Exponential Smoothing | 243.838177 | 301.681215 | 2.083055 |
 
-| Rank | Protocol A: rolling one-step | MASE-48 | Protocol B: 48-step day-ahead | MASE-48 |
-|---:|---|---:|---|---:|
-| 1 | TimesFM | 0.1400 | TimesFM | 0.6892 |
-| 2 | DHR-ARIMA | 0.2276 | Chronos-Bolt-Tiny | 1.0774 |
-| 3 | Chronos-Bolt-Tiny | 0.2762 | Daily Seasonal Naive | 1.1056 |
-| 4 | Naive | 0.3611 | LSTM | 1.3064 |
-| 5 | LSTM | 0.4017 | Weekly Seasonal Naive | 1.3088 |
-| 6 | Daily Seasonal Naive | 1.1056 | Moving Average | 1.7359 |
-| 7 | Weekly Seasonal Naive | 1.3088 | Naive | 2.0831 |
-| 8 | Moving Average | 1.5302 | DHR-ARIMA | 2.4557 |
+### Electricity Protocol B — 13 models
 
-TimesFM leads both protocols and beats their strongest baselines by about 38%. Chronos 80% coverage is approximately 91.1% and 67.6%; TimesFM coverage is approximately 33.6% and 24.6%.
+Source: [`protocol_b_validated_forecasts.csv`](results/electricity/protocol_b_validated_forecasts.csv).
+
+| Rank | Model | MAE | RMSE | MASE-48 |
+|---:|---|---:|---:|---:|
+| 1 | TimesFM | 80.675384 | 126.984300 | 0.689192 |
+| 2 | SARIMA | 122.782256 | 196.035241 | 1.048901 |
+| 3 | Chronos-Bolt-Tiny | 126.119534 | 188.844105 | 1.077411 |
+| 4 | Daily Seasonal Naive | 129.416180 | 200.442098 | 1.105573 |
+| 5 | LSTM | 152.926817 | 210.523254 | 1.306420 |
+| 6 | Weekly Seasonal Naive | 153.210769 | 267.161682 | 1.308845 |
+| 7 | Prophet | 177.109255 | 243.849558 | 1.513005 |
+| 8 | Holt-Winters | 179.622941 | 269.632642 | 1.534479 |
+| 9 | Moving Average | 203.199277 | 260.260560 | 1.735886 |
+| 10 | Simple Exponential Smoothing | 243.838177 | 301.681215 | 2.083055 |
+| 11 | Naive | 243.838179 | 301.681217 | 2.083055 |
+| 12 | DHR-ARIMA | 287.456183 | 329.891048 | 2.455674 |
+| 13 | ARIMA | 521.970508 | 569.249822 | 4.459077 |
+
+TimesFM has the lowest MAE under both Electricity protocols, but not the lowest Protocol A RMSE: SARIMA has lower squared-error loss. DHR-ARIMA’s fall from third one-step to twelfth day-ahead demonstrates protocol sensitivity.
+
+![Model ranks across completed tasks](figures/cross_domain/model_rank_across_domains.png)
+
+## Accuracy Is Not Trustworthiness
+
+TimesFM leads Electricity by MAE but its native intervals substantially under-cover. Chronos is less point-accurate but closer to nominal marginal coverage. Bitcoin’s strongest models are simple or classical, and conditional analyses expose behavior hidden by aggregate ranks. Complexity therefore does not imply trustworthy performance.
+
+## Uncertainty Calibration
+
+| Task | Nominal | Chronos coverage | TimesFM coverage | Lower absolute coverage error |
+|---|---:|---:|---:|---|
+| Bitcoin rolling one-step | 80% | 84.5429% | 33.0820% | Chronos |
+| Electricity A | 80% | 91.1231% | 33.6495% | Chronos |
+| Electricity B | 80% | 67.6239% | 24.5604% | Chronos |
+
+Chronos has lower absolute error from nominal 80% marginal coverage in these three tasks. This is not universal calibration superiority: width, sharpness, conditional coverage, checkpoint, and task matter. Bitcoin training-only conformal adjustment changes Chronos to 81.5269% and TimesFM to 55.6079%; TimesFM remains below nominal. Electricity reports only preserved native foundation-model intervals and does not fabricate deterministic-model uncertainty.
+
+![Native 80% interval calibration](figures/cross_domain/uncertainty_calibration_across_domains.png)
+
+## Regime-Conditional Robustness and Temporal Stability
+
+Bitcoin regimes use training-only return and volatility thresholds. Electricity uses frozen pre-test demand, peak-event, and volatility thresholds. Conditional rankings can differ from aggregate rankings—for example, Bitcoin’s PE Transformer is weak overall but unusually strong in the major-downward regime.
+
+Temporal Stability divides the test into contiguous Earlier, Middle, and Later segments and asks whether aggregate results are concentrated in one period. It does not establish broad OOD generalisation. Electricity artifact filenames retain historical `generalisation` terminology for hash stability; public analysis uses **Temporal Stability**.
+
+## Trustworthiness Synthesis
+
+Two variants expose missing evidence:
+
+- **Missing-evidence-penalised:** an unavailable dimension contributes zero.
+- **Evidence-available:** weights are renormalized across measured dimensions.
+
+Missing uncertainty means “not measured,” not “measured and poor.” Corrected Bitcoin v2 penalised leaders are Naive (`97.051891`), SES (`96.970846`), ARIMA (`96.266697`), and additive-trend smoothing (`96.179827`). PE-LSTM changes from `81.342547` penalised to `95.697114` on available dimensions.
+
+In the 13-model Electricity artifacts, TimesFM leads both variants under both protocols. Protocol A’s penalised leaders are TimesFM (`92.033198`) and SARIMA (`77.218028`); Protocol B’s are TimesFM (`91.078842`) and Chronos (`66.311491`). Composite scores remain secondary and do not erase component weaknesses such as undercoverage.
+
+## Statistical Inference
+
+| Task | Models / pairs | Design | HAC lag | Correction |
+|---|---:|---|---:|---|
+| Bitcoin | 10 / 45 | Daily squared-error DM tests | 6 | Holm family-wise control |
+| Electricity A | 13 / 78 | Half-hourly squared-error differentials | 48 | Benjamini–Hochberg FDR |
+| Electricity B | 13 / 78 | Daily-origin mean squared error | 7 | Benjamini–Hochberg FDR |
+
+Bitcoin has 39 raw-significant and 33 Holm-significant pairs at 5%. Electricity has 77 BH-significant pairs in A and 68 in B. Effect-size tables accompany p-values. In Protocol A, TimesFM has lower MAE than SARIMA, but SARIMA wins their squared-error comparison (`BH p = 0.0000956209577590908`). Non-significance does not establish equivalence.
 
 ## Cross-Domain Findings
 
-Both domains have grown since the original 4-common-model comparison (Bitcoin now has 10 models, Electricity 13
-per protocol); the comparison below covers 8 genuinely comparable model families, each labelled where a domain
-uses a best-in-family or model-class representative rather than an identical model (see
-`notebooks/18_Cross_Domain_Comparison.ipynb`, Section 3).
+1. Foundation models are not universally dominant: TimesFM ranks sixth in Bitcoin and first in both Electricity protocols.
+2. Strong baselines remain essential: persistence leads Bitcoin, while SARIMA ranks second by MAE in both Electricity protocols.
+3. Horizon and update discipline materially affect ranks.
+4. Point accuracy and calibration can disagree sharply.
+5. Complexity does not guarantee trustworthiness.
+6. Frozen, protocol-specific evidence makes comparisons auditable without conflating artifact reproduction with model regeneration.
 
-- Foundation models are not consistently dominant, and the fuller roster sharpens this: TimesFM now ranks 6th of 10
-  in Bitcoin (behind Naive, Simple Exponential Smoothing, ARIMA, additive-trend smoothing, and PE-LSTM) and Chronos
-  ranks 7th of 10. In Electricity, TimesFM leads both protocols by MAE/MASE-48, but SARIMA has significantly lower
-  squared-error loss than TimesFM in Protocol A (Benjamini-Hochberg-corrected p ≈ 9.6e-05) despite TimesFM's lower
-  MAE — so even the electricity lead is metric-dependent, not absolute.
-- Chronos remains consistently closer to nominal 80% marginal coverage than TimesFM in every completed task; width
-  and sharpness still matter. Bitcoin's post-hoc calibration moves TimesFM from 33.1% toward 55.6% coverage (still
-  well below nominal) and moves Chronos from 84.5% to 81.5% (closer to nominal either way).
-- Strong classical baselines remain essential, and are now the most cross-domain-*consistent* family: the best
-  ARIMA-family model (Bitcoin's plain ARIMA; Electricity's SARIMA) has the lowest mean rank (2.33) and lowest rank
-  variability (std 0.58) of the 8 comparable families across Bitcoin and both electricity protocols — more stable
-  than TimesFM (mean rank 2.67, std 2.89), whose strong mean is driven entirely by its electricity wins offsetting
-  a weak Bitcoin rank.
-- Horizon materially changes ranks within a family: Electricity's DHR-ARIMA (harmonic-regression, tuned for
-  one-step) falls from rank 3/13 at one-step to rank 12/13 at day-ahead, while SARIMA (sequential state extension)
-  stays strong at rank 2/13 under both horizons.
-- Model complexity and point accuracy do not imply calibrated uncertainty or universal trustworthiness: in Bitcoin,
-  four simple/classical models (Naive, SES, ARIMA, additive-trend smoothing) all score above 96 in the
-  missing-evidence-penalised Trust Score, versus 90.5 (TimesFM) and 91.3 (Chronos).
+## Reproducibility and Artifact Integrity
 
-Raw Bitcoin and electricity MAE/RMSE values are never compared directly because their units and scales differ.
-Bitcoin's significance tests use Holm correction (family-wise error control); Electricity's use Benjamini-Hochberg
-(false discovery rate control) — both are domain-appropriate for their respective family sizes, but "significant"
-is not pooled or treated as equivalent between the two domains (see the notebook's Section 10).
+The protected ledger contains **52 artifacts**. A live read-only verifier run on 2026-08-15 returned:
+
+```text
+SUMMARY: 313 PASS, 0 FAIL
+```
+
+The verifier checks hashes, schemas, row counts, keys, timestamps, finite values, metric reproduction, corrected Bitcoin evidence structures, Electricity Protocol B horizon completeness, and cross-domain loading. See [`authoritative_artifact_hashes.md`](results/authoritative_artifact_hashes.md) and [`results/README.md`](results/README.md).
+
+- **Artifact-level reproducibility is demonstrated:** frozen vectors support repeatable validation, metrics, conditional analysis, inference, synthesis, and figures without model packages.
+- **Full end-to-end regeneration is not claimed:** it requires raw-data access, exact checkpoints, compatible full dependencies, and substantial computation. Remote checkpoint revisions were not pinned, and the historical generation environment has not been freshly reconstructed.
+
+Candidate generation is separated from validation and explicit promotion; routine analysis does not overwrite frozen evidence.
+
+## Notebook Workflow
+
+- **Bitcoin:** [`01_Bitcoin_Data_EDA.ipynb`](notebooks/01_Bitcoin_Data_EDA.ipynb) through [`12_Bitcoin_Trustworthiness_Synthesis.ipynb`](notebooks/12_Bitcoin_Trustworthiness_Synthesis.ipynb), with [`Bitcoin_Master.ipynb`](notebooks/Bitcoin_Master.ipynb) as the compact artifact-driven entry point.
+- **Electricity:** [`10_Electricity_EDA.ipynb`](notebooks/electricity/10_Electricity_EDA.ipynb) through [`18_Electricity_Statistical_Significance.ipynb`](notebooks/electricity/18_Electricity_Statistical_Significance.ipynb): EDA → classical models → LSTM → foundation models → validation → robustness/Temporal Stability → uncertainty → trustworthiness → inference.
+- **Cross-domain:** [`18_Cross_Domain_Comparison.ipynb`](notebooks/18_Cross_Domain_Comparison.ipynb), an artifact-only synthesis using within-task ranks and scale-independent evidence.
 
 ## Repository Structure
 
 ```text
-TimeSeriesFoundationModels/
-├── data/                         # Local datasets and dataset notes
-├── docs/                         # Protocols, case studies, findings, environment, status
-├── figures/
-│   ├── bitcoin/                  # Bitcoin publication and diagnostic figures
-│   ├── electricity/              # Protocol-specific electricity figures
-│   └── cross_domain/             # Cross-domain synthesis figures
-├── notebooks/
-│   └── electricity/              # Electricity phases 1–9
-├── paper/                        # Main research manuscript and references
-├── proposal/                     # Research proposal
-├── results/
-│   └── electricity/              # Frozen forecasts and evidence by protocol
-├── src/                          # Reusable loading, preprocessing, metrics, plots
-├── requirements-research.txt     # Authoritative direct dependencies
-└── requirements.txt              # Historical minimal environment file
+Time-Series-Foundation-Models/
+├── data/          # Datasets, provenance, and policy
+├── notebooks/     # Domain workflows and synthesis
+├── results/       # Frozen forecasts and evidence
+├── figures/       # Publication and diagnostic figures
+├── docs/          # Case studies and reproducibility
+├── src/           # Pipelines, metrics, validation, builders
+├── tests/         # Helper and pipeline tests
+├── tools/         # Controlled rebuild utilities
+├── paper/         # Manuscript and bibliography
+└── proposal/      # Forward-looking proposal
 ```
-
-## Notebook Guide
-
-| Notebook | Status | Purpose |
-|---|---|---|
-| `Bitcoin_Master.ipynb` | MASTER / RECOMMENDED ENTRY POINT | Safe ten-model artifact-driven synthesis |
-| `Electricity_Master.ipynb` | MASTER / RECOMMENDED ENTRY POINT | Safe Electricity orchestration, validation, and artifact-based analysis |
-| `01_Bitcoin_Data_EDA.ipynb` | AUTHORITATIVE DATA | Canonical UTC aggregation, checks, and split |
-| `02_Bitcoin_Classical_Baselines.ipynb` | AUTHORITATIVE ANALYSIS | Final past-only classical comparison |
-| `03_Bitcoin_PE_LSTM.ipynb` | AUTHORITATIVE ANALYSIS | Frozen PE Log-Return LSTM evidence |
-| `04_Bitcoin_PE_Transformer.ipynb` | AUTHORITATIVE ANALYSIS | Frozen PE Log-Return Transformer evidence |
-| `05_Bitcoin_Prophet_and_Deferred_Models.ipynb` | SUPPORTING COMPARATOR | Periodic-refit Prophet and model-status table |
-| `06_Bitcoin_Foundation_Models.ipynb` | AUTHORITATIVE ANALYSIS | Zero-shot Chronos and TimesFM evidence |
-| `07_Bitcoin_Forecast_Freeze_and_Validation.ipynb` | AUTHORITATIVE GATE | Forecast-freeze boundary and validation |
-| `08_Bitcoin_Naive_Audit.ipynb` | AUTHORITATIVE AUDIT | Persistence and leakage proof |
-| `09_Bitcoin_Robustness_and_Temporal_Stability.ipynb` | AUTHORITATIVE ANALYSIS | Training-defined regimes and temporal segments |
-| `10_Bitcoin_Uncertainty.ipynb` | AUTHORITATIVE ANALYSIS | Method-separated uncertainty evidence |
-| `11_Bitcoin_Statistical_Inference.ipynb` | AUTHORITATIVE ANALYSIS | HAC DM tests and Holm adjustment |
-| `12_Bitcoin_Trustworthiness_Synthesis.ipynb` | AUTHORITATIVE SYNTHESIS | Component-first evidence and secondary composite |
-| `electricity/10_Electricity_EDA.ipynb` | AUTHORITATIVE | Dataset selection and audit |
-| `electricity/11_Electricity_Baselines.ipynb` | AUTHORITATIVE GENERATION | Protocol-specific deterministic baselines |
-| `electricity/11b_Electricity_Statistical_Model.ipynb` | AUTHORITATIVE GENERATION | DHR-ARIMA |
-| `electricity/12_Electricity_LSTM.ipynb` | AUTHORITATIVE GENERATION | Deterministic LSTM forecasts |
-| `electricity/13_Electricity_Foundation_Models.ipynb` | AUTHORITATIVE GENERATION | Zero-shot Chronos and TimesFM |
-| `electricity/14_Electricity_Model_Validation_Audit.ipynb` | AUTHORITATIVE AUDIT | Protocol and vector audit |
-| `electricity/15_Electricity_Trustworthiness_Evidence.ipynb` | ARTIFACT-ONLY ANALYSIS (saved without outputs) | Regime-conditional robustness, temporal stability, and uncertainty evidence |
-| `electricity/16_Electricity_Trustworthiness.ipynb` | ARTIFACT-ONLY ANALYSIS (saved without outputs) | Exploratory composite scores and sensitivity |
-| `electricity/17_Electricity_Statistical_Significance.ipynb` | AUTHORITATIVE ANALYSIS | Protocol-specific DM tests |
-| `18_Cross_Domain_Comparison.ipynb` | AUTHORITATIVE SYNTHESIS | Artifact-only two-domain comparison |
-
-The inserted `11b` name preserves the historical electricity phase order; notebooks are intentionally not renamed.
-
-Use the master notebooks for routine inspection and artifact-based analysis. Use the phase-specific notebooks for model generation, audits, and historical implementation detail. Both master notebooks default to safe mode and do not load or train forecasting models.
-
-## Authoritative Artifacts
-
-- Bitcoin: `results/validated_forecasts.csv`
-- Electricity A: `results/electricity/protocol_a_validated_forecasts.csv`
-- Electricity B: `results/electricity/protocol_b_validated_forecasts.csv`
-- Rebuilt Bitcoin trust evidence: `bitcoin_trustworthiness_components_v2.csv` and `bitcoin_trust_score_sensitivity_v2.csv`
-- Corrected Bitcoin inference: `bitcoin_dm_pairwise_results_hac_holm.csv`; historical DM evidence is retained for provenance
-- Cross-domain: the eight `results/cross_domain_*.csv` files (model comparison, foundation-model comparison,
-  uncertainty comparison, significance summary, rank stability, trust comparison, comparable-families map, and
-  non-comparable items)
-
-The complete protected set and SHA-256 values are in [`results/authoritative_artifact_hashes.md`](results/authoritative_artifact_hashes.md). See [`results/README.md`](results/README.md) for artifact classification.
-
-## Reproducibility
-
-Routine Bitcoin Run All is artifact-only. Generation must write to staging and
-requires explicit promotion. Run `python src/verify_research_artifacts.py` for
-artifact verification. See [`docs/bitcoin_reproducibility.md`](docs/bitcoin_reproducibility.md)
-for the separation between artifact-level reproduction and full model regeneration.
 
 ## Environment
 
-The lightweight Bitcoin artifact environment is Python 3.12 on Windows and is
-pinned in [`requirements-bitcoin-artifact.txt`](requirements-bitcoin-artifact.txt).
-The historical full-generation record used CPU-only Python 3.13.2, TensorFlow
-2.21.0, Torch 2.12.1, Chronos Forecasting 2.3.1, and TimesFM 2.0.2. The original
-`.venv` references a removed Python installation; full regeneration was not
-rerun or claimed during this rebuild.
+[`requirements-research.txt`](requirements-research.txt) records the historical research dependency set, including TensorFlow 2.21.0, PyTorch 2.12.1, `chronos-forecasting` 2.3.1, and TimesFM 2.0.2. The CPU-only forecast-generation record used Python 3.13.2 on Windows.
+
+The supported lightweight artifact-analysis path is Python 3.12 on Windows using [`requirements-bitcoin-artifact.txt`](requirements-bitcoin-artifact.txt). It verifies frozen evidence but does not regenerate neural or foundation-model forecasts. [`requirements.txt`](requirements.txt) is a historical minimal file, not the complete research lock.
 
 ## Limitations
 
-Only two domains, one Bitcoin asset, and one electricity region are complete. Frequencies, targets, horizons, and LSTM formulations differ; single deterministic runs do not quantify seed uncertainty. Composite weights and transparency/auditability scores are researcher-defined. Supported uncertainty quantiles are limited. Moirai is absent, while PatchTST and iTransformer are outside the authoritative comparison and are not assumed to be zero-shot foundation models. No foundation model is fine-tuned.
+- Two completed domains and one asset/series per domain.
+- One frozen evaluation period per domain; dataset, target, frequency, horizon, and domain effects cannot be separated.
+- Different cross-domain protocols and neural formulations.
+- Only two foundation-model checkpoints; no fine-tuning.
+- Unknown pretraining overlap and unpinned checkpoint revisions.
+- Missing uncertainty for several models and one principal Electricity interval level.
+- Electricity B exact interval vectors were not preserved; aggregates remain.
+- Researcher-defined, comparison-relative trust composite and transparency rubric.
+- Conditional robustness is descriptive, not adversarial.
+- Partial final Bitcoin day and unresolved Bitcoin provider/licence provenance.
+- No repository licence file.
+- Artifact reproducibility does not equal full regeneration.
 
 ## Future Work
 
-Weather is the recommended next case study, followed by Transport. Other priorities are additional electricity regions, foundation-model scaling, and compatible Python 3.12 evaluation of Moirai, PatchTST, and iTransformer.
+Planned work includes Weather and Transport; additional Electricity regions; more foundation-model families/scales; Moirai in a compatible environment; PatchTST/iTransformer supervised comparators; richer interval levels and proper scoring; conditional calibration; broader rolling-origin evaluation; pretraining-contamination audits; and alternative trust-weight sensitivity. None is current evidence.
 
-Detailed reports: [`Bitcoin case study`](docs/bitcoin_case_study.md) and [`Electricity case study`](docs/electricity_case_study.md). The primary cross-domain narrative is the [`research manuscript`](paper/research_manuscript.md).
+## Research Documentation
+
+- [Bitcoin case study](docs/bitcoin_case_study.md) — detailed workflow; corrected v2 artifacts remain numeric authority.
+- [Electricity case study](docs/electricity_case_study.md) — detailed background; some rankings and notebook references predate the 13-model 10–18 workflow.
+- [Bitcoin reproducibility record](docs/bitcoin_reproducibility.md)
+- [Result artifact guide](results/README.md)
+- [Figure index](figures/README.md)
+- [Research manuscript](paper/research_manuscript.md) and [verified references](paper/references.md) — some result summaries predate full-roster evidence.
+- [Research proposal](proposal/Research_Proposal.md) — forward-looking, not authority for final rankings.
+
+## Citation and Licence Status
+
+Formal repository citation metadata has not been provided. Until an author-approved citation is added, cite the underlying datasets, model papers, and software using [`paper/references.md`](paper/references.md), and record the repository URL and accessed revision.
+
+No repository licence file is present. Its absence must not be interpreted as permission to redistribute code or data. Bitcoin provider attribution and redistribution terms require external verification.
