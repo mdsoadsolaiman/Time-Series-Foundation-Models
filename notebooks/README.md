@@ -110,14 +110,6 @@ Notebooks 15–18 consume validated forecasts. Notebook 15 derives robustness an
 
 The notebook compares within-task ranks, scale-independent metrics, baseline-relative performance, evidence availability, and carefully mapped model families. It does **not** pool raw Bitcoin and Electricity MAE/RMSE as if the tasks were interchangeable. Interpretations preserve differences in target, scale, frequency, horizon, protocol, information updates, model specification, and statistical methodology.
 
-# Master / Convenience Notebooks
-
-| Notebook | Current status | Recommended use |
-|---|---|---|
-| [Bitcoin_Master.ipynb](Bitcoin_Master.ipynb) | Compact artifact-driven orchestration aligned with the frozen Bitcoin evidence boundary. | Safe high-level Bitcoin entry point; use numbered notebooks for methods and detailed evidence. |
-| [Electricity_Master.ipynb](Electricity_Master.ipynb) | Historically consolidated workflow containing older phase organization and generation sections. | Useful for provenance and consolidated context, but the modular Electricity 10–18 sequence is the clearer current workflow and should be preferred. |
-
-Master notebooks are convenience views, not substitutes for the numbered experimental record or the authoritative result artifacts.
 
 # Evidence Freeze and Authority
 
