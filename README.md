@@ -1,42 +1,41 @@
 # Trustworthy Foundation Models for Time-Series Forecasting:
-## Evaluating Accuracy, Robustness, Temporal Stability, Uncertainty, and Auditability Across Domains
+## Evaluating Accuracy, Robustness, and Uncertainty Across Domains
 
 **Cross-Domain Empirical Study | Time-Series Foundation Models | Trustworthy AI | Forecasting | Uncertainty | Reproducibility**
 
-Time-series foundation models promise transferable forecasting ability without conventional domain-specific training. That promise is important: a reusable model may reduce the cost of building forecasting systems for new datasets, horizons, and operational settings. Yet aggregate point accuracy alone does not establish whether a forecast can be trusted. A model may rank well on average while failing during volatile periods, becoming unstable over time, producing poorly calibrated intervals, or depending on mutable external checkpoints that are difficult to audit.
+Time-series foundation models can forecast new series without task-specific training. This makes them attractive when building and maintaining a separate model is costly.
 
-This research evaluates forecasting systems as **trustworthy systems**, not merely accuracy contestants. Zero-shot Chronos-Bolt-Tiny and TimesFM are compared with deterministic baselines, classical and statistical methods, and supervised neural models. The completed experiments cover two deliberately contrasting domains: daily Bitcoin prices in Finance and half-hourly South Australian electricity demand in Energy.
+The main question is simple. When can these models be trusted relative to strong conventional methods? Accuracy matters, but it does not tell the whole story. A model may perform well on average yet fail during difficult periods. It may also be unstable or produce unreliable prediction intervals.
 
-The study separates forecast generation from evaluation. Accepted forecast vectors are frozen and hash-protected before downstream analyses of Accuracy, Regime-Conditional Robustness, Temporal Stability, Uncertainty, Auditability/Transparency, and statistical inference. Weather and Transport are planned extensions; they are not part of the completed evidence.
+The completed work covers daily Bitcoin prices and half-hourly South Australian electricity demand. Chronos-Bolt-Tiny and TimesFM are evaluated alongside simple baselines, statistical methods, and supervised neural models. Weather and Transport are planned extensions.
 
 ## Research Question
 
-> Under what domain, horizon, and information-update conditions can zero-shot time-series foundation models be considered trustworthy relative to strong deterministic, statistical, and supervised neural forecasting systems?
+> Under what domain, horizon, regime, and information-update conditions can zero-shot time-series foundation models be considered trustworthy relative to strong conventional forecasting methods?
 
-The empirical programme also asks:
+The secondary questions are:
 
-1. Are foundation-model accuracy ranks stable across heterogeneous domains and protocols?
-2. Does performance remain competitive in difficult domain-specific regimes and across the evaluation period?
-3. Do native predictive intervals attain credible coverage without relying on width alone?
-4. Can forecasts, assumptions, dependencies, and downstream results be independently inspected and reproduced from preserved evidence?
-5. Do observed loss differences survive serial-dependence adjustment, multiple-comparison correction, and practical effect-size analysis?
+1. Do accuracy rankings remain stable across domains and protocols?
+2. How do models perform during difficult regimes?
+3. Is performance stable across the test period?
+4. Are prediction intervals reasonably calibrated?
+5. Can the forecasts and supporting evidence be inspected and reproduced?
+6. Are loss differences statistically and practically meaningful?
 
 ## Why This Research Matters
 
-Forecasting decisions are often consequential precisely when average conditions do not apply. Financial markets can enter extreme movement and volatility regimes. Electricity systems require forecasts at operational horizons where new observations may or may not be available. A model’s ranking can therefore change with the information set, target structure, loss function, and interval requirement.
+Accuracy alone does not tell the whole story. A low average error may hide poor performance during volatility, peaks, or large movements. Rankings may also change when the horizon or available information changes.
 
-> **Accuracy is evidence of forecast quality; it is not, by itself, evidence of trustworthiness.**
+Uncertainty is another concern. A point forecast can be accurate while its interval is poorly calibrated. Simple models may also remain difficult to beat, especially when a series is highly persistent.
 
 | Conventional benchmarking | This research |
 |---|---|
 | Aggregate error | Aggregate and conditional error |
-| One leaderboard | Domain- and protocol-sensitive rankings |
+| One leaderboard | Domain- and protocol-specific rankings |
 | Point forecasts | Point forecasts and preserved uncertainty evidence |
 | Average performance | Regime-conditional and temporal performance |
-| Reproduction assumed | Forecast identity and artifact integrity audited |
-| P-values alone | Dependence-aware inference, multiplicity correction, and effect sizes |
-
-The distinction is central to trustworthy AI: a useful forecasting system must be evaluated not only by what it predicts, but also by when it fails, how confidence is expressed, whether evidence is stable under review, and what claims the completed experiment can legitimately support.
+| Reproduction assumed | Forecast identity and artifact integrity checked |
+| P-values alone | Dependence-aware tests, multiplicity correction, and effect sizes |
 
 ## Research Design
 
@@ -60,7 +59,7 @@ Accuracy ─┬─ Regime-Conditional Robustness
 Component-first trustworthiness and cross-domain synthesis
 ```
 
-The design holds final test periods and protocol rules fixed across each domain’s comparison set. It does not assume that every model has the same internal update mechanism: deterministic formulas, sequential state updates, periodic refits, supervised training, and zero-shot inference remain methodologically distinct but must obey the same legally available information at each forecast origin.
+All models within a domain use the same test period and information boundary. Their internal methods still differ. Some update a state, some are periodically refitted, and others use zero-shot inference.
 
 ## Empirical Domains
 
@@ -71,9 +70,9 @@ The design holds final test periods and protocol rules fixed across each domain�
 | Weather | Dataset and frozen protocol not selected | — | Future extension | — | Planned |
 | Transport | Dataset and frozen protocol not selected | — | Future extension | — | Planned |
 
-Bitcoin is a volatile, non-stationary price-level task with heavy-tailed returns and weak weekly seasonality. Its completed comparison is strongly persistence-dominated. Electricity demand has pronounced daily and weekly structure and supports operationally distinct short-horizon and day-ahead protocols. This contrast tests whether zero-shot transfer remains useful when temporal structure and information-release rules change substantially.
+Bitcoin is volatile and highly persistent, with weak weekly seasonality. Electricity has strong daily and weekly patterns. It supports both frequently updated and day-ahead forecasting tasks.
 
-Dataset provenance, quality checks, temporal coverage, and chronological partitions are documented in [`data/README.md`](data/README.md).
+Dataset sources, quality checks, and chronological splits are documented in the [data guide](data/README.md).
 
 ## Model Landscape
 
@@ -84,45 +83,35 @@ Dataset provenance, quality checks, temporal coverage, and chronological partiti
 | Supervised neural | Bitcoin Persistence-Enhanced Log-Return LSTM and Transformer; protocol-specific Electricity LSTM |
 | Zero-shot foundation | **Chronos-Bolt-Tiny**; **TimesFM** |
 
-Chronos-Bolt-Tiny and TimesFM receive no Bitcoin- or Electricity-specific gradient training. They forecast from legally available historical context using pretrained checkpoints. The evidence applies to the evaluated checkpoints and configurations—not to every model size, release, or time-series foundation model.
+Chronos and TimesFM are used zero-shot. They receive no Bitcoin- or Electricity-specific supervised training. The conclusions apply only to the tested checkpoints and settings.
 
-Moirai/Uni2TS has no authoritative run in the current environment. PatchTST and iTransformer are planned supervised comparators rather than completed zero-shot foundation-model evidence.
+Moirai/Uni2TS has no authoritative run in the current environment. PatchTST and iTransformer are planned supervised comparators, not completed foundation-model results.
 
 ## Trustworthiness Framework
 
 ### Accuracy
 
-**Question:** Does the model forecast accurately over the aggregate frozen test?
-
-**Evidence:** MAE, RMSE, MAPE, sMAPE, Bitcoin MASE-1, and Electricity MASE-48.
+How close are the forecasts to the actual values? Measures include MAE, RMSE, MAPE, sMAPE, and domain-appropriate MASE.
 
 ### Regime-Conditional Robustness
 
-**Question:** Does performance remain competitive in difficult domain-specific conditions?
-
-**Evidence:** Training/pre-test-defined volatility, movement, demand, and peak-event regimes evaluated from frozen forecast errors. This is conditional robustness, not adversarial robustness.
+Does a model remain competitive during difficult conditions? Bitcoin uses volatility and movement regimes. Electricity uses demand, peak, and volatility regimes.
 
 ### Temporal Stability
 
-**Question:** Is performance distributed across the evaluation period rather than concentrated in one interval?
-
-**Evidence:** Comparable Earlier, Middle, and Later chronological segments. This is within-test stability, not broad geographic or out-of-distribution generalisation.
+Does performance remain consistent through the test period? Each test is divided into contiguous Earlier, Middle, and Later segments.
 
 ### Uncertainty
 
-**Question:** Do preserved prediction intervals attain their nominal marginal coverage with interpretable width?
-
-**Evidence:** Native foundation quantiles, training-only calibrated foundation intervals, validation-residual empirical intervals where supported, coverage error, width, and proper interval scores where available.
+Are prediction intervals reasonably calibrated? Coverage is considered with interval width and proper scores where available.
 
 ### Auditability / Transparency
 
-**Question:** Can the evidence, mechanisms, protocol assumptions, dependencies, and failure modes be independently inspected?
-
-**Evidence:** Frozen vectors, schemas, hashes, deterministic reconstruction, implementation and checkpoint provenance, reproducibility controls, and an explicit researcher-defined rubric. This is not direct explainable-AI attribution.
+Can the forecast process and evidence be inspected? The audit covers frozen vectors, schemas, hashes, assumptions, dependencies, and model provenance.
 
 ### Statistical Inference
 
-Statistical inference is an additional layer, not a Trust Score component. It tests whether observed squared-error loss differences survive serial dependence, protocol-appropriate sampling, multiple-comparison correction, and consideration of practical effects.
+Statistical inference is separate from the five trust dimensions. It tests whether loss differences remain after accounting for serial dependence and multiple comparisons.
 
 ## Experimental Protocols
 
@@ -134,44 +123,44 @@ Statistical inference is an additional layer, not a Trust Score component. It te
 | Operational interpretation | Daily rolling one-step | Frequently updated short-horizon forecast | Fixed-origin day-ahead forecast |
 | Foundation context | Last 128 prices | Last 336 demand observations | Same 336-observation context for the full day |
 
-Protocol A and Protocol B use the same Electricity test series but answer different operational questions. Protocol A continually incorporates newly observed demand; Protocol B must sustain a full day’s forecast without within-horizon correction. Results are therefore reported separately.
+Protocol A receives a new actual value after every half-hour forecast. Protocol B must forecast the full day without those updates. This makes Protocol B harder, so its results are reported separately.
 
 ## Headline Results
 
-The detailed metric tables remain in machine-readable artifacts and the [result evidence guide](results/README.md). The scholarship-facing findings are summarized here.
+Detailed metrics are available in the [research artifact guide](results/README.md).
 
 ### Bitcoin
 
-The final comparison contains ten models. By MAE, Naive ranks first, rolling Simple Exponential Smoothing second, and rolling ARIMA third. TimesFM ranks sixth and Chronos-Bolt-Tiny seventh. The result indicates that transferable model complexity does not overcome a strong persistence-dominated benchmark in this daily financial task.
+Naive ranks first by MAE. Simple Exponential Smoothing and ARIMA follow closely. TimesFM ranks sixth and Chronos seventh. Neither foundation model beats the strongest simple and statistical methods.
 
 ### Electricity — Protocol A
 
-Among 13 models, TimesFM ranks first by MAE, SARIMA second, and DHR-ARIMA third. SARIMA nevertheless has lower RMSE than TimesFM, demonstrating that the leading model depends on the loss definition as well as the protocol.
+TimesFM has the lowest MAE among 13 models. SARIMA is second and DHR-ARIMA is third. SARIMA has a lower RMSE than TimesFM, so the leading model depends on the loss measure.
 
 ### Electricity — Protocol B
 
-Among the same 13 model families under fixed-origin day-ahead forecasting, TimesFM ranks first by MAE, SARIMA second, and Chronos-Bolt-Tiny third. Daily Seasonal Naive ranks fourth, remaining a strong operational benchmark.
+TimesFM remains first by MAE. SARIMA is second and Chronos improves to third. Daily Seasonal Naive ranks fourth and remains a strong benchmark.
 
 | Task | Best model by MAE | Foundation-model result | Main lesson |
 |---|---|---|---|
-| Bitcoin rolling one-step | Naive | TimesFM 6th; Chronos 7th | Simple persistence/statistical systems dominate |
-| Electricity A | TimesFM | TimesFM 1st; Chronos 5th | Zero-shot transfer is strong, but SARIMA is highly competitive and has lower RMSE |
-| Electricity B | TimesFM | TimesFM 1st; Chronos 3rd | Day-ahead information constraints change the competitive order |
+| Bitcoin rolling one-step | Naive | TimesFM 6th; Chronos 7th | Simple persistence and statistical methods lead |
+| Electricity A | TimesFM | TimesFM 1st; Chronos 5th | TimesFM leads, while SARIMA remains highly competitive |
+| Electricity B | TimesFM | TimesFM 1st; Chronos 3rd | Day-ahead constraints change the ranking |
 
 <p align="center">
   <img src="figures/cross_domain/model_rank_across_domains.png" width="820" alt="Within-task model ranks across Bitcoin and Electricity protocols">
 </p>
-<p align="center"><em>Within-task ranks change materially across the completed domain–protocol combinations; lower rank is better.</em></p>
+<p align="center"><em>Within-task ranks across the completed domain and protocol combinations. Lower is better.</em></p>
 
-## Cross-Domain Key Finding
+## Cross-Domain Finding
 
-**TimesFM is not universally dominant.** It trails several simple, statistical, and supervised systems in Bitcoin while leading both Electricity protocols by MAE. Chronos also changes position across the tasks. The evidence therefore supports a task-bounded conclusion: foundation-model value is conditional on domain structure, horizon, benchmark strength, and information-update discipline.
+TimesFM is not the best model everywhere. It ranks sixth on Bitcoin but first under both Electricity protocols. Chronos also changes position across the tasks.
 
-This is evidence of domain- and protocol-dependent performance within two completed datasets, not proof of a pure causal “domain effect.” Frequency, target semantics, evaluation period, and horizon also differ.
+This suggests that foundation-model performance depends on the forecasting task and protocol. It does not prove that domain alone causes the difference. Frequency, target, horizon, and evaluation period also change.
 
 ## Accuracy versus Uncertainty
 
-The most accurate point forecaster is not necessarily the best calibrated probabilistic forecaster. The current common native evidence uses nominal 80% intervals:
+The common native comparison uses nominal 80% intervals.
 
 | Task | Nominal | Chronos coverage | TimesFM coverage | Lower absolute coverage error |
 |---|---:|---:|---:|---|
@@ -179,48 +168,44 @@ The most accurate point forecaster is not necessarily the best calibrated probab
 | Electricity A | 80% | 91.1231% | 33.6495% | Chronos |
 | Electricity B | 80% | 67.6239% | 24.5604% | Chronos |
 
-Chronos is closer to nominal coverage in all three evaluated native-interval tasks, despite TimesFM’s stronger Electricity point accuracy. This does not establish universal calibration superiority: coverage must be considered alongside width, conditional behavior, checkpoint, interval construction, and task.
+TimesFM is the strongest Electricity point forecaster. Its native 80% intervals are poorly calibrated. Chronos is less accurate on Electricity point forecasts, but its coverage is closer to nominal.
 
-Bitcoin also preserves training-only CQR adjustment. Chronos moves from 84.5429% to 81.5269% coverage; TimesFM moves from 33.0820% to 55.6079% and remains below nominal. Electricity does not fabricate intervals for deterministic models without preserved pre-test uncertainty evidence.
+Bitcoin also preserves training-only CQR adjustment. Chronos coverage changes from 84.5429% to 81.5269%. TimesFM changes from 33.0820% to 55.6079% and remains below nominal. These results do not establish universal calibration superiority.
 
 <p align="center">
   <img src="figures/cross_domain/uncertainty_calibration_across_domains.png" width="760" alt="Native 80 percent interval coverage for Chronos and TimesFM">
 </p>
-<p align="center"><em>Native 80% marginal coverage differs sharply from the nominal target, particularly for TimesFM.</em></p>
+<p align="center"><em>Native interval coverage differs from the 80% target, especially for TimesFM.</em></p>
 
 ## Robustness and Temporal Stability
 
-Aggregate winners need not be conditional winners. Bitcoin evaluates low/high volatility and major upward/downward movements using thresholds fixed from training data. Electricity evaluates pre-test-defined demand, peak-event, and volatility conditions under each protocol. The analyses report regime error and comparison-relative robustness rather than claiming resilience to arbitrary perturbations.
+Aggregate ranks can hide conditional failures. Bitcoin uses volatility and price-movement regimes. Electricity uses demand, peak-event, and volatility regimes. Thresholds are fixed before final test evaluation.
 
-Temporal Stability divides each test into contiguous Earlier, Middle, and Later segments. It reveals whether an aggregate score is supported throughout the period or disproportionately driven by one interval. Bitcoin’s PE Transformer, for example, is weak in aggregate but unusually competitive during major downward movements; such behavior would be hidden by a single leaderboard.
-
-The current publication figure set contains no standalone robustness or Temporal Stability plot that is both cross-domain and traceable through the paper-figure catalog. This README therefore reports the implemented evidence without substituting a diagnostic or fabricating a new visualization. Detailed tables and notebook plots are available through the [workflow guide](notebooks/README.md).
+Temporal Stability checks the Earlier, Middle, and Later parts of each test period. This shows whether performance is consistent or driven by one interval. Detailed evidence is linked through the [workflow guide](notebooks/README.md).
 
 ## Trustworthiness Synthesis
 
-The exploratory composite provides a compact sensitivity-oriented summary across heterogeneous evidence. It is useful for asking whether conclusions remain recognizable when more than accuracy is considered; it does not replace the underlying dimensions.
+The exploratory Trust Score summarises the five dimensions:
 
 `T = 0.35A + 0.20R + 0.20Ts + 0.15U + 0.10E`
 
-where `A` is Accuracy, `R` Regime-Conditional Robustness, `Ts` Temporal Stability, `U` Uncertainty, and `E` Auditability/Transparency. The weights are researcher-defined, components are dependent, normalization changes with the comparison set, and the score is not a validated universal scale.
-
-Two formulations are retained:
+Here, `A` is Accuracy, `R` Robustness, `Ts` Temporal Stability, `U` Uncertainty, and `E` Auditability/Transparency. The weights are researcher-defined. The result also depends on the models being compared.
 
 - **Missing-evidence-penalised:** an unavailable dimension contributes zero.
-- **Evidence-available:** weights are renormalized over measured dimensions.
+- **Evidence-available:** weights are renormalised over measured dimensions.
 
 | Task | Leading penalised composite | Interpretation |
 |---|---|---|
-| Bitcoin | Naive, 97.051891 | Leading simple/classical systems combine strong accuracy, stability, and auditability |
-| Electricity A | TimesFM, 92.033198 | Broad component strength, but poor interval coverage remains visible |
-| Electricity B | TimesFM, 91.078842 | Leading exploratory synthesis under the day-ahead protocol |
+| Bitcoin | Naive, 97.051891 | Strong accuracy, stability, and auditability |
+| Electricity A | TimesFM, 92.033198 | Strong overall components, but weak interval coverage |
+| Electricity B | TimesFM, 91.078842 | Leading summary under the day-ahead protocol |
 
-Missing uncertainty means “not measured,” not “measured and poor.” Component evidence should be read before composite ranks.
+The composite score is only a summary. The individual dimensions remain more important. Missing uncertainty means evidence is unavailable, not that measured uncertainty is poor.
 
 <p align="center">
   <img src="figures/cross_domain/trustworthiness_evidence_matrix.png" width="820" alt="Cross-domain trustworthiness component evidence matrix">
 </p>
-<p align="center"><em>Component evidence exposes accuracy, robustness, stability, calibration, and availability trade-offs without relying on a single universal score.</em></p>
+<p align="center"><em>The component matrix shows where evidence is strong, weak, or unavailable.</em></p>
 
 ## Statistical Inference
 
@@ -230,43 +215,31 @@ Missing uncertainty means “not measured,” not “measured and poor.” Compo
 | Electricity A | 13 / 78 | Half-hourly squared-error differential | 48 | Benjamini–Hochberg false discovery rate |
 | Electricity B | 13 / 78 | Daily-origin mean squared error across 48 horizons | 7 | Benjamini–Hochberg false discovery rate |
 
-Bitcoin records 33 Holm-significant pairs at 5%. Electricity records 77 BH-significant pairs under Protocol A and 68 under Protocol B. Effect-size artifacts accompany the tests, and Electricity includes HAC sensitivity and selected horizon-specific evidence.
+Bitcoin uses Holm correction. Electricity uses Benjamini–Hochberg. Because the methods differ, the numbers of significant pairs should not be compared directly.
 
-Two findings illustrate why inference is separate from rank reporting. First, the leading Bitcoin systems Naive and SES are not significantly distinguishable under the corrected family-wide analysis. Second, TimesFM has lower Protocol A MAE than SARIMA, while SARIMA has significantly lower squared-error loss in their BH-adjusted comparison. Non-significance is not interpreted as equivalence, and adjusted counts are not compared across Holm and BH as if the procedures were identical.
+Naive and SES are not significantly different in the corrected Bitcoin comparison. Under Electricity Protocol A, TimesFM has lower MAE than SARIMA. However, SARIMA has significantly lower squared-error loss in their adjusted comparison. Non-significance is not proof of equivalence.
 
 ## Research Contributions
 
-This study contributes:
-
-1. A cross-domain empirical comparison of zero-shot foundation forecasters against deterministic, statistical, and supervised neural baselines.
-2. A multidimensional evaluation framework that extends beyond aggregate point accuracy.
-3. Explicit separation of forecasting horizon and information-update discipline through two Electricity protocols.
-4. Training/pre-test-defined regime diagnostics and contiguous Temporal Stability analysis.
-5. Method-labeled uncertainty evaluation that distinguishes native, calibrated, empirical, and unavailable evidence.
-6. Dependence-aware statistical inference with domain-specific multiple-comparison procedures and practical effect sizes.
-7. Frozen forecast artifacts that enable low-cost reconstruction of downstream results without silently rerunning models.
-8. A transparent boundary between demonstrated artifact reproducibility and unverified complete end-to-end regeneration.
-
-These contributions are methodological and empirical. They do not establish universal model superiority, universal trustworthiness, or deployment readiness.
+1. Compares zero-shot foundation models with strong conventional baselines.
+2. Evaluates more than aggregate point accuracy.
+3. Separates frequently updated and day-ahead Electricity protocols.
+4. Examines uncertainty, difficult regimes, and performance over time.
+5. Uses dependence-aware statistical tests and effect-size evidence.
+6. Preserves validated forecast artifacts for downstream analysis.
+7. Separates artifact-level reproducibility from full model regeneration.
 
 ## Reproducibility and Auditability
 
 ```text
-model generation → validated forecast vectors → SHA-256 freeze → downstream evidence
+model generation → checked forecast vectors → SHA-256 freeze → downstream analysis
 ```
 
-The protected ledger currently contains 52 artifacts. A live read-only execution of `python src/verify_research_artifacts.py` during this README update returned:
+Forecasts are generated, checked, frozen, and then reused for later analyses. This prevents downstream notebooks from silently replacing accepted forecasts.
 
-```text
-SUMMARY: 313 PASS, 0 FAIL
-```
+Artifact-level reproducibility is supported. Accepted forecasts can be checked and used to reconstruct downstream results. Full end-to-end regeneration has not been independently demonstrated. That would also require exact raw data, compatible dependencies, external checkpoints, and substantial computation.
 
-The count may grow as verification coverage expands; it is not a permanent research result. The verifier checks hashes, schemas, rows and keys, timestamps, finiteness, metric reproduction, protocol structure, and corrected evidence families.
-
-- **Artifact-level reproducibility is demonstrated:** accepted forecasts can be validated and used to reproduce metrics, conditional analyses, calibration summaries, inference, synthesis, and figures.
-- **Full end-to-end regeneration is not claimed:** it additionally requires exact raw-source acquisition, compatible full-generation dependencies, external checkpoints, and substantial computation. Remote checkpoint revisions were not pinned.
-
-See the [research artifact guide](results/README.md) and [SHA-256 ledger](results/authoritative_artifact_hashes.md) for evidence authority, lineage, staging, promotion, and historical-file status.
+See the [research artifact guide](results/README.md) and [SHA-256 ledger](results/authoritative_artifact_hashes.md) for evidence authority and file lineage.
 
 ## Research Workflow
 
@@ -282,60 +255,47 @@ See the [research artifact guide](results/README.md) and [SHA-256 ledger](result
 | Trustworthiness synthesis | [12](notebooks/12_Bitcoin_Trustworthiness_Synthesis.ipynb) | [17](notebooks/electricity/17_Electricity_Trustworthiness.ipynb) |
 | Statistical inference | [11](notebooks/11_Bitcoin_Statistical_Inference.ipynb) | [18](notebooks/electricity/18_Electricity_Statistical_Significance.ipynb) |
 
-The final synthesis is [`18_Cross_Domain_Comparison.ipynb`](notebooks/18_Cross_Domain_Comparison.ipynb). It compares within-task ranks, scale-independent and baseline-relative evidence, calibration, components, and explicitly mapped model families. It does not pool raw Bitcoin and Electricity errors into one homogeneous task.
-
-See [`notebooks/README.md`](notebooks/README.md) for research questions, inputs, outputs, execution classes, and reading paths for every notebook.
+The final synthesis is [18_Cross_Domain_Comparison.ipynb](notebooks/18_Cross_Domain_Comparison.ipynb). See the [notebook guide](notebooks/README.md) for full details.
 
 ## Repository Structure
 
 ```text
 Time-Series-Foundation-Models/
-├── data/          # Canonical local datasets and provenance documentation
-├── notebooks/     # Bitcoin 01–12, Electricity 10–18, cross-domain synthesis
+├── data/          # Datasets and provenance documentation
+├── notebooks/     # Bitcoin, Electricity, and cross-domain workflows
 ├── results/       # Frozen forecasts, derived evidence, and hash ledger
-├── figures/       # Bitcoin, Electricity, and cross-domain research figures
-├── src/           # Data, metric, pipeline, validation, and figure utilities
+├── figures/       # Research figures and figure catalog
+├── src/           # Data, metrics, validation, and plotting utilities
 ├── tests/         # Helper and pipeline tests
 ├── tools/         # Controlled rebuild utilities
 ├── paper/         # Verified academic bibliography
-└── proposal/      # Forward-looking research proposal
+└── proposal/      # Research scholarship proposal
 ```
-
-Navigation:
 
 - [Research data](data/README.md)
 - [Notebook workflow](notebooks/README.md)
-- [Result and evidence architecture](results/README.md)
+- [Results and evidence](results/README.md)
 - [Figure catalog](figures/README.md)
 - [Verified bibliography](paper/references.md)
 - [Research proposal](proposal/Research_Proposal.md)
 
 ## Limitations
 
-- Only two domains, one Bitcoin asset, and one Electricity region are complete.
-- Each domain has one frozen evaluation period; domain, target, frequency, horizon, and period effects cannot be isolated cleanly.
-- The foundation-model roster contains only Chronos-Bolt-Tiny and one TimesFM checkpoint, with no fine-tuning.
-- Bitcoin and Electricity use different operational protocols and nonidentical supervised neural formulations.
-- Unknown foundation-model pretraining overlap or contamination cannot be excluded.
-- Uncertainty evidence is heterogeneous; several models have no preserved intervals, and Electricity uses one principal 80% level.
-- The Trust Score and auditability rubric are researcher-defined and comparison-relative.
+- Only two domains are complete.
+- Bitcoin uses one asset, and Electricity uses one region.
+- Each domain has one frozen evaluation period.
+- Only two foundation-model checkpoints are evaluated, without fine-tuning.
+- Pretraining overlap or contamination cannot be ruled out.
+- Uncertainty evidence differs across models; several have no preserved intervals.
+- The Trust Score uses researcher-defined weights and depends on the comparison set.
 - The final Bitcoin day is partial, and its source provider and licence remain unresolved.
-- Artifact-level reproducibility is demonstrated, but fresh end-to-end regeneration and exact remote-checkpoint reproduction are not.
+- Full end-to-end regeneration has not been independently reproduced.
 
 ## Future Research
 
-The proposal extends the completed evidence rather than redefining it. Planned directions include:
+Weather and Transport are the next planned domains. Further work will consider more regions, assets, horizons, and foundation models. Other priorities include richer uncertainty evaluation, broader rolling-origin tests, and Trust Score sensitivity analysis.
 
-- Weather and Transport case studies under new frozen protocols;
-- additional Electricity regions, financial assets, and forecast horizons;
-- additional foundation-model families and model scales;
-- Moirai in a compatible environment and PatchTST/iTransformer as supervised comparators;
-- richer nominal interval levels, proper scores, and conditional calibration;
-- broader rolling-origin and stress-test evaluation;
-- checkpoint-version and pretraining-contamination audits; and
-- sensitivity analysis for trust-component normalization, missing-evidence treatment, and weighting.
-
-These are research objectives, not completed results. The forward-looking programme is described in [`proposal/Research_Proposal.md`](proposal/Research_Proposal.md).
+These are future plans, not completed results. They are described in the [research proposal](proposal/Research_Proposal.md).
 
 # References
 
@@ -351,4 +311,4 @@ These are research objectives, not completed results. The forward-looking progra
 10. Gneiting, T., Balabdaoui, F., & Raftery, A. E. (2007). Probabilistic forecasts, calibration and sharpness. *Journal of the Royal Statistical Society: Series B, 69*(2), 243–268. https://doi.org/10.1111/j.1467-9868.2007.00587.x
 11. Stankevičiūtė, K., Alaa, A. M., & van der Schaar, M. (2021). Conformal time-series forecasting. *Advances in Neural Information Processing Systems, 34*, 6216–6228. https://papers.nips.cc/paper_files/paper/2021/hash/312f1ba2a72318edaaa995a67835fad5-Abstract.html
 
-See [`paper/references.md`](paper/references.md) for the extended verified bibliography.
+See [paper/references.md](paper/references.md) for the full verified bibliography.
