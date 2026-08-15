@@ -28,7 +28,7 @@ The aim is to determine the conditions under which zero-shot time-series foundat
 
 ## 3. Preliminary Research
 
-### 3.1 Finance — Bitcoin
+### 3.1 Finance - Bitcoin
 
 The completed Finance study evaluates ten models on 1,061 daily Bitcoin Close targets using rolling one-step forecasting. The comparison spans deterministic, statistical, supervised neural, and foundation systems.
 
@@ -36,7 +36,7 @@ Naive persistence ranks first, followed by rolling Simple Exponential Smoothing 
 
 At nominal 80% coverage, native Chronos intervals cover approximately 84.5% of outcomes, compared with 33.1% for TimesFM. Chronos is closer to nominal marginal coverage, although width and conditional calibration also matter. The leading point forecast and better-calibrated foundation forecast are not the same system.
 
-### 3.2 Energy — South Australian Electricity Demand
+### 3.2 Energy - South Australian Electricity Demand
 
 The completed Energy study evaluates 13 models on half-hourly South Australian demand. **Protocol A** releases each actual after its 30-minute forecast. **Protocol B** generates all 48 day-ahead values at midnight without within-day updates. Both use the same frozen test series but different information sets.
 
@@ -52,13 +52,13 @@ Two datasets cannot isolate a pure domain effect from frequency, target, histori
 
 ## 4. Proposed Research Extension
 
-### 4.1 Weather — Planned
+### 4.1 Weather - Planned
 
 A public Weather benchmark will be selected using predefined chronological, quality, provenance, and forecasting criteria. Environmental measurements add seasonal, event-driven, and physical dynamics distinct from Finance and Energy.
 
 Chronological partitions will precede comparison of strong baselines, a supervised neural model, Chronos, and TimesFM. Forecasts will be frozen before downstream analysis. Dataset, target, sample size, thresholds, and results remain undetermined.
 
-### 4.2 Traffic / Transport — Planned
+### 4.2 Traffic / Transport - Planned
 
 Traffic adds intraday and weekly periodicity, congestion peaks, behavioral variation, abrupt disruptions, and operational multi-step forecasting.
 
@@ -78,7 +78,7 @@ Forecast vectors, timestamps, origins, horizons, and targets will be aligned and
 
 ### 5.3 Trustworthiness Evaluation
 
-Five dimensions will be evaluated. **Accuracy** measures aggregate error. **Regime-Conditional Robustness** examines predefined difficult conditions. **Temporal Stability** compares chronological test segments. **Uncertainty Calibration** assesses coverage, width, and proper scores where available. **Auditability / Transparency** covers traceable artifacts, protocols, configurations, dependencies, and limitations—not feature-level explanation.
+Five dimensions will be evaluated. **Accuracy** measures aggregate error. **Regime-Conditional Robustness** examines predefined difficult conditions. **Temporal Stability** compares chronological test segments. **Uncertainty Calibration** assesses coverage, width, and proper scores where available. **Auditability / Transparency** covers traceable artifacts, protocols, configurations, dependencies, and limitations-not feature-level explanation.
 
 An exploratory composite may support sensitivity analysis, but component evidence will remain primary. Any composite will be identified as researcher-defined, comparison-set-relative, secondary, and not a validated universal trustworthiness instrument.
 
